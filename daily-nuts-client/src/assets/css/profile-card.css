@@ -1,0 +1,107 @@
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+  max-width: 200px;
+}
+
+.profile-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  object-fit: cover;
+}
+
+.profile-username {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333333;
+  margin: 0;
+}
+
+.profile-content {
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.profile-row:last-child {
+  margin-bottom: 0;
+}
+
+.profile-label {
+  font-size: 14px;
+  color: #666666;
+  font-weight: 500;
+  min-width: 80px;
+}
+
+.profile-value {
+  font-size: 14px;
+  color: #333333;
+  text-align: right;
+  flex: 1;
+  margin-left: 16px;
+}
+
+.edit-button {
+  width: 100%;
+  background-color: #d4af37;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-bottom: 16px;
+}
+
+.edit-button:hover {
+  background-color: #c19b26;
+}
+
+.last-update {
+  font-size: 12px;
+  color: #999999;
+  text-align: center;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .profile-card {
+    width: 100%;
+    max-width: 320px;
+    padding: 24px;
+  }
+  
+  .profile-row {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  
+  .profile-value {
+    margin-left: 0;
+    margin-top: 4px;
+    text-align: left;
+  }
+}

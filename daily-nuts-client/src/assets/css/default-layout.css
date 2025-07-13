@@ -1,0 +1,142 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: #ffffff;
+  color: #242424;
+  line-height: 1.4;
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Main Content */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  margin-left: 240px;
+  min-height: 100vh;
+  max-width: 800px;
+  background-color: #ffffff;
+}
+
+.main-header {
+  border-bottom: 1px solid #f2f2f2;
+  background-color: #ffffff;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 16px 24px;
+  width: 100%;
+  min-width: 800px;
+}
+
+.tabs {
+  display: flex;
+  gap: 32px;
+  flex: 1;
+}
+
+.tab {
+  padding: 8px 0;
+  color: #6b6b6b;
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: #242424;
+}
+
+.tab.active {
+  color: #242424;
+  font-weight: 500;
+  border-bottom: 2px solid #242424;
+}
+
+.spacer {
+  flex: 1;
+  min-width: 100px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-left: 40px;
+}
+
+.search-input-container {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9CA3AF;
+  z-index: 1;
+}
+
+.search-input {
+  width: 180px;
+  padding: 10px 16px 10px 40px;
+  font-size: 14px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 20px;
+  color: #242424;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: #9CA3AF;
+}
+
+.search-input:focus {
+  border-color: #dee2e6;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  width: 100% ;
+  padding: 0 42px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0 42px;
+    text-align: left;
+}
+
+/* 로그아웃 섹션 스타일 */
+.logout-section {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #f2f2f2;
+}
+
+.logout-button {
+    color: #dc2626 !important;
+    font-weight: 500;
+}
+
+.logout-button:hover {
+    background-color: #fef2f2 !important;
+    color: #dc2626 !important;
+}
