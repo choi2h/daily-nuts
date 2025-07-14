@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/post")
 @RequiredArgsConstructor
-public class PostController {
+public class PostWriteController {
 
     private final PostService postService;
 
@@ -29,12 +29,6 @@ public class PostController {
     public ResponseEntity<PostResponseDto> getPost(@PathVariable Long id) {
         PostResponseDto responseDto = postService.getPost(id);
         return ResponseEntity.ok(responseDto);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        List<PostResponseDto> responseDtoList = postService.getAllPosts();
-        return ResponseEntity.ok(responseDtoList);
     }
 
     @PutMapping("/{id}")
