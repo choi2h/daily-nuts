@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PostRequest {
+public class PostRequestDto {
     @NotBlank
     private String title;
 
