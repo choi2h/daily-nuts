@@ -4,7 +4,7 @@ import com.dailynuts.subscription.dto.ProductRequest;
 import com.dailynuts.subscription.dto.ProductResponse;
 import com.dailynuts.subscription.dto.ProductsResponse;
 import com.dailynuts.subscription.service.ProductService;
-import jakarta.websocket.server.PathParam;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/product")
-    public ResponseEntity<Long> saveProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Long> saveProduct(@RequestBody @Valid ProductRequest productRequest) {
         Long id = productService.saveProduct(productRequest);
         return ResponseEntity.ok(id);
     }
