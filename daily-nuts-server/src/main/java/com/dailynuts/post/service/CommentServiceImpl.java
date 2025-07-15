@@ -26,7 +26,6 @@ public class CommentServiceImpl implements CommentService {
 
         System.out.println(">>> 저장된 Comment의 commentId = " + saved.getId());
 
-
         return commentMapper.toResponse(saved);
     }
 
@@ -52,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public List<CommentResponse> getCommentsByPost(Long postId) {
+    public List<CommentResponse> getCommentsByPostId(Long postId) {
         List<Comment> parentComments = commentRepository.findByPostIdAndParentCommentIdIsNullOrderByCreatedAtAsc(postId);
 
         List<CommentResponse> responseList = new ArrayList<>();
