@@ -1,5 +1,6 @@
 package com.dailynuts.post.controller;
 
+import com.dailynuts.post.dto.CommentListResponse;
 import com.dailynuts.post.dto.CommentRequest;
 import com.dailynuts.post.dto.CommentResponse;
 import com.dailynuts.post.service.CommentService;
@@ -12,13 +13,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/post/{postId}/comment")
+@RequestMapping("/post/{postId}")
 public class CommentController {
     private final CommentService commentService;
 
 
     //댓글 등록
-    @PostMapping
+    @PostMapping("/comment")
     public ResponseEntity<CommentResponse> createComment(
             @PathVariable Long postId,
             @RequestBody @Valid CommentRequest request
@@ -31,7 +32,7 @@ public class CommentController {
     }
 
     //대댓글 등록
-    @PostMapping("/{parentCommentId}/reply")
+    @PostMapping("/comment/{parentCommentId}/reply")
     public ResponseEntity<CommentResponse> createReplyToComment(
             @PathVariable Long postId,
             @PathVariable String parentCommentId,
@@ -46,8 +47,9 @@ public class CommentController {
 
     //댓글+ 대댓글 조회
     @GetMapping("/comments")
-    public ResponseEntity<List<CommentResponse>> getCommentsByPost(@PathVariable Long postId) {
-        List<CommentResponse> comments = commentService.getCommentsByPost(postId);
-        return ResponseEntity.ok(comments);
+    public ResponseEntity<CommentListResponse> getCommentsByPostId(@PathVariable Long postId) {
+        List<CommentResponse> comments = commentService.getCommentsByPostId(postId);
+        CommentListResponse response = new CommentListResponse(comments);
+        return ResponseEntity.ok(response);
     }
 }
