@@ -13,5 +13,5 @@ public interface CommentService {
     CommentResponse createReplyToComment(Long postId, String parentCommentId, Long memberId, String writer, CommentRequest request);
 
     //조회
-    List<CommentResponse> getCommentsByPost(Long postId);
+    List<CommentResponse> getCommentsByPostId(Long postId);
 }
