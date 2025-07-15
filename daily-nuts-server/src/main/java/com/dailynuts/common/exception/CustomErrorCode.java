@@ -13,13 +13,15 @@ public enum CustomErrorCode {
 
     // 게시글 P
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "요청하신 게시글을 찾을 수 없습니다."),
-
+    POST_LIKE_NOT_EXIST(HttpStatus.NOT_FOUND, "P002", "좋아요 기록이 존재하지 않습니다."),
+    POST_LIKE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "P003", "이미 좋아요된 게시물입니다."),
     // 댓글 C
 
     // 구독 S
+    SUBSCRIPTION_NOT_EXIST(HttpStatus.BAD_REQUEST, "S001", "작가에 대한 구독자 권한이 없습니다."),
 
-    // 결제 M
-    PRODUCT_NOT_EXIST(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 상품입니다.");
+    // 결제 A
+    PRODUCT_NOT_EXIST(HttpStatus.NOT_FOUND, "A001", "존재하지 않는 상품입니다.");
 
     // 알림 N
 
