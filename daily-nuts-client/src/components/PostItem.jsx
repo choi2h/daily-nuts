@@ -1,45 +1,41 @@
-import '../assets/css/feed.css';
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { GoComment } from "react-icons/go";
+import defaultProfile from '../assets/images/default-profile.png';
 
-function PostItem({post}) {
-    const isLiked = false;
+function PostItem({post, toggleLike, onClick}) {
+
     return (
-        <article key={post.id} className="post">
-              <div className="post-content">
-                <div className="post-header">
-                  <div className="post-author">
-                    <div className="author-avatar">
-                      {post.avatar}
-                    </div>
-                    <div className="author-info">
-                      <span className="author-name">{post.author}</span>
-                      <span className="post-time">· {post.time}</span>
-                    </div>
-                  </div>
+         <div className="post">
+          <div className="post-header">
+            <div className="post-avatar">
+                <div className="profile-avatar">
+                    <img class="profile-image" src={defaultProfile} alt="Profile" />
                 </div>
-                
-                <div className="post-body">
-                  <div className="post-text">
-                    <h2 className="post-title">{post.title}</h2>
-                    <p className="post-excerpt">{post.content}</p>
-                    
-                    <div className="post-meta">
-                      <div className="post-actions">
-                        <button className="heart-btn">
-                          {isLiked ? <IoMdHeart size={24}/> : <IoMdHeartEmpty size={24}/>}
-                          <span className="like-count">2</span>
-                        </button>
-                        <button className="comment-btn">
-                          <GoComment size={22} />
-                          <span className="comment-count">3</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            </div>
+              <div className="author-info">
+                <span className="author-name">{post.author}</span>
+                <span className="post-date">· {post.time}</span>
               </div>
-            </article>
+          </div>
+          
+          <div className="post-title">{post.title}</div>
+          <div className="post-excerpt">{post.contents}</div>
+          
+          <div className="post-actions">
+            <button 
+              className={`action-btn ${post.liked ? 'liked' : ''}`}
+              onClick={() => toggleLike(post.id)}
+            >
+              {post.liked ? <IoMdHeart size={24}/> : <IoMdHeartEmpty size={24}/>} <span>3</span>
+            </button>
+            <button 
+              className="action-btn"
+              onClick={() => onClick(post.id)}
+            >
+              <GoComment size={22} /> <span>3</span>
+            </button>
+          </div>
+        </div>
     );
 }
 

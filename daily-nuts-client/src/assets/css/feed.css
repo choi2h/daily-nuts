@@ -1,301 +1,203 @@
-.header-content {
-  padding: 24px 64px 16px 64px;
-}
-
-.follow-btn {
+.container {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  background: none;
-  border: 1px solid #f2f2f2;
-  color: #6b6b6b;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
+  min-height: 100vh;
 }
 
-.follow-btn:hover {
-  background-color: #f9f9f9;
-}
-
-.tabs {
-  display: flex;
-  gap: 32px;
-  padding: 0 20px;
-}
-
-.tab {
-  background: none;
-  border: none;
-  color: #6b6b6b;
-  font-size: 16px;
-  font-weight: 400;
-  padding: 16px 0;
-  cursor: pointer;
-  position: relative;
-  transition: color 0.2s;
-}
-
-.tab.active {
-  color: #242424;
-  font-weight: 600;
-}
-
-.tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background-color: #242424;
-}
-
-.tab:hover {
-  color: #242424;
-}
-
-/* Feed */
-.post {
-  border-bottom: 1px solid #f2f2f2;
-  padding: 32px 0;
-  text-align: left;
-}
-
-.post:last-child {
-  border-bottom: none;
-}
-
-.post-content {
+/* 포스트 스타일 */
+.feed {
   display: flex;
   flex-direction: column;
+  gap: 20px;
 }
+
+.post {
+  background: #ffffff;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e5e5;
+  transition: all 0.2s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+  text-align: left;
+  /* cursor: pointer; */
+}
+
+/* .post:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: #d0d0d0;
+} */
 
 .post-header {
   display: flex;
-  align-items: start;
-  gap: 12px;
-}
-
-.post-author {
-  display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-.author-avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background-color: #f2f2f2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6b6b6b;
-  font-weight: 600;
-  font-size: 12px;
-}
-
-.author-info {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.author-name {
-  font-weight: 400;
-  color: #242424;
-  font-size: 14px;
-}
-
-.post-time {
-  color: #6b6b6b;
-  font-size: 14px;
-}
-
-.post-body {
-  display: flex;
-  gap: 32px;
-  align-items: flex-start;
-}
-
-.post-text {
-  flex: 1;
-}
-
-.post-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #242424;
-  margin-bottom: 8px;
-  line-height: 1.3;
-}
-
-.post-excerpt {
-  color: #6b6b6b;
-  font-size: 16px;
-  line-height: 1.4;
   margin-bottom: 16px;
 }
 
-.post-meta {
+.post-avatar {
+    width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden; /* ✅ 이미지 넘치는 것 자르기 */
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-right: 10px;
 }
 
-.post-tags {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+.post-avatar .profile-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.category {
-  background-color: #f2f2f2;
-  color: #6b6b6b;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 400;
+.post-info {
+  flex: 1;
 }
 
-.read-time {
-  color: #6b6b6b;
-  font-size: 12px;
+.post-author {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
 }
 
-.tag {
-  color: #6b6b6b;
-  font-size: 12px;
+.post-date {
+  color: #999;
+  font-size: 13px;
+}
+
+.post-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.post-excerpt {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 16px;
 }
 
 .post-actions {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  gap: 20px;
 }
 
-.post-actions button {
+.action-btn {
   display: flex;
   align-items: center;
-  gap: 4px; /* 아이콘과 숫자 사이 간격 */
-  background: none;
+  gap: 6px;
+  padding: 4px 6px;
   border: none;
-  cursor: pointer;
-}
-
-.like-count,
-.comment-count {
-  font-size: 14px;
+  background: none;
   color: #666;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 14px;
 }
 
-.heart-btn,
-.comment-btn {
+.action-btn:hover {
+  background: #f8f8f8;
+  color: #B57138;
+}
+
+.action-btn.liked {
+  color: #B57138;
+}
+
+.action-btn.liked:hover {
+  background: rgba(181, 113, 56, 0.1);
+}
+
+/* 모바일 헤더 */
+.mobile-header {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: white;
+  border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.menu-toggle {
   background: none;
   border: none;
-  color: #6b6b6b;
+  font-size: 20px;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all 0.2s;
+  padding: 8px;
+  color: #B57138;
 }
 
-.bookmark-btn:hover,
-.more-btn:hover {
-  background-color: #f2f2f2;
-  color: #242424;
-}
-
-.post-image {
-  width: 160px;
-  height: 107px;
-  border-radius: 4px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.post-image img {
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .main {
-    margin-left: 200px;
-  }
-  
-  .sidebar {
-    width: 200px;
-  }
-  
-  .feed {
-    padding: 0 32px;
-  }
-  
-  .header-content {
-    padding: 24px 32px 16px 32px;
-  }
-  
-  .tabs {
-    padding: 0 10px;
+/* 애니메이션 */
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
+/* 반응형 디자인 */
 @media (max-width: 768px) {
+  .mobile-header {
+    display: flex;
+  }
+
   .sidebar {
-    width: 60px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
-  
-  .main {
-    margin-left: 60px;
+
+  .sidebar.open {
+    transform: translateX(0);
   }
-  
-  .nav-item span {
-    display: none;
+
+  .main-content {
+    margin-left: 0;
+    padding: 20px;
   }
-  
-  .sidebar-content {
-    padding: 0 12px;
+
+  .search-bar {
+    margin-bottom: 20px;
   }
-  
-  .feed {
-    padding: 0 16px;
-  }
-  
-  .header-content {
+
+  .post {
     padding: 16px;
   }
-  
-  .tabs {
-    padding: 0 16px;
-  }
-  
-  .post-body {
-    flex-direction: column;
+
+  .post-actions {
     gap: 16px;
-  }
-  
-  .post-image {
-    width: 100%;
-    height: 200px;
   }
 }
 
-@media (max-width: 600px) {
-  .sidebar {
-    display: none;
+@media (max-width: 480px) {
+  .main-content {
+    padding: 16px;
   }
-  
-  .main {
-    margin-left: 0;
+
+  .post-title {
+    font-size: 16px;
   }
-  
-  .app {
-    max-width: 100%;
+
+  .post-excerpt {
+    font-size: 14px;
   }
 }
