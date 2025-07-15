@@ -1,4 +1,4 @@
-package com.dailynuts.common.config;
+package com.dailynuts.common.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
