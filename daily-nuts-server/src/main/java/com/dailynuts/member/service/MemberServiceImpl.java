@@ -17,7 +17,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberFormatter memberFormatter;
 
     @Override
-    public Long saveMember(MemberRequestDto Req) {
+    public Long createMember(MemberRequestDto Req) {
         Member member = memberMapper.getMember(Req);
         member = memberRepository.save(memberFormatter.hashPassword(member));
         System.out.println(member.getPassword());
