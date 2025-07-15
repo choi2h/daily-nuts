@@ -2,6 +2,7 @@ package com.dailynuts.post.entity;
 
 import com.dailynuts.member.entity.Member;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -52,5 +53,20 @@ public class Post {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Builder
+    public Post(Member member, Category category, String title, String contents, boolean isPinned, int likeCount) {
+        this.member = member;
+        this.category = category;
+        this.title = title;
+        this.contents = contents;
+        this.isPinned = isPinned;
+        this.likeCount = likeCount;
+        this.writer = member.getName();
+    }
 
+    public void update(String title, String contents, Category category) {
+        this.title = title;
+        this.contents = contents;
+        this.category = category;
+    }
 }
