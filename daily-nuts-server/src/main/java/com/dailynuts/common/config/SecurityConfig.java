@@ -17,7 +17,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // 제대로 파악이 안됨.. 일단 오류나서 붙였어요. 파악해서 주석 달아놓겠습니다..
+    // HTTP 인증 회피용 메서드 (*수정 예정*)
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

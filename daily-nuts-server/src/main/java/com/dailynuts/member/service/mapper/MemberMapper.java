@@ -1,7 +1,6 @@
 package com.dailynuts.member.service.mapper;
 
 import com.dailynuts.member.dto.MemberRequestDto;
-import com.dailynuts.member.dto.MemberResponseDto;
 import com.dailynuts.member.entity.Member;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +12,7 @@ public class MemberMapper {
 
     private final PasswordEncoder passwordEncoder;
 
+    // req -> 저장용 entity
     public Member convertMember(MemberRequestDto req){
         return Member.builder()
                 .loginId(req.getLoginId())

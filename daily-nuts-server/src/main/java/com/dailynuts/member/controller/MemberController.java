@@ -21,8 +21,4 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberService.createMember(req));
     }
 
-    @GetMapping("/hello")
-    public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("hello");
-    }
 }
