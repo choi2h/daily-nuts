@@ -2,12 +2,14 @@ package com.dailynuts.subscription.entity;
 
 import com.dailynuts.member.entity.Member;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity @Getter
+@Entity
+@Getter
 @Table(name = "payment")
 @NoArgsConstructor
 public class Payment {
@@ -25,6 +27,13 @@ public class Payment {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(name = "paid_at", columnDefinition = "TIMESTAMP", nullable = false)
-    private LocalDateTime paidAt;
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Builder
+    public Payment(Member member, Product product, LocalDateTime createdAt) {
+        this.member = member;
+        this.product = product;
+        this.createdAt = createdAt;
+    }
 }
