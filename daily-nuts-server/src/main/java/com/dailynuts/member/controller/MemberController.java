@@ -1,6 +1,7 @@
 package com.dailynuts.member.controller;
 
 import com.dailynuts.member.dto.MemberLoginRequestDto;
+import com.dailynuts.member.dto.MemberLoginResponseDto;
 import com.dailynuts.member.dto.MemberSignupRequestDto;
 import com.dailynuts.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -23,7 +24,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Long> loginMember(@RequestBody @Valid MemberLoginRequestDto req){
+    public ResponseEntity<MemberLoginResponseDto> loginMember(@RequestBody @Valid MemberLoginRequestDto req){
 
         return ResponseEntity.ok(memberService.loginMember(req));
     }
