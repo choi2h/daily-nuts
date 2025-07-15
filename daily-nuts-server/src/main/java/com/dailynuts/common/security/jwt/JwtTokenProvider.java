@@ -14,7 +14,7 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    public MemberLoginResponseDto provide(MemberLoginRequestDto req) {
+    public String provide(MemberLoginRequestDto req) {
         // 시크릿 키 생성 메서드
         SecretKey secretKey = Keys.hmacShaKeyFor("NoNutsGang!RejectNuts2024$@^#LongSecretKeyHere!!".getBytes(StandardCharsets.UTF_8));
 
@@ -25,8 +25,6 @@ public class JwtTokenProvider {
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
 
-        MemberLoginResponseDto res = new MemberLoginResponseDto(token);
-
-        return res;
+        return token;
     }
 }

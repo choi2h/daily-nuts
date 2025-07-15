@@ -33,18 +33,22 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberLoginResponseDto loginMember(MemberLoginRequestDto req) {
+
+        return loginAndGenerateToken(req);
+    }
+
+    private MemberLoginResponseDto loginAndGenerateToken(MemberLoginRequestDto req) {
         Member member = memberRepository.findByLoginId(req.getLoginId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
 
-        System.out.println("1 = " + req.getLoginId() + " " + member.getLoginId() + "|" + req.getPassword() + " " + member.getPassword());
+        if (passwordEncoder.matches(req.getPassword(), member.getPassword())) {
 
-        if (passwordEncoder.matches(req.getPassword(), member.getPassword())){
+            String token = jwtTokenProvider.provide(req);
 
-            return jwtTokenProvider.provide(req);
+            return new MemberLoginResponseDto(token);
         } else {
-           throw new CustomException(CustomErrorCode.PASSWORD_DOSE_NOT_MATCH);
+            throw new CustomException(CustomErrorCode.PASSWORD_DOSE_NOT_MATCH);
         }
-
     }
 
     private Member createHashedMember(MemberSignupRequestDto req) {
