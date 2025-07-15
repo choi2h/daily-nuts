@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Table(name = "payment")
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Payment {
 
     @Id
@@ -27,6 +30,7 @@ public class Payment {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @CreationTimestamp
     @Column(name = "created_at", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime createdAt;
 
