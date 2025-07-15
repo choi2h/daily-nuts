@@ -23,8 +23,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Long createMember(MemberSignupRequestDto req) {
-        Member member = createHashedMember(req);
-        member = memberRepository.save(member);
+        Member member = memberRepository.save(createHashedMember(req));
+
         System.out.println(member.getLoginId() + " = " + member.getPassword());
 
         return member.getId();
@@ -32,13 +32,18 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Long loginMember(MemberLoginRequestDto req) {
-        Optional<Member> findMember = memberRepository.findByLoginId(req.getLoginId());
         // 레포지토리에서 loginID로 DB상에 존재하는 멤버 객체를 가져옴
         Member member = memberRepository.findByLoginId(req.getLoginId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
-        System.out.println(member.toString());
 
-        // 가져온 객체의 비밀번호(해시화)랑 req의 비밀번호를 matches메서드로 비교.
+        System.out.println("1 = " + member.toString());
+
+        if (passwordEncoder.matches(req.getPassword(), member.getPassword())){
+
+        } else {
+           throw new CustomException(CustomErrorCode.PASSWORD_DOSE_NOT_MATCH);
+        }
+
         // 성공하면 sout으로 성공 메시지 띄우면됨.
         return 0L;
     }
@@ -47,6 +52,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberMapper.toSignupEntity(req);
         String hashPassword = passwordEncoder.encode(member.getPassword());
         member = memberMapper.toHashEntity(member, hashPassword);
+
         return member;
     }
 
