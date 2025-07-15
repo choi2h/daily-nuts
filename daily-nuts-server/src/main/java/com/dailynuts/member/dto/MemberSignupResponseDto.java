@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter @Builder
-public class MemberResponseDto {
+public class MemberSignupResponseDto {
     private String loginId;
     private String name;
 }

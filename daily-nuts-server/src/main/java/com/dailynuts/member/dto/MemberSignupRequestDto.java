@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
-public class MemberRequestDto {
+public class MemberSignupRequestDto {
 
     @NotNull @NotBlank
     @Size(min=5, max=16, message = "사용할 수 없는 아이디 입니다")

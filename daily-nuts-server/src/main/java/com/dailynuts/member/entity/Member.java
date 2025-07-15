@@ -62,4 +62,20 @@ public class Member {
         this.birth = birth;
         this.role = role;
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", loginId='" + loginId + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", birth=" + birth +
+                ", role=" + role +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

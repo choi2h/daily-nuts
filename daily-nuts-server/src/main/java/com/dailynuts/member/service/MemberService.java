@@ -1,8 +1,9 @@
 package com.dailynuts.member.service;
 
-import com.dailynuts.member.dto.MemberRequestDto;
+import com.dailynuts.member.dto.MemberLoginRequestDto;
+import com.dailynuts.member.dto.MemberSignupRequestDto;
 
 public interface MemberService {
-    Long createMember(MemberRequestDto memberRequestDto);
-
+    Long createMember(MemberSignupRequestDto memberSignupRequestDto);
+    Long loginMember(MemberLoginRequestDto memberLoginRequestDto);
 }

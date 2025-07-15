@@ -1,6 +1,7 @@
 package com.dailynuts.member.controller;
 
-import com.dailynuts.member.dto.MemberRequestDto;
+import com.dailynuts.member.dto.MemberLoginRequestDto;
+import com.dailynuts.member.dto.MemberSignupRequestDto;
 import com.dailynuts.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -16,9 +17,15 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Long> createMember(@RequestBody @Valid MemberRequestDto req){
+    public ResponseEntity<Long> createMember(@RequestBody @Valid MemberSignupRequestDto req){
 
         return ResponseEntity.status(HttpStatus.CREATED).body(memberService.createMember(req));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Long> loginMember(@RequestBody @Valid MemberLoginRequestDto req){
+
+        return ResponseEntity.ok(memberService.loginMember(req));
     }
 
 }
