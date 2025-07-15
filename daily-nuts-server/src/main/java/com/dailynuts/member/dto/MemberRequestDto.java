@@ -28,7 +28,7 @@ public class MemberRequestDto {
 
     @NotNull @NotBlank
     @Size(min=11, max=11)
-    @Pattern(regexp = "^\\d+$")
+    @Pattern(regexp = "^\\d+$", message = "올바른 핸드폰 번호를 입력해 주세요")
     private String phoneNumber;
 
     @Email
