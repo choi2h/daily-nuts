@@ -23,6 +23,7 @@ const categories = [
     }
 ]
 
+
 function MyPage() {
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 

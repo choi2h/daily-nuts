@@ -39,6 +39,14 @@
   padding: 20px 16px;
 }
 
+.payment-info-profile {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
 .profile-section {
   display: flex;
   align-items: center;
@@ -49,13 +57,6 @@
   position: relative;
   width: 60px;
   height: 60px;
-}
-
-.profile-image {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 .online-indicator {
@@ -92,7 +93,7 @@
 }
 
 .payment-button {
-  background-color: #d4af37;
+  background-color: #B57138;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -105,7 +106,7 @@
 }
 
 .payment-button:hover {
-  background-color: #c19b26;
+  background-color: #ac6933;
 }
 
 .payment-button:active {

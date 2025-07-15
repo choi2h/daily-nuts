@@ -17,7 +17,7 @@ body {
   flex: 1;
   display: flex;
   flex-direction: row;
-  margin-left: 240px;
+  margin-left: 250px;
   min-height: 100vh;
   max-width: 800px;
   background-color: #ffffff;
@@ -110,6 +110,7 @@ body {
 }
 
 .feed {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   width: 100% ;
@@ -117,6 +118,7 @@ body {
 }
 
 .card {
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     width: 100%;

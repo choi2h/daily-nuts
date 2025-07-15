@@ -18,26 +18,26 @@ const PaymentHistory = () => {
   ];
 
   return (
-    <div className="approval-history">
-      <h3 className="approval-title">결재내역</h3>
+    <div className="profile-card">
+      <h2 className="page-title">결제내역</h2>
       
       <div className="approval-list">
         {approvalItems.map((item) => (
           <div key={item.id} className="approval-item">
             <div className="approval-content">
-              <div className="profile-section">
-                <div className="profile-image-wrapper">
-                  <img 
-                    src={defaultProfile} 
-                    className="profile-image"
-                  />
-                  <div className="online-indicator"></div>
+                <div className="payment-info-profile">
+                  <div className="profile-image-wrapper">
+                    <img 
+                      src={defaultProfile} 
+                      className="profile-image"
+                    />
+                    <div className="online-indicator"></div>
+                  </div>
+                  <div className="approval-info">
+                    <h4 className="author-name">{item.name}</h4>
+                    <p className="next-payment">다음 결제일은 {item.nextPayment}입니다.</p>
+                  </div>
                 </div>
-                <div className="approval-info">
-                  <h4 className="author-name">{item.name}</h4>
-                  <p className="next-payment">다음 결제일은 {item.nextPayment}입니다.</p>
-                </div>
-              </div>
               
               <button className="payment-button">결제하기</button>
             </div>

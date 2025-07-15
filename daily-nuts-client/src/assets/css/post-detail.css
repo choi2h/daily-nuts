@@ -1,5 +1,5 @@
 .post-detail {
-  max-width: 700px;
+  min-width: 800px;
   margin: 0 auto;
   padding: 32px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -37,7 +37,7 @@
 .author-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 5px;
 }
 
 .author-avatar {
@@ -59,8 +59,7 @@
 }
 
 .post-detail-content {
-    text-align: left;
-  margin-bottom: 32px;
+  text-align: left;
 }
 
 .post-detail-content p {
@@ -68,15 +67,7 @@
   color: #333333;
   line-height: 1.8;
   margin: 0;
-}
-
-.post-detail-actions {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 15px;
 }
 
 .like-button {

@@ -1,3 +1,7 @@
+.comment-container {
+  margin-top: 10px;
+}
+
 /* 댓글 섹션 */
 .comment-section {
   background-color: white;
@@ -14,34 +18,37 @@
 
 .comment-form {
   margin-bottom: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch; /* 자식 요소들을 같은 높이로 맞춤 */
+  gap: 10px;
+  width: 100%;
+  height: 100px; /* 전체 폼 높이 설정 */
 }
 
 .comment-input {
-  width: 100%;
+  flex: 1; /* 남은 공간을 모두 차지 */
   padding: 12px;
   border: 1px solid #E5E7EB;
   border-radius: 8px;
   font-size: 14px;
-  resize: vertical;
-  margin-bottom: 10px;
+  resize: none; /* 리사이즈 비활성화 */
   box-sizing: border-box;
   background-color: #fff;
-  color: #333
+  color: #333;
+  height: 100%; /* 부모 높이에 맞춤 */
 }
 
 .comment-submit {
-  background-color: #3B82F6;
+  background-color: #B57138;
   color: white;
-  padding: 8px 16px;
+  width: 100px;
   border: none;
   border-radius: 6px;
   font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  float: right;
-}
-
-.comment-submit:hover {
-  background-color: #2563EB;
+  height: 100%; /* 부모 높이에 맞춤 */
 }
 
 /* 댓글 스레드 */
@@ -67,8 +74,8 @@
 
 .reply-indicator {
   color: #6B7280;
-  margin-top: 8px;
-  margin-right: 4px;
+  margin-top: 2px;
+  transform: rotate(180deg);
 }
 
 .comment-avatar {
@@ -76,8 +83,8 @@
 }
 
 .comment-avatar img {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   object-fit: cover;
   background-color: #E5E7EB;
@@ -88,11 +95,17 @@
   position: relative;
 }
 
+/* 댓글 헤더 - 이름/날짜와 액션 버튼을 같은 선상에 배치 */
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .comment-header-info {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
 }
 
 .comment-author {
@@ -110,16 +123,15 @@
   color: #374151;
   font-size: 14px;
   line-height: 1.5;
-  margin-bottom: 8px;
   text-align: left;
+  padding: 2px 0;
 }
 
-/* 댓글 액션 버튼들 - 우측 정렬 */
+/* 댓글 액션 버튼들 - 헤더 오른쪽에 배치 */
 .comment-actions {
   display: flex;
   gap: 8px;
-  justify-content: flex-end;
-  margin-top: 8px;
+  flex-shrink: 0;
 }
 
 .reply-button {
@@ -128,9 +140,10 @@
   color: #6B7280;
   font-size: 12px;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 4px 0;
   border-radius: 4px;
   transition: background-color 0.2s ease;
+  text-align: left;
 }
 
 .reply-button:hover {

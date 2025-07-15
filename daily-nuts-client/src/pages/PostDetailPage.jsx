@@ -4,7 +4,8 @@ import '../assets/css/comment.css';
 import { useLocation } from 'react-router';
 import DefaultLayout from '../layers/DefaultLayout';
 import PostDetailItem from '../components/PostDetailItem';
-import { IoArrowUndoOutline } from 'react-icons/io5';
+import ReplyItem from '../components/ReplyItem';
+import CommentItem from '../components/CommentItem';
 
 const post = {
     category: "기타",
@@ -43,8 +44,6 @@ const testComments = [
 const PostDetail = () => {
     const {tab} = useLocation();
     const [comment, setComment] = useState('');
-    const [likes, setLikes] = useState(16);
-    const [isLiked, setIsLiked] = useState(false);
     const [comments, setComments] = useState(testComments);
 
     useEffect(() => {
@@ -64,16 +63,15 @@ const PostDetail = () => {
         }
     };
 
-    const handleLike = () => {
-        setIsLiked(!isLiked);
-        setLikes(isLiked ? likes - 1 : likes + 1);
-    };
+    const toggleLike = () => {
+        console.log(toggleLike);
+  };
     
 
     return (
         <DefaultLayout className="app">
             <div className="post-detail">
-                <PostDetailItem post={post} isLiked={isLiked} handleLike={handleLike}/>
+                <PostDetailItem post={post} toggleLike={toggleLike} />
                 <div className="comment-section">
                     <div className="comment-title">댓글</div>
                     <form onSubmit={handleCommentSubmit} className="comment-form">
@@ -88,50 +86,19 @@ const PostDetail = () => {
                         등록
                     </button>
                     </form>
+                    <div className="comment-container">
+                        {comments.map((comment) => (
+                        <div key={comment.id} className="comment-thread">
+                            {/* 메인 댓글 */}
+                            <CommentItem comment={comment}/>
 
-                {comments.map((comment) => (
-                <div key={comment.id} className="comment-thread">
-                    {/* 메인 댓글 */}
-                    <div className="comment-item">
-                    <div className="comment-avatar">
-                        <img src={comment.avatar} alt={comment.author} />
+                            {/* 답글들 */}
+                            {comment.replies && comment.replies.map((reply) => (
+                                <ReplyItem reply={reply}/>
+                            ))}
+                        </div>
+                        ))}
                     </div>
-                    <div className="comment-content">
-                        <div className="comment-header-info">
-                        <span className="comment-author">{comment.author}</span>
-                        <span className="comment-date">{comment.date}</span>
-                        </div>
-                        <div className="comment-text">{comment.content}</div>
-                        <div className="comment-actions">
-                        <button className="reply-button">답글</button>
-                        </div>
-                    </div>
-                    </div>
-
-                    {/* 답글들 */}
-                    {comment.replies && comment.replies.map((reply) => (
-                    <div key={reply.id} className="reply-item">
-                        <div className="reply-indicator">
-                        <IoArrowUndoOutline size={16} />
-                        </div>
-                        <div className="comment-avatar">
-                        <img src={reply.avatar} alt={reply.author} />
-                        </div>
-                        <div className="comment-content">
-                        <div className="comment-header-info">
-                            <span className="comment-author">{reply.author}</span>
-                            <span className="comment-date">{reply.date}</span>
-                        </div>
-                        <div className="comment-text">{reply.content}</div>
-                        <div className="comment-actions">
-                            <button className="action-button">수정</button>
-                            <button className="action-button">삭제</button>
-                        </div>
-                        </div>
-                    </div>
-                    ))}
-                </div>
-                ))}
                 </div>
             </div>
         </DefaultLayout>

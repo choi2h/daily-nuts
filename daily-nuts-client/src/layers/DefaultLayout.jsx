@@ -1,9 +1,9 @@
-import Navigationbar from "../components/Navigationbar";
+import Sidebar from "../components/Sidebar";
 import '../assets/css/default-layout.css';
 function DefaultLayout({children}) {
     return (
         <div>
-            <Navigationbar />
+            <Sidebar />
             <div className="main">
                 {children}
             </div>
