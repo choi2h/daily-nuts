@@ -3,23 +3,21 @@ package com.dailynuts.member.service.mapper;
 import com.dailynuts.member.dto.MemberRequestDto;
 import com.dailynuts.member.dto.MemberResponseDto;
 import com.dailynuts.member.entity.Member;
+import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class MemberMapper {
 
-    public MemberResponseDto getResponse(Member member) {
-        return MemberResponseDto.builder()
-                .loginId(member.getLoginId())
-                .name(member.getName())
-                .build();
-    }
+    private final PasswordEncoder passwordEncoder;
 
-    public Member getMember(MemberRequestDto req){
+    public Member convertMember(MemberRequestDto req){
         return Member.builder()
                 .loginId(req.getLoginId())
                 .name(req.getName())
-                .password(req.getPassword())
+                .password(passwordEncoder.encode(req.getPassword()))
                 .phoneNumber(req.getPhoneNumber())
                 .email(req.getEmail())
                 .birth(req.getBirth())
