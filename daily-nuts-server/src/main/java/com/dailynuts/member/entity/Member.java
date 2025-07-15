@@ -2,6 +2,7 @@ package com.dailynuts.member.entity;
 
 import com.dailynuts.member.entity.type.Role;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -51,4 +52,14 @@ public class Member {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Builder
+    public Member(String loginId, String name, String password, String phoneNumber, String email, LocalDate birth, Role role) {
+        this.loginId = loginId;
+        this.name = name;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.birth = birth;
+        this.role = role;
+    }
 }
