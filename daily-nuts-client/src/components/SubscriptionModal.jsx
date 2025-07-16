@@ -1,7 +1,69 @@
+import { useState } from "react";
 import "../assets/css/subscription-modal.css";
+import axios from "axios";
 
-const SubscriptionModal = ({ isOpen, onClose, expertName, price }) => {
+const SubscriptionModal = ({ isOpen, onClose, expertId, expertName, price}) => {
+  const [loading, setLoading] = useState(false);
+  
   if (!isOpen) return null;
+
+  const handleSubscribe = async () => {
+    try {
+      setLoading(true);
+
+      //결제 준비 요청
+      const prepareRes = await axios.post("/payment/prepare", { expertId },);
+
+      const {
+        merchantUid,
+        amount,
+        name,
+        buyerEmail,
+        buyerName,
+        buyerTel,
+        buyerAddr,
+        buyerPostcode,
+      } = prepareRes.data;
+
+      //포트원 결제창 호출
+      const { IMP } = window;
+      IMP.init("imp11205567");
+
+      IMP.request_pay(
+        {
+          pg: "html5_inicis",
+          pay_method: "card",
+          merchant_uid: merchantUid,
+          name: name,
+          amount: amount,
+          buyer_email: buyerEmail,
+          buyer_name: buyerName,
+          buyer_tel: buyerTel,
+          buyer_addr: buyerAddr,
+          buyer_postcode: buyerPostcode,
+        },
+        async function (rsp) {
+          if (rsp.success) {
+            //결제 성공 시 confirm 요청
+            await axios.post("/payment/confirm",{
+                impUid: rsp.imp_uid,
+                merchantUid: merchantUid,
+              });
+            alert("구독이 완료되었습니다!");
+            onClose();
+            window.location.reload();
+          } else {
+            alert("결제가 실패하거나 취소되었습니다.");
+          }
+        }
+      );
+    } catch (err) {
+      alert("결제 처리 중 오류가 발생했습니다.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -26,7 +88,9 @@ const SubscriptionModal = ({ isOpen, onClose, expertName, price }) => {
           </p>
         </div>
 
-        <button className="subscribe-btn">구독하기</button>
+        <button className="subscribe-btn" onClick={handleSubscribe} disabled={loading}>
+          {loading ? "처리중..." : "구독하기"}
+        </button>
       </div>
     </div>
   );
