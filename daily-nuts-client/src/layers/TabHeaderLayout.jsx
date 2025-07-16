@@ -1,7 +1,7 @@
 import SubTab from "../components/SubTab";
 import '../assets/css/default-layout.css'
 
-function TabHeaderLyaout({categories, selectedCategory, changeCategory, type, header, children}) {
+function TabHeaderLyaout({categories, selectedCategory, changeCategory, type, children}) {
     return (
         <div>
             {

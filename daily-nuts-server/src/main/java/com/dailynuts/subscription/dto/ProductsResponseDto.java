@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class ProductsResponse {
-    private List<ProductResponse> products;
+public class ProductsResponseDto {
+    private List<ProductResponseDto> products;
 
-    public ProductsResponse() {
+    public ProductsResponseDto() {
         products = new ArrayList<>();
     }
 
-    public void addProduct(ProductResponse product) {
+    public void addProduct(ProductResponseDto product) {
         products.add(product);
     }
 }

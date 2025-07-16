@@ -1,11 +1,11 @@
 package com.dailynuts.subscription.service;
 
-import com.dailynuts.subscription.dto.ProductRequest;
-import com.dailynuts.subscription.dto.ProductResponse;
-import com.dailynuts.subscription.dto.ProductsResponse;
+import com.dailynuts.subscription.dto.ProductRequestDto;
+import com.dailynuts.subscription.dto.ProductResponseDto;
+import com.dailynuts.subscription.dto.ProductsResponseDto;
 
 public interface ProductService {
-    Long saveProduct(ProductRequest productRequest);
-    ProductResponse getProductById(Long id);
-    ProductsResponse getAllProducts();
+    Long saveProduct(ProductRequestDto productRequestDto);
+    ProductResponseDto getProductById(Long id);
+    ProductsResponseDto getAllProducts();
 }

@@ -1,6 +1,7 @@
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { GoComment } from "react-icons/go";
 import defaultProfile from '../assets/images/default-profile.png';
+import '../assets/css/feed.css';
 
 function PostItem({post, toggleLike, onClick}) {
 
@@ -9,7 +10,7 @@ function PostItem({post, toggleLike, onClick}) {
           <div className="post-header">
             <div className="post-avatar">
                 <div className="profile-avatar">
-                    <img class="profile-image" src={defaultProfile} alt="Profile" />
+                    <img className="profile-image" src={defaultProfile} alt="Profile" />
                 </div>
             </div>
               <div className="author-info">

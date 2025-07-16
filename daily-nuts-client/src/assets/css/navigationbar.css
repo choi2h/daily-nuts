@@ -1,27 +1,33 @@
-/* 왼쪽 사이드바 */
+/* ===== 공통 사이드바 레이아웃 ===== */
 .sidebar {
   width: 250px;
-  background: #ffffff;
+  background: #fff;
   border-right: 1px solid #e5e5e5;
   padding: 20px;
   position: fixed;
   height: 100vh;
-  display: flex;               /* ✅ 추가 */
-  flex-direction: column;      /* ✅ 세로 정렬 */
-  justify-content: space-between; /* ✅ 위/중간/아래 분리 */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 상단, 중간, 하단 구분 */
 }
 
+/* ===== 로고 ===== */
 .logo {
   padding: 0 25px;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo-item {
-  width: 100%;
+  text-align: center;
 }
 
+.logo-item {
+  width: 100%;
+  max-width: 150px;
+}
+
+/* ===== 네비게이션 메뉴 ===== */
 .nav-menu {
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-item {
@@ -34,13 +40,8 @@
   color: #666;
   text-decoration: none;
   border-radius: 8px;
-  transition: all 0.2s ease;
   font-size: 15px;
-}
-
-.middle {
-  display: flex;
-  flex-direction: column;
+  transition: all 0.2s ease;
 }
 
 .nav-item a:hover {
@@ -50,50 +51,55 @@
 
 .nav-item.active a {
   background: #B57138;
-  color: white;
+  color: #fff;
 }
 
-.profile-section {
-  margin-top: 40px;
-  margin-bottom: 20px;
+/* ===== 프로필 섹션 ===== */
+.profile-info-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 60px 0;
+  background-color: #eeebeb;
   padding: 20px;
-  background: #fafafa;
-  border-radius: 12px;
-  border: 1px solid #e1e1e1;
+  gap: 20px;
 }
 
 .profile-avatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  overflow: hidden; /* ✅ 이미지 넘치는 것 자르기 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: bold;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .profile-image {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
   object-fit: cover;
 }
 
-.profile-info h3 {
+.profile-info-names {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-info-names h3 {
   font-size: 16px;
-  margin-bottom: 4px;
+  font-weight: bold;
+  margin: 0;
   color: #333;
 }
 
-.profile-info p {
+.profile-info-names p {
   font-size: 14px;
   color: #666;
+  margin: 0;
 }
 
+/* ===== 사이드바 푸터 ===== */
 .sidebar-footer {
-  margin-top: 40px;
+  margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #e5e5e5;
 }
@@ -106,6 +112,8 @@
 
 .sidebar-footer ul {
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .sidebar-footer li {
