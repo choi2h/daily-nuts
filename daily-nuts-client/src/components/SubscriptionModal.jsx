@@ -7,56 +7,44 @@ const SubscriptionModal = ({ isOpen, onClose, expertId, expertName, price}) => {
   
   if (!isOpen) return null;
 
+  //결제 요청 객체 생성
+  const createPayRequest = (data) => ({
+    pg: "html5_inicis",
+    pay_method: "card",
+    merchant_uid: data.merchantUid,
+    name: data.name,
+    amount: data.amount,
+    buyer_email: data.buyerEmail,
+    buyer_name: data.buyerName,
+    buyer_tel: data.buyerTel,
+    buyer_addr: data.buyerAddr,
+    buyer_postcode: data.buyerPostcode,
+  });
+
   const handleSubscribe = async () => {
     try {
       setLoading(true);
 
-      //결제 준비 요청
-      const prepareRes = await axios.post("/payment/prepare", { expertId },);
+      //결제 요청 준비
+      const prepareRes = await axios.post("/payment/prepare", { expertId });
+      const { data } = prepareRes;
 
-      const {
-        merchantUid,
-        amount,
-        name,
-        buyerEmail,
-        buyerName,
-        buyerTel,
-        buyerAddr,
-        buyerPostcode,
-      } = prepareRes.data;
-
-      //포트원 결제창 호출
       const { IMP } = window;
       IMP.init("imp11205567");
 
-      IMP.request_pay(
-        {
-          pg: "html5_inicis",
-          pay_method: "card",
-          merchant_uid: merchantUid,
-          name: name,
-          amount: amount,
-          buyer_email: buyerEmail,
-          buyer_name: buyerName,
-          buyer_tel: buyerTel,
-          buyer_addr: buyerAddr,
-          buyer_postcode: buyerPostcode,
-        },
-        async function (rsp) {
-          if (rsp.success) {
-            //결제 성공 시 confirm 요청
-            await axios.post("/payment/confirm",{
-                impUid: rsp.imp_uid,
-                merchantUid: merchantUid,
-              });
-            alert("구독이 완료되었습니다!");
-            onClose();
-            window.location.reload();
-          } else {
-            alert("결제가 실패하거나 취소되었습니다.");
-          }
+      IMP.request_pay(createPayRequest(data), async function (rsp) {
+        if (rsp.success) {
+          await axios.post("/payment/confirm", {
+            impUid: rsp.imp_uid,
+            merchantUid: data.merchantUid,
+          });
+          alert("구독이 완료되었습니다!");
+          onClose();
+          window.location.reload();
+        } else {
+          alert("결제가 실패하거나 취소되었습니다.");
         }
-      );
+      });
     } catch (err) {
       alert("결제 처리 중 오류가 발생했습니다.");
       console.error(err);
