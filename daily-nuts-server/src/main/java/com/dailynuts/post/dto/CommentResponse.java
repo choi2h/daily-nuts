@@ -19,5 +19,7 @@ public class CommentResponse {
     private String writer;
     private String contents;
     private LocalDateTime createdAt;
-    private List<CommentResponse> replies;
+
+    @Builder.Default
+    private List<CommentResponse> replies = new ArrayList<>();
 }

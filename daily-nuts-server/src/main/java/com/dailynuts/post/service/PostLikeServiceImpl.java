@@ -2,6 +2,8 @@ package com.dailynuts.post.service;
 
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
+import com.dailynuts.notification.entity.NotificationType;
+import com.dailynuts.notification.service.NotificationInfoService;
 import com.dailynuts.post.dto.PostLikeResponseDto;
 import com.dailynuts.post.entity.PostLike;
 import com.dailynuts.post.repository.PostLikeRepository;
@@ -21,6 +23,7 @@ public class PostLikeServiceImpl implements PostLikeService {
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final NotificationInfoService notificationInfoService;
 
     @Override
     @Transactional
@@ -51,6 +54,8 @@ public class PostLikeServiceImpl implements PostLikeService {
         // 좋아요 수 증가
         postRepository.increaseLikeCount(postId);
         int likeCount = postRepository.findLikeCountById(postId);
+
+        notificationInfoService.createNotification(NotificationType.LIKES, memberId, writerMemberId, postId);
 
         return getResponseDto(postId, likeCount, true);
     }
