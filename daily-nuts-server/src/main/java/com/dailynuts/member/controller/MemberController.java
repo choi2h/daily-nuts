@@ -30,10 +30,12 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<Void> loginMember(@RequestBody @Valid MemberLoginRequestDto req){
 
-        ResponseCookie cookie = memberService.loginMember(req);
+        ResponseCookie[] cookies = memberService.loginMember(req);
 
         return ResponseEntity.ok()
-                             .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                             .header(HttpHeaders.SET_COOKIE,
+                                     cookies[0].toString(),
+                                     cookies[1].toString())
                              .build();
     }
 

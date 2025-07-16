@@ -21,11 +21,17 @@ public class JwtUtils {
     @Value("${jwt.secret}")
     private String secretKeyString;
 
-    @Value("${jwt.expiration.access-token-seconds}")
+    @Value("${jwt.expiration.access-token}")
     private long accessTokenSeconds;
 
     @Value("${cookie.max-age.access}")
     private long accessCookieSeconds;
+
+    @Value("${jwt.expiration.refresh-token}")
+    private long refreshTokenSeconds;
+
+    @Value("${cookie.max-age.refresh}")
+    private long refreshCookieSeconds;
 
     private SecretKey secretKey;
 
@@ -49,12 +55,35 @@ public class JwtUtils {
     // 쿠키 생성 메서드
     public ResponseCookie provideCookie(String token) {
 
-        return ResponseCookie.from("token", token)
+        return ResponseCookie.from("accessToken", token)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
                 .maxAge(accessCookieSeconds)
-                .sameSite("Strict")
+                .sameSite("None")
+                .build();
+    }
+
+    // 리프레시 토큰 생성 메서드
+    public String provideRefreshToken(MemberLoginRequestDto req) {
+
+        return Jwts.builder()
+                .subject(req.getLoginId())
+                .issuedAt(Date.from(Instant.now()))
+                .expiration(Date.from(Instant.now().plusSeconds(refreshTokenSeconds)))
+                .signWith(secretKey)
+                .compact();
+    }
+
+    // 리프레시 쿠키 생성 메서드
+    public ResponseCookie provideRefreshCookie(String token) {
+
+        return ResponseCookie.from("refreshToken", token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(refreshCookieSeconds)
+                .sameSite("None")
                 .build();
     }
 
