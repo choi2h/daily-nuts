@@ -8,6 +8,5 @@ import java.util.Optional;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
     List<Subscription> findAllBySubscriberIdOrderByStartedAtDesc(Long subscriberId);
-
     Optional<Subscription> findByExpertIdAndSubscriberId(Long expertId, Long subscriberId);
 }
