@@ -10,9 +10,10 @@ import java.time.LocalDateTime;
 public class PostResponseDto {
     private Long id;
     private String title;
-    private String content;
+    private String contents;
     private String writer;
     private String categoryName;
+    private Long categoryId;
     private int likeCount;
     private boolean isPinned;
     private LocalDateTime createdAt;

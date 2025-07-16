@@ -62,4 +62,5 @@ public class Member {
         this.birth = birth;
         this.role = role;
     }
+
 }

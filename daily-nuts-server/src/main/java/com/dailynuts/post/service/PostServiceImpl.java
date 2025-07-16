@@ -66,7 +66,7 @@ public class PostServiceImpl implements PostService{
         //테스트용 카테고리
         Category category = categoryRepository.findById(request.getCategoryId()).get();
 
-        post.update(request.getTitle(), request.getContent(), category);
+        post.update(request.getTitle(), request.getContents(), category);
         return postMapper.getPostResponseDto(post);
     }
 
