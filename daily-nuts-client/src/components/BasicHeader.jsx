@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { IoArrowBack } from 'react-icons/io5';
 import { IoSearchOutline } from 'react-icons/io5';
-import './TabBarWithSearch.css';
+import '../assets/css/default-layout.css'
 
-function BasicHeader() {
-  const [searchQuery, setSearchQuery] = useState('');
+function BasicHeader () {
+      const [searchQuery, setSearchQuery] = useState('');
 
-  const handleBackClick = () => {
-    console.log('뒤로가기 클릭');
-  };
+      const handleBackClick = () => {
+        console.log('뒤로가기 클릭');
+      };
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
+      const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+      };
 
-  const handleSearchSubmit = (searchTerm) => {
-    console.log('검색어:', searchTerm);
-  };
+      const handleSearchSubmit = (searchTerm) => {
+        console.log('검색어:', searchTerm);
+      };
 
-  return (
-    <div className="tab-bar-container">
-      <div className="tab-bar-header">
+
+    return (
+      <div className="main-header">
         {/* 뒤로가기 버튼 */}
         <button
           onClick={handleBackClick}
@@ -51,8 +51,7 @@ function BasicHeader() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    )
 }
 
 export default BasicHeader;

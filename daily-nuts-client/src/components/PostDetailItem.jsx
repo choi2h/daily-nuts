@@ -14,7 +14,7 @@ function PostDetailItem({post, toggleLike}) {
                     <div className="author-info">
                      <div className="post-avatar">
                         <div className="profile-avatar">
-                            <img class="profile-image" src={defaultProfile} alt="Profile" />
+                            <img className="profile-image" src={defaultProfile} alt="Profile" />
                         </div>
                     </div>
                     <span className="author-name">{post.writer}</span>
