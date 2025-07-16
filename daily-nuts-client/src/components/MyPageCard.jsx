@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import '../assets/css/mypage.css';
+import '../assets/css/MyPage.css';
+import defaultProfile from '../assets/images/default-profile.png';
+
 
 function MyPageCard() {
     const [isEditMode, setIsEditMode] = useState(false);
@@ -45,34 +47,32 @@ function MyPageCard() {
                 <h2 className="page-title">회원정보 수정</h2>
                 <div className="mypage-header">
                     <div className="mypage-avatar-image">
-                        👤
+                        <img className="profile-image" src={defaultProfile} alt="프로필 사진" />
                     </div>
-                    <input
-                        type="text"
-                        className="mypage-username-input"
-                        value={editData.username}
-                        onChange={(e) => handleInputChange('username', e.target.value)}
-                        placeholder="이름을 입력하세요"
-                    />
+                    <h2 className="mypage-username">{profileData.username}</h2>
                 </div>
                 
                 <div className="mypage-content">
                     <div className="mypage-row">
                         <span className="mypage-label">아이디</span>
-                        <input
-                            type="text"
-                            className="mypage-input"
-                            value={editData.userId}
-                            onChange={(e) => handleInputChange('userId', e.target.value)}
-                            placeholder="아이디를 입력하세요"
-                        />
+                        <span className="mypage-value">{profileData.userId}</span>
                     </div>
                     
                     <div className="mypage-row">
                         <span className="mypage-label">비밀번호</span>
                         <input
                             type="password"
-                            className="profile-input"
+                            className="mypage-input"
+                            placeholder="새 비밀번호를 입력하세요"
+                            onChange={(e) => handleInputChange('password', e.target.value)}
+                        />
+                    </div>
+
+                     <div className="mypage-row">
+                        <span className="mypage-label">비밀번호 확인</span>
+                        <input
+                            type="password"
+                            className="mypage-input"
                             placeholder="새 비밀번호를 입력하세요"
                             onChange={(e) => handleInputChange('password', e.target.value)}
                         />
@@ -80,24 +80,12 @@ function MyPageCard() {
                     
                     <div className="mypage-row">
                         <span className="mypage-label">성별</span>
-                        <select
-                            className="mypage-select"
-                            value={editData.gender}
-                            onChange={(e) => handleInputChange('gender', e.target.value)}
-                        >
-                            <option value="남성">남성</option>
-                            <option value="여성">여성</option>
-                        </select>
+                        <span className="mypage-value">{profileData.gender}</span>
                     </div>
                     
                     <div className="mypage-row">
                         <span className="mypage-label">생년월일</span>
-                        <input
-                            type="date"
-                            className="mypage-input"
-                            value={editData.birthDate.replace(/\./g, '-')}
-                            onChange={(e) => handleInputChange('birthDate', e.target.value.replace(/-/g, '.'))}
-                        />
+                        <span className="mypage-value">{profileData.birthDate}</span>
                     </div>
                     
                     <div className="mypage-row">
@@ -141,7 +129,7 @@ function MyPageCard() {
             <h2 className="page-title">회원정보</h2>
             <div className="mypage-header">
                 <div className="mypage-avatar-image">
-                    👤
+                    <img className="profile-image" src={defaultProfile} alt="프로필 사진" />
                 </div>
                 <h2 className="mypage-username">{profileData.username}</h2>
             </div>
