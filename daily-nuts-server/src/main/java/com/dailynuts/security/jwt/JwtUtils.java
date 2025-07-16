@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
@@ -14,9 +15,9 @@ import java.time.Instant;
 import java.util.Date;
 
 @Component
+@Slf4j
 public class JwtUtils {
 
-    // 환경 변수에서 secretKey 가져오기
     @Value("${jwt.secret}")
     private String secretKeyString;
 
@@ -66,16 +67,16 @@ public class JwtUtils {
                     .parseSignedClaims(token);
             return true;
 
-        } catch (SignatureException e) { // JWT 서명 오류 (변조)
-            System.err.println("Invalid JWT signature: " + e.getMessage());
-        } catch (MalformedJwtException e) { // JWT 구조 오류 (잘못된 형식)
-            System.err.println("Invalid JWT token: " + e.getMessage());
+        } catch (SignatureException e) {
+            log.error("JWT 서명 오류: {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.error("JWT 구조 오류: {}", e.getMessage());
         } catch (ExpiredJwtException e) { // 토큰 만료
-            System.err.println("JWT token is expired: " + e.getMessage());
-        } catch (UnsupportedJwtException e) { // 지원되지 않는 JWT 토큰
-            System.err.println("JWT token is unsupported: " + e.getMessage());
-        } catch (IllegalArgumentException e) { // JWT 클레임 문자열 비어있음
-            System.err.println("JWT claims string is empty: " + e.getMessage());
+            log.error("토큰 만료: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.error("지원되지 않는 JWT 토큰: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error("JWT 클레임 문자열 비어있음: {}", e.getMessage());
         }
         return false;
     }

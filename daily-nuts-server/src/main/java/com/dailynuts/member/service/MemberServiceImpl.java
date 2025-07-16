@@ -26,8 +26,6 @@ public class MemberServiceImpl implements MemberService {
     public Long createMember(MemberSignupRequestDto req) {
         Member member = memberRepository.save(createHashedMember(req));
 
-        System.out.println(member.getLoginId() + " = " + member.getPassword());
-
         // 회원가입 성공시 어떤 데이터 보낼건지 정해야함 (*수정예정*)
         return member.getId();
     }
@@ -58,16 +56,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private Member createHashedMember(MemberSignupRequestDto req) {
-        // 회원가입용 엔티티 생성
-        Member member = memberMapper.toSignupEntity(req);
 
-        // 회원가입용 엔티티에서 비밀번호 꺼내고 해시화
-        String hashPassword = passwordEncoder.encode(member.getPassword());
+        // 비밀번호 해시화
+        String hashPassword = passwordEncoder.encode(req.getPassword());
 
-        // 회원가입용 엔티티에 해시화된 비밀번호 주입
-        member = memberMapper.toHashEntity(member, hashPassword);
-
-        return member;
+        // 해시화 Entity 생성
+        return memberMapper.toHashEntity(req, hashPassword);
     }
 
 }
