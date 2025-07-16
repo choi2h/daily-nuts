@@ -42,11 +42,11 @@ function Sidebar() {
                     <img className="logo-item" src={logo} alt="logo"/>
                 </div>
                 
-                <div className="profile-section">
+                <div className="profile-info-section">
                     <div className="profile-avatar">
                         <img className="profile-image" src={defaultProfile} alt="Profile" />
                     </div>
-                    <div className="profile-info">
+                    <div className="profile-info-names">
                         <h3>김이름</h3>
                         <p>@loginId</p>
                     </div>
@@ -54,7 +54,7 @@ function Sidebar() {
                 <ul className="nav-menu">
                 {navs.map((nav) => (
                     <li 
-                    key={nav.name} 
+                    key={nav.api} 
                     className={`nav-item  ${nav.api === location.pathname ? 'active' : ''}`}
                     >
                     <a href={nav.api} onClick={(e) => {

@@ -31,7 +31,7 @@ const PaymentHistory = () => {
                       src={defaultProfile} 
                       className="profile-image"
                     />
-                    <div className="online-indicator"></div>
+                    {/* <div className="online-indicator"></div> */}
                   </div>
                   <div className="approval-info">
                     <h4 className="author-name">{item.name}</h4>

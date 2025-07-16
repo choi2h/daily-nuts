@@ -1,15 +1,16 @@
 import { useState } from "react";
 import DefaultLayout from "../layers/DefaultLayout";
-import ProfileCard from "../components/ProfileCard";
+
 import PaymentHistory from "../components/PaymentHistory";
 import TabHeaderLyaout from "../layers/TabHeaderLayout";
 import ExpertInfo from "../components/ExpertInfo";
+import MyPageCard from "../components/MyPageCard";
 
 const categories = [
     {
         name: "개인정보",
         api: "/me",
-        components: <ProfileCard/>
+        components: <MyPageCard/>
     },
     {
         name: "전문가 등록 정보",
