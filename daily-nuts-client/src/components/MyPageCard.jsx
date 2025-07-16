@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import '../assets/css/profile-card.css';
+import '../assets/css/mypage.css';
 
-function ProfileCard() {
+function MyPageCard() {
     const [isEditMode, setIsEditMode] = useState(false);
     const [profileData, setProfileData] = useState({
         username: '김00',
@@ -41,35 +41,35 @@ function ProfileCard() {
     // 수정 화면
     if (isEditMode) {
         return (
-            <div className="profile-card">
+            <div className="mypage-card">
                 <h2 className="page-title">회원정보 수정</h2>
-                <div className="profile-header">
-                    <div className="profile-avatar-image">
+                <div className="mypage-header">
+                    <div className="mypage-avatar-image">
                         👤
                     </div>
                     <input
                         type="text"
-                        className="profile-username-input"
+                        className="mypage-username-input"
                         value={editData.username}
                         onChange={(e) => handleInputChange('username', e.target.value)}
                         placeholder="이름을 입력하세요"
                     />
                 </div>
                 
-                <div className="profile-content">
-                    <div className="profile-row">
-                        <span className="profile-label">아이디</span>
+                <div className="mypage-content">
+                    <div className="mypage-row">
+                        <span className="mypage-label">아이디</span>
                         <input
                             type="text"
-                            className="profile-input"
+                            className="mypage-input"
                             value={editData.userId}
                             onChange={(e) => handleInputChange('userId', e.target.value)}
                             placeholder="아이디를 입력하세요"
                         />
                     </div>
                     
-                    <div className="profile-row">
-                        <span className="profile-label">비밀번호</span>
+                    <div className="mypage-row">
+                        <span className="mypage-label">비밀번호</span>
                         <input
                             type="password"
                             className="profile-input"
@@ -78,10 +78,10 @@ function ProfileCard() {
                         />
                     </div>
                     
-                    <div className="profile-row">
-                        <span className="profile-label">성별</span>
+                    <div className="mypage-row">
+                        <span className="mypage-label">성별</span>
                         <select
-                            className="profile-select"
+                            className="mypage-select"
                             value={editData.gender}
                             onChange={(e) => handleInputChange('gender', e.target.value)}
                         >
@@ -90,32 +90,32 @@ function ProfileCard() {
                         </select>
                     </div>
                     
-                    <div className="profile-row">
-                        <span className="profile-label">생년월일</span>
+                    <div className="mypage-row">
+                        <span className="mypage-label">생년월일</span>
                         <input
                             type="date"
-                            className="profile-input"
+                            className="mypage-input"
                             value={editData.birthDate.replace(/\./g, '-')}
                             onChange={(e) => handleInputChange('birthDate', e.target.value.replace(/-/g, '.'))}
                         />
                     </div>
                     
-                    <div className="profile-row">
-                        <span className="profile-label">전화번호</span>
+                    <div className="mypage-row">
+                        <span className="mypage-label">전화번호</span>
                         <input
                             type="tel"
-                            className="profile-input"
+                            className="mypage-input"
                             value={editData.phone}
                             onChange={(e) => handleInputChange('phone', e.target.value)}
                             placeholder="전화번호를 입력하세요"
                         />
                     </div>
                     
-                    <div className="profile-row">
-                        <span className="profile-label">이메일</span>
+                    <div className="mypage-row">
+                        <span className="mypage-label">이메일</span>
                         <input
                             type="email"
-                            className="profile-input"
+                            className="mypage-input"
                             value={editData.email}
                             onChange={(e) => handleInputChange('email', e.target.value)}
                             placeholder="이메일을 입력하세요"
@@ -137,44 +137,44 @@ function ProfileCard() {
 
     // 조회 화면
     return (
-        <div className="profile-card">
+        <div className="mypage-card">
             <h2 className="page-title">회원정보</h2>
-            <div className="profile-header">
-                <div className="profile-avatar-image">
+            <div className="mypage-header">
+                <div className="mypage-avatar-image">
                     👤
                 </div>
-                <h2 className="profile-username">{profileData.username}</h2>
+                <h2 className="mypage-username">{profileData.username}</h2>
             </div>
             
-            <div className="profile-content">
-                <div className="profile-row">
-                    <span className="profile-label">아이디</span>
-                    <span className="profile-value">{profileData.userId}</span>
+            <div className="mypage-content">
+                <div className="mypage-row">
+                    <span className="mypage-label">아이디</span>
+                    <span className="mypage-value">{profileData.userId}</span>
                 </div>
                 
-                <div className="profile-row">
-                    <span className="profile-label">비밀번호</span>
-                    <span className="profile-value">········</span>
+                <div className="mypage-row">
+                    <span className="mypage-label">비밀번호</span>
+                    <span className="mypage-value">········</span>
                 </div>
                 
-                <div className="profile-row">
-                    <span className="profile-label">성별</span>
-                    <span className="profile-value">{profileData.gender}</span>
+                <div className="mypage-row">
+                    <span className="mypage-label">성별</span>
+                    <span className="mypage-value">{profileData.gender}</span>
                 </div>
                 
-                <div className="profile-row">
-                    <span className="profile-label">생년월일</span>
-                    <span className="profile-value">{profileData.birthDate}</span>
+                <div className="mypage-row">
+                    <span className="mypage-label">생년월일</span>
+                    <span className="mypage-value">{profileData.birthDate}</span>
                 </div>
                 
-                <div className="profile-row">
-                    <span className="profile-label">전화번호</span>
-                    <span className="profile-value">{profileData.phone}</span>
+                <div className="mypage-row">
+                    <span className="mypage-label">전화번호</span>
+                    <span className="mypage-value">{profileData.phone}</span>
                 </div>
                 
-                <div className="profile-row">
-                    <span className="profile-label">이메일</span>
-                    <span className="profile-value">{profileData.email}</span>
+                <div className="mypage-row">
+                    <span className="mypage-label">이메일</span>
+                    <span className="mypage-value">{profileData.email}</span>
                 </div>
             </div>
             
@@ -189,4 +189,4 @@ function ProfileCard() {
     );
 }
 
-export default ProfileCard;
+export default MyPageCard;
