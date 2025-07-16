@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@AllArgsConstructor
 public enum CustomErrorCode {
     // 회원 M
     MEMBER_NOT_EXIST(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 회원입니다."),
@@ -28,10 +29,4 @@ public enum CustomErrorCode {
     private final HttpStatus status;
     private final String errorCode;
     private final String message;
-
-    CustomErrorCode(HttpStatus status, String errorCode, String message) {
-        this.status = status;
-        this.errorCode = errorCode;
-        this.message = message;
-    }
 }
