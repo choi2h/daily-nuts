@@ -1,5 +1,5 @@
 import Sidebar from "../components/Sidebar";
-import '../assets/css/default-layout.css';
+import '../assets/css/Default.css';
 function DefaultLayout({children}) {
     return (
         <div>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import '../assets/css/expert-info.css';
+import '../assets/css/ExpertInfo.css';
 
 const info = {
   description : `성격심리학 박사 | 발달심리 전문가 | 종단연구 분석가

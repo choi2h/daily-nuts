@@ -1,4 +1,4 @@
-import '../assets/css/join.css';
+import '../assets/css/Join.css';
 import { useState } from 'react';
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaPhone } from 'react-icons/fa';
 

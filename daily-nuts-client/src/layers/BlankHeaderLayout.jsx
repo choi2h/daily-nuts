@@ -1,11 +1,11 @@
-import '../assets/css/default-layout.css'
+import '../assets/css/Default.css'
 import BasicHeader from '../components/BasicHeader';
 
-function BlankHeaderLayout({type, children}) {
+function BlankHeaderLayout({type, children, isUseSearch, title}) {
     return (
         <div>
             {
-                <BasicHeader/>
+                <BasicHeader isUseSearc={isUseSearch} title={title}/>
             }
 
             {/* Posts Feed */}

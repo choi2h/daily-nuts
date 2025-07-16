@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
-import '../assets/css/default-layout.css'
+import '../assets/css/Default.css'
 
 
 function SubTab ({categories, selectedCategory, changeCategory}) {

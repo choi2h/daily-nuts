@@ -1,7 +1,7 @@
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { GoComment } from "react-icons/go";
 import defaultProfile from '../assets/images/default-profile.png';
-import '../assets/css/feed.css';
+import '../assets/css/Feed.css';
 
 function PostItem({post, toggleLike, onClick}) {
 

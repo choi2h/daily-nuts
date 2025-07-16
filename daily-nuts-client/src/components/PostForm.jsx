@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IoChevronDown } from 'react-icons/io5';
-import '../assets/css/post-write.css';
+import '../assets/css/PostWrite.css';
 
 const PostForm = () => {
   const [category, setCategory] = useState('카테고리');

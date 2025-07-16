@@ -63,6 +63,11 @@ body {
   border-bottom: 2px solid #242424;
 }
 
+.back-button {
+  background-color: #fff;
+  color: #333;
+}
+
 .spacer {
   flex: 1;
   min-width: 100px;

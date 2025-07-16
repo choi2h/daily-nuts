@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import '../assets/css/post-detail.css';
-import '../assets/css/comment.css';
+import '../assets/css/PostDetail.css';
+import '../assets/css/Comment.css';
 import { useLocation } from 'react-router';
 import DefaultLayout from '../layers/DefaultLayout';
 import PostDetailItem from '../components/PostDetailItem';
@@ -48,6 +48,7 @@ const PostDetail = () => {
     const [comments, setComments] = useState(testComments);
 
     useEffect(() => {
+        
         console.log(tab);
     })
 

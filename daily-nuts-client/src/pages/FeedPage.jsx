@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import '../assets/css/feed.css';
+import '../assets/css/Feed.css';
 import PostItem from '../components/PostItem';
 import DefaultLayout from '../layers/DefaultLayout';
 import TabHeaderLyaout from '../layers/TabHeaderLayout';

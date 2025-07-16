@@ -1,4 +1,4 @@
-import '../assets/css/payment-history.css';
+import '../assets/css/PaymentHistory.css';
 import defaultProfile from '../assets/images/default-profile.png';
 
 const PaymentHistory = () => {

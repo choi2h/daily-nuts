@@ -1,4 +1,4 @@
-import "../assets/css/subscription-modal.css";
+import "../assets/css/SubscribeModal.css";
 
 const SubscriptionModal = ({ isOpen, onClose, expertName, price }) => {
   if (!isOpen) return null;

@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router';
-import '../assets/css/navigationbar.css';
+import '../assets/css/Sidebar.css';
 import logo from '../assets/images/daily-nuts-logo.png';
 import defaultProfile from '../assets/images/default-profile.png';
 
@@ -12,10 +12,10 @@ const navs = [
         name: "좋아요",
         api: "/posts/likes"
     },
-    // {
-    //     name: "구독목록",
-    //     api: "/subscribe"
-    // },
+    {
+        name: "구독목록",
+        api: "/subscribe"
+    },
     {
         name: "마이페이지",
         api: "/mypage"
