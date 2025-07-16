@@ -2,10 +2,12 @@ package com.dailynuts.subscription.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public class PaymentRequestDto {
 
     @Getter
+    @Setter
     @NoArgsConstructor
     public static class PrepareRequest {
         private Long expertId;

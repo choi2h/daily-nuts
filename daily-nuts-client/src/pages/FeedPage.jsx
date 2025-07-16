@@ -4,6 +4,7 @@ import PostItem from '../components/PostItem';
 import DefaultLayout from '../layers/DefaultLayout';
 import TabHeaderLyaout from '../layers/TabHeaderLayout';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
 
 const defaultPosts = [
   {
@@ -190,6 +191,19 @@ const FeedPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    axios.get('/api/posts')
+    .then(res => {
+      const posts = res.data || [];
+      const sortedPosts = posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setPosts(sortedPosts);
+    })
+    .catch(err => {
+      console.error('글 목록 못 불러옴:', err);
+      setPosts([]);
+    });
+  }, []);
+
   const changeCategory = (category) => {
     console.log(category.target);
     setSelectedCategory(category);
@@ -252,12 +266,12 @@ const FeedPage = () => {
   return (
     <>
       <DefaultLayout>
-        <TabHeaderLyaout 
-          categories={categories} 
-          selectedCategory={selectedCategory} 
-          changeCategory={changeCategory}
-          type="feed"
-        >
+          <TabHeaderLyaout 
+            categories={categories} 
+            selectedCategory={selectedCategory} 
+            changeCategory={changeCategory}
+            type="feed"
+          >
             <div className="main-content">
               <div className="posts-container">
                 {posts.map((post) => 

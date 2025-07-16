@@ -1,24 +1,12 @@
 import { useEffect, useState } from 'react';
 import '../assets/css/PostDetail.css';
-import '../assets/css/Comment.css';
-import { useLocation } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import DefaultLayout from '../layers/DefaultLayout';
 import PostDetailItem from '../components/PostDetailItem';
 import ReplyItem from '../components/ReplyItem';
 import CommentItem from '../components/CommentItem';
 import BlankHeaderLayout from '../layers/BlankHeaderLayout';
-
-const post = {
-    category: "기타",
-    title : "성격은 변하는가?",
-    writer: "김00",
-    createdDate: "2025.07.08",
-    contents: `성격은 변하는가? 보통 동양사회에서 성격은 변할 수 있는 것으로 간주되고 반면 지능은 바꿀 수 없는 것으로 간주된다. 
-            이러한 인식은 지능의 유전률이 성격의 유전률보다 낮다는 사실에 비춰볼 때 아이러니하다. 유전률을 제외하고 보더라도 
-                    성격은 매우 안정적으로 유지된다. 845년간 진행된 네덜란드의 연구에서도 성격이 안정적으로 유지되어 발견되었으며 
-                    잠노년층을 대상으로 6년간 진행한 종단 연구에서도 성격의 상대적 측면이 변하지 않음이 발견되었다. 인간의 성격은 
-                    아동기에는 변화가 크나 청소년기부터 변화의 폭이 작아져 점차 고정된다`,
-}
+import axios from 'axios';
 
 const testComments = [
     {
@@ -43,14 +31,23 @@ const testComments = [
 ]
 
 const PostDetail = () => {
+    const {id} = useParams();
+    const [post, setPost] = useState(null);
     const {tab} = useLocation();
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState(testComments);
 
     useEffect(() => {
-        
-        console.log(tab);
-    })
+        console.log("요청 ID:", id);
+        axios.get(`/api/post/${id}`)
+        .then((res) => {
+            console.log("응답 데이터:", res.data);
+            setPost(res.data);
+        })
+        .catch((err) => {
+            console.error('게시글 불러오기 실패:', err);
+        });
+    }, [id]);
 
     const handleCommentChange = (e) => {
         setComment(e.target.value);

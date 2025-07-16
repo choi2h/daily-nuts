@@ -1,21 +1,41 @@
 import '../assets/css/PaymentHistory.css';
+import { useEffect, useState } from 'react';
 import defaultProfile from '../assets/images/default-profile.png';
+import axios from 'axios';
+import SubscriptionModal from './SubscriptionModal';
 
 const PaymentHistory = () => {
-  const approvalItems = [
-    {
-      id: 1,
-      name: '김 ○○ 작가님',
-      nextPayment: '2025년 8월 20일',
-      profileImage: '/api/placeholder/60/60'
-    },
-    {
-      id: 2,
-      name: '이 ○○ 작가님',
-      nextPayment: '2025년 9월 26일',
-      profileImage: '/api/placeholder/60/60'
-    }
-  ];
+  const [approvalItems, setApprovalItems] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedExpert, setSelectedExpert] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get('/payment/status')
+      .then((res) => {
+        const items = res.data.payments.map((item, idx) => ({
+          id: item.paymentId ?? idx,
+          expertName: item.expertName,
+          name: `${item.expertName} 작가님`,
+          price: item.amount,
+          nextPayment: new Date(item.expireAt).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
+          profileImage: defaultProfile
+        }));
+        setApprovalItems(items);
+      })
+      .catch((err) => {
+        console.error('결제내역 불러오기 실패', err);
+      });
+  }, []);
+
+  const handleOpenModal = (expert) => {
+    setSelectedExpert(expert);
+    setModalOpen(true);
+  };
 
   return (
     <div className="profile-card">
@@ -38,12 +58,22 @@ const PaymentHistory = () => {
                     <p className="next-payment">다음 결제일은 {item.nextPayment}입니다.</p>
                   </div>
                 </div>
-              
-              <button className="payment-button">결제하기</button>
+              <button 
+                className="payment-button" 
+                onClick={() => handleOpenModal({expertId: item.expertId, expertName: item.expertName, price: item.price,})}>
+                  결제하기
+              </button>
             </div>
           </div>
         ))}
       </div>
+      <SubscriptionModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        expertId={selectedExpert?.expertId}
+        expertName={selectedExpert?.expertName}
+        price={selectedExpert?.price}
+      />
     </div>
   );
 };
