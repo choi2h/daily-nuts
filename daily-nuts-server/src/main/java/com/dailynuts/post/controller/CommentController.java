@@ -1,6 +1,5 @@
 package com.dailynuts.post.controller;
 
-import com.dailynuts.post.dto.CommentListResponseDto;
 import com.dailynuts.post.dto.CommentRequestDto;
 import com.dailynuts.post.dto.CommentResponseDto;
 import com.dailynuts.post.dto.CommentsResponseDto;
@@ -10,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
