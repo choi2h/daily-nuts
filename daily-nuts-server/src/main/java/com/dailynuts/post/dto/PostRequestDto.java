@@ -12,7 +12,7 @@ public class PostRequestDto {
     private String title;
 
     @NotBlank
-    private String content;
+    private String contents;
 
     @NotNull
     private Long categoryId;

@@ -26,7 +26,7 @@ public class Post {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
