@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum CustomErrorCode {
     // 회원 M
-    MEMBER_NOT_EXIST(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 회원입니다."),
-
+    MEMBER_NOT_EXIST(HttpStatus.NOT_FOUND, "M001", "아이디 혹은 비밀번호를 확인해주세요"),
+    PASSWORD_DOSE_NOT_MATCH(HttpStatus.UNAUTHORIZED, "M002", "아이디 혹은 비밀번호를 확인해주세요"),
+    TOKEN_NOT_VAILD(HttpStatus.UNAUTHORIZED, "M003", "로그인이 인증되지 않았습니다"),
+    PERMISSION_DENIED(HttpStatus.FORBIDDEN, "M004", "권한이 없습니다"),
 
     // 게시글 P
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "요청하신 게시글을 찾을 수 없습니다."),
@@ -24,6 +26,7 @@ public enum CustomErrorCode {
 
 
     // 구독 S
+
     SUBSCRIPTION_NOT_EXIST(HttpStatus.BAD_REQUEST, "S001", "작가에 대한 구독자 권한이 없습니다."),
 
     // 결제 A
