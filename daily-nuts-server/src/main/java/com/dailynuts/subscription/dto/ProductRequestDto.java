@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ProductRequest {
+public class ProductRequestDto {
 
     @NotBlank
     @Size(min = 1, max = 20)

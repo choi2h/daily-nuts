@@ -6,6 +6,7 @@ import DefaultLayout from '../layers/DefaultLayout';
 import PostDetailItem from '../components/PostDetailItem';
 import ReplyItem from '../components/ReplyItem';
 import CommentItem from '../components/CommentItem';
+import BlankHeaderLayout from '../layers/BlankHeaderLayout';
 
 const post = {
     category: "기타",
@@ -70,7 +71,8 @@ const PostDetail = () => {
 
     return (
         <DefaultLayout className="app">
-            <div className="post-detail">
+            {/* <div className="post-detail"> */}
+            <BlankHeaderLayout>
                 <PostDetailItem post={post} toggleLike={toggleLike} />
                 <div className="comment-section">
                     <div className="comment-title">댓글</div>
@@ -94,13 +96,14 @@ const PostDetail = () => {
 
                             {/* 답글들 */}
                             {comment.replies && comment.replies.map((reply) => (
-                                <ReplyItem reply={reply}/>
+                                <ReplyItem key={reply.id} reply={reply}/>
                             ))}
                         </div>
                         ))}
                     </div>
                 </div>
-            </div>
+            </BlankHeaderLayout>
+            {/* </div> */}
         </DefaultLayout>
     );
 };
