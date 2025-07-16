@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router';
+import { IoHome, IoHeartOutline, IoBookmarkOutline, IoPersonOutline, IoNotificationsOutline, IoLogOutOutline } from 'react-icons/io5';
 import '../assets/css/Sidebar.css';
 import logo from '../assets/images/daily-nuts-logo.png';
 import defaultProfile from '../assets/images/default-profile.png';
@@ -6,23 +7,28 @@ import defaultProfile from '../assets/images/default-profile.png';
 const navs = [
     {
         name: "피드",
-        api: "/"
+        api: "/",
+        icon: <IoHome />
     },
     {
         name: "좋아요",
-        api: "/posts/likes"
+        api: "/posts/likes",
+        icon: <IoHeartOutline />
     },
     {
         name: "구독목록",
-        api: "/subscribe"
+        api: "/subscribe",
+        icon: <IoBookmarkOutline />
     },
     {
         name: "마이페이지",
-        api: "/mypage"
+        api: "/mypage",
+        icon: <IoPersonOutline />
     },
     {
         name: "알림",
-        api: "/notification"
+        api: "/notification",
+        icon: <IoNotificationsOutline />
     }
 ]
 
@@ -57,17 +63,19 @@ function Sidebar() {
                         <p>@loginId</p>
                     </div>
                 </div>
+                
                 <ul className="nav-menu">
                 {navs.map((nav) => (
                     <li 
                     key={nav.api} 
-                    className={`nav-item  ${nav.api === location.pathname ? 'active' : ''}`}
+                    className={`nav-item ${nav.api === location.pathname ? 'active' : ''}`}
                     >
                     <a href={nav.api} onClick={(e) => {
                         e.preventDefault();
                         handleNav(nav);
                     }}>
-                        {nav.name}
+                        <span className="nav-icon">{nav.icon}</span>
+                        <span className="nav-text">{nav.name}</span>
                     </a>
                     </li>
                 ))}
@@ -75,6 +83,7 @@ function Sidebar() {
             </div>
 
             <div className="sidebar-footer" onClick={() => handleLogout}>
+                <IoLogOutOutline className="logout-icon" />
                 <h4>로그아웃</h4>
             </div>
         </div>

@@ -12,12 +12,10 @@ function PostDetailItem({post, toggleLike}) {
 
                 <div className="post-detail-meta">
                     <div className="author-info">
-                     <div className="post-avatar">
                         <div className="profile-avatar">
                             <img className="profile-image" src={defaultProfile} alt="Profile" />
                         </div>
-                    </div>
-                    <span className="author-name">{post.writer}</span>
+                        <span className="author-name">{post.writer}</span>
                     </div>
                     <span className="post-date">{post.createdDate}</span>
                 </div>

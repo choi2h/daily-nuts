@@ -107,8 +107,6 @@ const handleFileUpload = (e) => {
     };
   }, [formData.previewUrls]);
 
-
-
   return (
     <div className="profile-card">
       <h2 className="page-title">전문가 등록 정보</h2>

@@ -33,11 +33,11 @@ const subscribeInfos = [
 function SubscribeListPage() {
     return (
         <DefaultLayout>
-            <BlankHeaderLayout>
-                <div className="posts-section">
-                <div className="posts-header">
-                <span className="posts-label">구독 수</span>
-                <span className="posts-count">{subscribeInfos.length}</span>
+            <BlankHeaderLayout type='feed' isUseSearch={false} title='구독목록'>
+            <div className="subscribe-container">
+                <div className="count-header">
+                    <span className="posts-label">구독 수</span>
+                    <span className="posts-count">{subscribeInfos.length}</span>
                 </div>
 
                 <div className="main-content">
