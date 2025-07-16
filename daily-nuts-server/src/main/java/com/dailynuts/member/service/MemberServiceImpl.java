@@ -52,7 +52,7 @@ public class MemberServiceImpl implements MemberService {
         String token = jwtUtils.provideToken(req);
 
         // 쿠키 생성
-        ResponseCookie cookie = jwtUtils.tokenLovesCookie(token);
+        ResponseCookie cookie = jwtUtils.provideCookie(token);
 
         return cookie;
     }

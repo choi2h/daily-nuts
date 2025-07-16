@@ -10,6 +10,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.time.Instant;
 import java.util.Date;
 
 @Component
@@ -18,6 +19,13 @@ public class JwtUtils {
     // 환경 변수에서 secretKey 가져오기
     @Value("${jwt.secret}")
     private String secretKeyString;
+
+    @Value("${jwt.expiration.access-token-seconds}")
+    private long accessTokenSeconds;
+
+    @Value("${cookie.max-age.access}")
+    private long accessCookieSeconds;
+
     private SecretKey secretKey;
 
     // 토큰 서명 알고리즘
@@ -28,24 +36,23 @@ public class JwtUtils {
 
     // 토큰 생성 메서드
     public String provideToken(MemberLoginRequestDto req) {
-        long now = System.currentTimeMillis();
 
         return Jwts.builder()
                 .subject(req.getLoginId())
-                .issuedAt(new Date(now))
-                .expiration(new Date(now + 1000 * 60 * 60))
+                .issuedAt(Date.from(Instant.now()))
+                .expiration(Date.from(Instant.now().plusSeconds(accessTokenSeconds)))
                 .signWith(secretKey)
                 .compact();
     }
 
     // 쿠키 생성 메서드
-    public ResponseCookie tokenLovesCookie(String token) {
+    public ResponseCookie provideCookie(String token) {
 
         return ResponseCookie.from("token", token)
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
-                .maxAge(60 * 60)
+                .maxAge(accessCookieSeconds)
                 .sameSite("Strict")
                 .build();
     }
