@@ -1,0 +1,165 @@
+/* 전체 화면 중앙 정렬 */
+.signup-wrapper {
+  position: fixed;           /* 브라우저 전체 덮기 */
+  top: 0;
+  left: 0;
+  width: 100vw;              /* 가로 전체 */
+  height: 100vh;             /* 세로 전체 */
+  display: flex;
+  justify-content: center;   /* 가로 중앙 */
+  align-items: center;       /* 세로 중앙 */
+  background-color: #f9fafc; /* 로그인 화면만 배경색 */
+  z-index: 1000;             /* 다른 요소 위 */
+}
+
+/* 카드 스타일 */
+.signup-card {
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 420px;
+}
+
+.signup-card h2 {
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #111827;
+}
+
+/* 폼 레이아웃 */
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.signup-form label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+
+}
+
+/* input + 아이콘 */
+.input-icon-wrapper {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9aa7b8;
+  font-size: 1rem;
+}
+
+.input-icon-wrapper input {
+  width: 100%;
+  padding: 12px 14px 12px 40px;
+  border: 1px solid #e5eaf2;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #2c2c2c;
+}
+
+.input-icon-wrapper input:focus {
+  border-color: #d97706;
+  outline: none;
+}
+
+/* 아이디 중복검사 */
+.id-check-wrapper {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.id-check-wrapper input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #e5eaf2;
+  border-radius: 8px;
+}
+
+.check-btn {
+  background-color: #d97706;
+  border: none;
+  color: white;
+  padding: 0 14px;
+  height: 48px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.check-btn:hover {
+  background-color: #b45309;
+}
+
+/* 비밀번호 토글 */
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #9aa7b8;
+  cursor: pointer;
+}
+
+/* 생년월일 + 성별 */
+.birth-gender-wrapper {
+  background-color: #fff;
+  display: flex;
+  gap: 12px;
+}
+
+.birth-wrapper input,
+.gender-wrapper select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5eaf2;
+  border-radius: 8px;
+}
+
+/* 버튼 */
+.submit-btn {
+  margin-top: 20px;
+  background-color: #d97706;
+  border: none;
+  padding: 14px 0;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #b45309;
+}
+
+/* 로그인 안내 */
+.login-text {
+  text-align: center;
+  margin-top: 16px;
+  color: #6b7280;
+}
+
+.login-text strong {
+  cursor: pointer;
+  color: #111827;
+}
