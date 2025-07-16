@@ -1,11 +1,14 @@
 package com.dailynuts.post.service;
 
+import com.dailynuts.common.exception.CustomErrorCode;
+import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.post.dto.CommentRequest;
 import com.dailynuts.post.dto.CommentResponse;
 import com.dailynuts.post.entity.Comment;
 import com.dailynuts.post.repository.CommentRepository;
 import com.dailynuts.post.service.mapper.CommentMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -40,11 +43,11 @@ public class CommentServiceImpl implements CommentService {
 
         // 부모 댓글 유효성 확인
         Comment parent = commentRepository.findById(parentCommentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부모 댓글입니다."));
+                .orElseThrow(() -> new CustomException(CustomErrorCode.COMMENT_PARENT_NOT_FOUND));
 
         // 대댓글의 대댓글 방지
         if (parent.getParentCommentId() != null) {
-            throw new IllegalArgumentException("대댓글에는 다시 답글을 달 수 없습니다.");
+            throw new CustomException(CustomErrorCode.COMMENT_REPLY_NOT_ALLOWED);
         }
 
         Comment reply = commentMapper.toEntity(request, postId, memberId, writer, parentCommentId);
@@ -60,9 +63,9 @@ public class CommentServiceImpl implements CommentService {
         List<CommentResponse> responseList = new ArrayList<>();
 
         for (Comment parent : parentComments) {
-            System.out.println(">> 부모 댓글 ID = " + parent.getId());
+            log.info(">> 부모 댓글 ID = {}", parent.getId());
             List<Comment> replies = commentRepository.findByParentCommentId(parent.getId());
-            System.out.println(">> 대댓글 수 = " + replies.size());
+            log.info(">> 대댓글 수 = {}", replies.size());
             CommentResponse parentResponse = commentMapper.toResponse(parent);
             List<CommentResponse> replyResponses = commentMapper.toResponseList(replies);
             parentResponse.setReplies(replyResponses);
@@ -74,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
     //글자수제한
     private void validateContentLength(String contents) {
         if (contents == null || contents.length() < 1 || contents.length() > 100) {
-            throw new IllegalArgumentException("댓글 내용은 1자 이상 100자 이하로 입력해주세요.");
+            throw new CustomException(CustomErrorCode.COMMENT_CONTENT_INVALID);
         }
     }
 
@@ -82,10 +85,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentResponse updateComment(Long postId, String id, Long memberId, CommentRequest request){
         Comment comment = commentRepository.findById(new ObjectId(id))
-                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+                .orElseThrow(()-> new CustomException(CustomErrorCode.COMMENT_UNAUTHORIZED));
 
         if(!comment.getMemberId().equals(memberId)){
-            throw  new IllegalArgumentException("댓글 작성자만 수정할 수 있습니다.");
+            throw  new CustomException(CustomErrorCode.COMMENT_UNAUTHORIZED);
         }
 
         validateContentLength(request.getContents());
