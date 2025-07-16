@@ -12,19 +12,25 @@ const navs = [
         name: "좋아요",
         api: "/posts/likes"
     },
+    // {
+    //     name: "구독목록",
+    //     api: "/subscribe"
+    // },
     {
         name: "마이페이지",
         api: "/mypage"
+    },
+    {
+        name: "알림",
+        api: "/notification"
     }
 ]
 
 function Sidebar() {
     const location = useLocation();
-    console.log(location);
     const navigate = useNavigate();
 
     const handleNav = (nav) => {
-        console.log('hello');
         navigate(nav.api);
     }
 
