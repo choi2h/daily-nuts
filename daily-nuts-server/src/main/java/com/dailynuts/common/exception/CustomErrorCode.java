@@ -10,6 +10,8 @@ public enum CustomErrorCode {
     // 회원 M
     MEMBER_NOT_EXIST(HttpStatus.NOT_FOUND, "M001", "아이디 혹은 비밀번호를 확인해주세요"),
     PASSWORD_DOSE_NOT_MATCH(HttpStatus.UNAUTHORIZED, "M002", "아이디 혹은 비밀번호를 확인해주세요"),
+    COOKIE_NOT_EXIST(HttpStatus.NOT_FOUND, "M003", "로그인이 인증되지 않았습니다"),
+    TOKEN_NOT_VAILD(HttpStatus.UNAUTHORIZED, "M004", "로그인이 인증되지 않았습니다"),
 
     // 게시글 P
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "요청하신 게시글을 찾을 수 없습니다."),

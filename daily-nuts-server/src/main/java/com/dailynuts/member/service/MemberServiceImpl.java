@@ -2,7 +2,7 @@ package com.dailynuts.member.service;
 
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
-import com.dailynuts.common.security.jwt.JwtUtils;
+import com.dailynuts.security.jwt.JwtUtils;
 import com.dailynuts.member.dto.MemberLoginRequestDto;
 import com.dailynuts.member.dto.MemberSignupRequestDto;
 import com.dailynuts.member.entity.Member;
