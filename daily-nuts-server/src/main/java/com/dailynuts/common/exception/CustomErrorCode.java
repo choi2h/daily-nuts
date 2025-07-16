@@ -14,7 +14,14 @@ public enum CustomErrorCode {
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "요청하신 게시글을 찾을 수 없습니다."),
     POST_LIKE_NOT_EXIST(HttpStatus.NOT_FOUND, "P002", "좋아요 기록이 존재하지 않습니다."),
     POST_LIKE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "P003", "이미 좋아요된 게시물입니다."),
+
     // 댓글 C
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C001", "존재하지 않는 댓글입니다."),
+    COMMENT_UNAUTHORIZED(HttpStatus.FORBIDDEN, "C002", "댓글 작성자만 수정할 수 있습니다."),
+    COMMENT_CONTENT_INVALID(HttpStatus.BAD_REQUEST, "C003", "댓글 내용은 1자 이상 100자 이하로 입력해주세요."),
+    COMMENT_PARENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C004", "존재하지 않는 부모 댓글입니다."),
+    COMMENT_REPLY_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "C005", "대댓글에는 다시 답글을 달 수 없습니다."),
+
 
     // 구독 S
     SUBSCRIPTION_NOT_EXIST(HttpStatus.BAD_REQUEST, "S001", "작가에 대한 구독자 권한이 없습니다."),

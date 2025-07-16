@@ -6,6 +6,7 @@ import com.dailynuts.post.dto.CommentResponse;
 import com.dailynuts.post.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,7 @@ public class CommentController {
     @PostMapping("/comment/{parentCommentId}/reply")
     public ResponseEntity<CommentResponse> createReplyToComment(
             @PathVariable Long postId,
-            @PathVariable String parentCommentId,
+            @PathVariable ObjectId parentCommentId,
             @RequestBody @Valid CommentRequest request
     ) {
         Long memberId = 1L; // 테스트용 하드코딩
@@ -50,6 +51,18 @@ public class CommentController {
     public ResponseEntity<CommentListResponse> getCommentsByPostId(@PathVariable Long postId) {
         List<CommentResponse> comments = commentService.getCommentsByPostId(postId);
         CommentListResponse response = new CommentListResponse(comments);
+        return ResponseEntity.ok(response);
+    }
+
+    //댓글 수정
+    @PutMapping("/comment/{commentId}")
+    public ResponseEntity<CommentResponse> updateComment(
+            @PathVariable Long postId,
+            @PathVariable String commentId,
+            @RequestBody @Valid CommentRequest request
+    ){
+        Long memberId=1L; //로그인 사용자 대체
+        CommentResponse response = commentService.updateComment(postId,commentId,memberId,request);
         return ResponseEntity.ok(response);
     }
 }
