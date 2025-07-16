@@ -3,10 +3,12 @@ import { GoComment } from "react-icons/go";
 import defaultProfile from '../assets/images/default-profile.png';
 
 function PostDetailItem({post, toggleLike}) {
+    if (!post) return null;
+
     return (
             <div>
                 <div className="post-detail-header">
-                    <span className="post-detail-category">{post.category}</span>
+                    <span className="post-detail-category">{post.categoryName}</span>
                     <h1 className="post-detail-title">{post.title}</h1>
                 </div>
 
@@ -19,7 +21,7 @@ function PostDetailItem({post, toggleLike}) {
                     </div>
                     <span className="author-name">{post.writer}</span>
                     </div>
-                    <span className="post-date">{post.createdDate}</span>
+                    <span className="post-date">{post.createdAt}</span>
                 </div>
 
                 <div className="post-detail-content">
