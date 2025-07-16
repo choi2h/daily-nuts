@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class MemberMapper {
 
     public Member toSignupEntity(MemberSignupRequestDto req){
+
         return Member.builder()
                 .loginId(req.getLoginId())
                 .name(req.getName())
@@ -20,6 +21,7 @@ public class MemberMapper {
     }
 
     public Member toHashEntity(Member member, String hashPassword) {
+
         return Member.builder()
                 .loginId(member.getLoginId())
                 .name(member.getName())
