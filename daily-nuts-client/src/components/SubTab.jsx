@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
 import '../assets/css/default-layout.css'
+
+
 function SubTab ({categories, selectedCategory, changeCategory}) {
       const [searchQuery, setSearchQuery] = useState('');
 
@@ -51,7 +53,6 @@ function SubTab ({categories, selectedCategory, changeCategory}) {
           </div>
         </div>
         </div>
-
     )
 }
 

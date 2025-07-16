@@ -1,12 +1,14 @@
 package com.dailynuts.subscription.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity @Getter
+@Entity
+@Getter
 @Table(name = "subscription")
 @NoArgsConstructor
 public class Subscription {
@@ -34,4 +36,14 @@ public class Subscription {
 
     @Column(name = "ended_at", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime endedAt;
+
+    @Builder
+    public Subscription(Long expertId, Long subscriberId, Payment payment, boolean isActive, LocalDateTime startedAt, LocalDateTime endedAt) {
+        this.expertId = expertId;
+        this.subscriberId = subscriberId;
+        this.payment = payment;
+        this.isActive = isActive;
+        this.startedAt = startedAt;
+        this.endedAt = endedAt;
+    }
 }
