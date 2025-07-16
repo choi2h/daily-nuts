@@ -1,21 +1,22 @@
 package com.dailynuts.post.service;
 
-import com.dailynuts.post.dto.CommentRequest;
-import com.dailynuts.post.dto.CommentResponse;
+import com.dailynuts.post.dto.CommentRequestDto;
+import com.dailynuts.post.dto.CommentResponseDto;
+import com.dailynuts.post.dto.CommentsResponseDto;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
 public interface CommentService {
     //댓글 등록
-    CommentResponse createComment(Long postId, Long memberId, String writer, CommentRequest request);
+    CommentResponseDto createComment(Long postId, Long memberId, String writer, CommentRequestDto request);
 
     //대댓글
-    CommentResponse createReplyToComment(Long postId, ObjectId parentCommentId, Long memberId, String writer, CommentRequest request);
+    CommentResponseDto createReplyToComment(Long postId, ObjectId parentCommentId, Long memberId, String writer, CommentRequestDto request);
 
     //댓글 조회
-    List<CommentResponse> getCommentsByPostId(Long postId);
+    CommentsResponseDto getCommentsByPostId(Long postId);
 
     //댓글 수정
-    CommentResponse updateComment(Long postId, String commentId, Long memberId, CommentRequest request);
+    CommentResponseDto updateComment(Long postId, String commentId, Long memberId, CommentRequestDto request);
 }

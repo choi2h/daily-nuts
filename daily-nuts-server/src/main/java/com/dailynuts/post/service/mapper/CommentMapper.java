@@ -1,7 +1,8 @@
 package com.dailynuts.post.service.mapper;
 
-import com.dailynuts.post.dto.CommentRequest;
-import com.dailynuts.post.dto.CommentResponse;
+import com.dailynuts.post.dto.CommentRequestDto;
+import com.dailynuts.post.dto.CommentResponseDto;
+import com.dailynuts.post.dto.CommentsResponseDto;
 import com.dailynuts.post.entity.Comment;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class CommentMapper {
-    public Comment toEntity(CommentRequest request, Long postId, Long memberId, String writer, ObjectId parentCommentId){
+    public Comment toEntity(CommentRequestDto request, Long postId, Long memberId, String writer, ObjectId parentCommentId){
         return Comment.builder()
                 .postId(postId)
                 .memberId(memberId)
@@ -21,8 +22,8 @@ public class CommentMapper {
                 .build();
     }
 
-    public CommentResponse toResponse(Comment comment){
-        return CommentResponse.builder()
+    public CommentResponseDto toResponse(Comment comment){
+        return CommentResponseDto.builder()
                 .id(comment.getId().toHexString())
                 .postId(comment.getPostId())
                 .memberId(comment.getMemberId())
@@ -33,9 +34,7 @@ public class CommentMapper {
                 .build();
     }
 
-    public List<CommentResponse> toResponseList(List<Comment> comments) {
-        return comments.stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
+    public CommentsResponseDto toResponseList(List<CommentResponseDto> list) {
+        return new CommentsResponseDto(list);
     }
 }
