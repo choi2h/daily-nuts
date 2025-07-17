@@ -10,7 +10,7 @@ public enum CustomErrorCode {
     // 회원 M
     MEMBER_NOT_EXIST(HttpStatus.NOT_FOUND, "M001", "아이디 혹은 비밀번호를 확인해주세요"),
     PASSWORD_DOSE_NOT_MATCH(HttpStatus.UNAUTHORIZED, "M002", "아이디 혹은 비밀번호를 확인해주세요"),
-    TOKEN_NOT_VAILD(HttpStatus.UNAUTHORIZED, "M003", "로그인이 인증되지 않았습니다"),
+    TOKEN_NOT_VALID(HttpStatus.UNAUTHORIZED, "M003", "로그인이 인증되지 않았습니다"),
     PERMISSION_DENIED(HttpStatus.FORBIDDEN, "M004", "권한이 없습니다"),
 
     // 게시글 P

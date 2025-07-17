@@ -31,12 +31,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public ResponseCookie loginMember(MemberLoginRequestDto req) {
+    public ResponseCookie[] loginMember(MemberLoginRequestDto req) {
 
         return processLoginAndGenerateCookie(req);
     }
 
-    private ResponseCookie processLoginAndGenerateCookie(MemberLoginRequestDto req) {
+    private ResponseCookie[] processLoginAndGenerateCookie(MemberLoginRequestDto req) {
         // 아이디 존재 확인
         Member member = memberRepository.findByLoginId(req.getLoginId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
@@ -47,12 +47,14 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 토큰 생성
-        String token = jwtUtils.provideToken(req);
+        String accessToken = jwtUtils.provideToken(req.getLoginId());
+        String refreshToken = jwtUtils.provideRefreshToken(req);
 
         // 쿠키 생성
-        ResponseCookie cookie = jwtUtils.provideCookie(token);
+        ResponseCookie accessCookie = jwtUtils.provideCookie(accessToken);
+        ResponseCookie refreshCookie = jwtUtils.provideRefreshCookie(refreshToken);
 
-        return cookie;
+        return new ResponseCookie[]{accessCookie, refreshCookie};
     }
 
     private Member createHashedMember(MemberSignupRequestDto req) {
