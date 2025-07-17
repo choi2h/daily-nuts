@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CommentUpdateResponse {
-    private CommentResponse comment;
+public class CommentUpdateResponseDto {
+    private CommentResponseDto comment;
 }
