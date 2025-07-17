@@ -1,203 +1,113 @@
-.container {
-  display: flex;
-  min-height: 100vh;
+/* 컨테이너 */
+.main-content {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-/* 포스트 스타일 */
-.feed {
+.posts-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
+/* 게시글 */
 .post {
-  background: #ffffff;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e5e5e5;
-  transition: all 0.2s ease;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.5s ease forwards;
+  background: #fff;
+  border-bottom: 1px solid #e1e8ed;
+  padding: 16px 20px;
+  transition: background 0.2s ease;
+  cursor: pointer;
   text-align: left;
-  /* cursor: pointer; */
 }
 
-/* .post:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-color: #d0d0d0;
-} */
+.post:hover {
+  background: #f8f9fa;
+}
 
+/* 헤더 */
 .post-header {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
-.post-avatar {
-    width: 40px;
-  height: 40px;
+.profile-avatar {
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  overflow: hidden; /* ✅ 이미지 넘치는 것 자르기 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: bold;
-  margin-right: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
-.post-avatar .profile-image {
+.profile-image {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
   object-fit: cover;
 }
 
-.post-info {
-  flex: 1;
+.author-info {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
 }
 
-.post-author {
+.author-name {
   font-weight: 600;
-  color: #333;
-  margin-bottom: 2px;
 }
 
 .post-date {
-  color: #999;
-  font-size: 13px;
+  color: #657786;
 }
 
+/* 본문 */
 .post-title {
   font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 12px;
-  line-height: 1.4;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
 .post-excerpt {
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 16px;
+  font-size: 15px;
+  color: #657786;
+  margin-bottom: 12px;
 }
 
+/* 액션 버튼 */
 .post-actions {
   display: flex;
-  gap: 20px;
+  gap: 16px;
 }
 
 .action-btn {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 6px;
   border: none;
   background: none;
-  color: #666;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  color: #657786;
   font-size: 14px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 20px;
+  transition: background 0.2s ease;
 }
 
 .action-btn:hover {
-  background: #f8f8f8;
-  color: #B57138;
+  background: #f1f3f4;
 }
 
+/* 좋아요 클릭 시 빨간색 */
 .action-btn.liked {
-  color: #B57138;
+  color: #e0245e;
 }
 
-.action-btn.liked:hover {
-  background: rgba(181, 113, 56, 0.1);
+.action-btn.liked svg {
+  fill: #e0245e;
 }
 
-/* 모바일 헤더 */
-.mobile-header {
-  display: none;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  background: white;
-  border-bottom: 1px solid #e5e5e5;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.menu-toggle {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 8px;
-  color: #B57138;
-}
-
-.sidebar-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-}
-
-/* 애니메이션 */
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-  .mobile-header {
-    display: flex;
-  }
-
-  .sidebar {
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  .main-content {
-    margin-left: 0;
-    padding: 20px;
-  }
-
-  .search-bar {
-    margin-bottom: 20px;
-  }
-
-  .post {
-    padding: 16px;
-  }
-
-  .post-actions {
-    gap: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-content {
-    padding: 16px;
-  }
-
-  .post-title {
-    font-size: 16px;
-  }
-
-  .post-excerpt {
-    font-size: 14px;
-  }
+/* 댓글 버튼 hover */
+.action-btn:nth-child(2):hover {
+  background: #e8f5fe;
+  color: #1da1f2;
 }

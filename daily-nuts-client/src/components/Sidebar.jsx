@@ -1,37 +1,49 @@
 import { useLocation, useNavigate } from 'react-router';
-import '../assets/css/navigationbar.css';
+import { IoHome, IoHeartOutline, IoBookmarkOutline, IoPersonOutline, IoNotificationsOutline, IoLogOutOutline } from 'react-icons/io5';
+import '../assets/css/Sidebar.css';
 import logo from '../assets/images/daily-nuts-logo.png';
 import defaultProfile from '../assets/images/default-profile.png';
 
 const navs = [
     {
         name: "피드",
-        api: "/"
+        api: "/",
+        icon: <IoHome />
     },
     {
         name: "좋아요",
-        api: "/posts/likes"
+        api: "/posts/likes",
+        icon: <IoHeartOutline />
     },
-    // {
-    //     name: "구독목록",
-    //     api: "/subscribe"
-    // },
+    {
+        name: "구독목록",
+        api: "/subscribe",
+        icon: <IoBookmarkOutline />
+    },
     {
         name: "마이페이지",
-        api: "/mypage"
+        api: "/mypage",
+        icon: <IoPersonOutline />
     },
     {
         name: "알림",
-        api: "/notification"
+        api: "/notification",
+        icon: <IoNotificationsOutline />
     }
 ]
 
 function Sidebar() {
-    const location = useLocation();
+    const {pathname} = useLocation();
     const navigate = useNavigate();
+    const isLogin = true;
 
     const handleNav = (nav) => {
         navigate(nav.api);
+    }
+
+    const handleLogin = () => {
+        console.log('로그인');
+        navigate('/login');
     }
 
     const handleLogout = () => {
@@ -48,37 +60,67 @@ function Sidebar() {
                     <img className="logo-item" src={logo} alt="logo"/>
                 </div>
                 
-                <div className="profile-info-section">
-                    <div className="profile-avatar">
-                        <img className="profile-image" src={defaultProfile} alt="Profile" />
-                    </div>
-                    <div className="profile-info-names">
-                        <h3>김이름</h3>
-                        <p>@loginId</p>
-                    </div>
-                </div>
                 <ul className="nav-menu">
-                {navs.map((nav) => (
-                    <li 
-                    key={nav.api} 
-                    className={`nav-item  ${nav.api === location.pathname ? 'active' : ''}`}
-                    >
-                    <a href={nav.api} onClick={(e) => {
-                        e.preventDefault();
-                        handleNav(nav);
-                    }}>
-                        {nav.name}
-                    </a>
-                    </li>
-                ))}
+                { isLogin ? (
+                    <div>
+                        <div className="profile-info-section">
+                            <div className="profile-avatar">
+                                <img className="profile-image" src={defaultProfile} alt="Profile" />
+                            </div>
+                            <div className="profile-info-names">
+                                <h3>김이름</h3>
+                                <p>@loginId</p>
+                            </div>
+                        </div>
+                        {
+                            navs.map((nav) => (
+                                <NavItem nav={nav} handleNav={handleNav} currentPath={pathname}/>
+                            ))
+                        }
+                    </div>
+                ) : 
+                (
+                    <NavItem nav={navs[0]} handleNav={handleNav} currentPath={pathname}/>
+                )
+            
+                }
                 </ul>
             </div>
 
-            <div className="sidebar-footer" onClick={() => handleLogout}>
-                <h4>로그아웃</h4>
-            </div>
+            
+            {
+                isLogin?
+                    (
+                        <div className="logout" onClick={() => handleLogout}>
+                            <IoLogOutOutline className="logout-icon" />
+                            <h4>로그아웃</h4>
+                        </div>
+                    ) :
+                    (
+                        <button type="submit" className="login" onClick={handleLogin}>
+                            <h4>로그인</h4>
+                        </button>
+                    ) 
+            }
         </div>
     );
+}
+
+function NavItem ({nav, handleNav, currentPath}) {
+    return (
+        <li 
+        key={nav.api} 
+        className={`nav-item ${nav.api === currentPath ? 'active' : ''}`}
+        >
+        <a href={nav.api} onClick={(e) => {
+            e.preventDefault();
+            handleNav(nav);
+        }}>
+            <span className="nav-icon">{nav.icon}</span>
+            <span className="nav-text">{nav.name}</span>
+        </a>
+        </li>
+    )
 }
 
 export default Sidebar;

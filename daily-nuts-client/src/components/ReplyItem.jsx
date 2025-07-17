@@ -2,6 +2,7 @@ import { BiReply } from "react-icons/bi";
 import defaultProfile from '../assets/images/default-profile.png';
 
 function ReplyItem({reply}) {
+
     return (
         <div key={reply.id} className="reply-item">
             <div className="reply-indicator">

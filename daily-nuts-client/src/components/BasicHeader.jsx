@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { IoArrowBack } from 'react-icons/io5';
 import { IoSearchOutline } from 'react-icons/io5';
-import '../assets/css/default-layout.css'
+import '../assets/css/Default.css'
+import { useNavigate } from 'react-router';
 
-function BasicHeader () {
+function BasicHeader ({isUseSearch, title}) {
       const [searchQuery, setSearchQuery] = useState('');
-
+      const navigate = useNavigate();
       const handleBackClick = () => {
         console.log('뒤로가기 클릭');
+        navigate(-1);
       };
 
       const handleSearchChange = (e) => {
@@ -28,28 +30,33 @@ function BasicHeader () {
         >
           <IoArrowBack size={20} />
         </button>
+        <h2 className='notification-title'>
+          {title}
+        </h2>
 
         {/* 빈 공간 */}
         <div className="spacer"></div>
 
         {/* 검색창 */}
-        <div className="search-container">
-          <div className="search-input-container">
-            <IoSearchOutline className="search-icon" size={16} />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              placeholder="검색"
-              className="search-input"
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleSearchSubmit(searchQuery);
-                }
-              }}
-            />
-          </div>
-        </div>
+        { isUseSearch ? 
+          (<div className="search-container">
+            <div className="search-input-container">
+              <IoSearchOutline className="search-icon" size={16} />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="검색"
+                className="search-input"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearchSubmit(searchQuery);
+                  }
+                }}
+              />
+            </div>
+          </div>) : ''
+        }
       </div>
     )
 }

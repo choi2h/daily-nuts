@@ -1,5 +1,5 @@
+import '../assets/css/PaymentHistory.css';
 import { useEffect, useState } from 'react';
-import '../assets/css/payment-history.css';
 import defaultProfile from '../assets/images/default-profile.png';
 import axios from 'axios';
 import SubscriptionModal from './SubscriptionModal';

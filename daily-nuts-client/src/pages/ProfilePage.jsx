@@ -1,4 +1,4 @@
-import '../assets/css/profile.css';
+import '../assets/css/Profile.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import PostItem from '../components/PostItem';

@@ -79,6 +79,20 @@
   border-color: #9ca3af;
 }
 
+.preview-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.preview-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
 .upload-icon {
   font-size: 16px;
 }
