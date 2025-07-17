@@ -12,10 +12,13 @@ import com.dailynuts.post.repository.CategoryRepository;
 import com.dailynuts.post.repository.PostRepository;
 import com.dailynuts.post.service.mapper.PostMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -50,12 +53,12 @@ public class PostServiceImpl implements PostService{
         return postMapper.getPostResponseDto(post);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<PostResponseDto> getAllPosts() {
-        List<Post> postList = postRepository.findAll();
-        return postMapper.getPostResponseDtoList(postList);
-    }
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<PostResponseDto> getAllPosts() {
+//        List<Post> postList = postRepository.findAll();
+//        return postMapper.getPostResponseDtoList(postList);
+//    }
 
     @Override
     @Transactional
@@ -78,4 +81,27 @@ public class PostServiceImpl implements PostService{
 
         postRepository.delete(post);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PostResponseDto> getPosts(Long categoryId, int pageNo, String criteria) {
+        Set<String> allowedCriteria = Set.of("createdAt", "likeCount", "commentCount");
+        if (!allowedCriteria.contains(criteria)) {
+            throw new IllegalArgumentException("지원하지 않는 정렬 기준입니다: " + criteria);
+        }
+
+        Pageable pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, criteria));
+
+        Page<Post> postPage = (categoryId == null || categoryId == 0L)
+                ? postRepository.findAll(pageable)
+                : postRepository.findByCategory_Id(categoryId, pageable);
+
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for (Post post : postPage.getContent()) {
+            postResponseDtoList.add(postMapper.getPostResponseDto(post));
+        }
+
+        return new PageImpl<>(postResponseDtoList, pageable, postPage.getTotalElements());
+    }
+
 }

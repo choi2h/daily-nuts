@@ -4,9 +4,18 @@ import defaultProfile from '../assets/images/default-profile.png';
 import '../assets/css/feed.css';
 
 function PostItem({post, toggleLike, onClick}) {
+  const handleCardClick = () => {
+    onClick(post.id);
+  };
+
+  const handleLikeClick = (e) => {
+    e.stopPropagation();
+    console.log("liked 상태:", post.liked);
+    toggleLike(post.id, post.liked);
+  };
 
     return (
-         <div className="post">
+         <div className="post" onClick={handleCardClick}>
           <div className="post-header">
             <div className="post-avatar">
                 <div className="profile-avatar">
@@ -25,9 +34,10 @@ function PostItem({post, toggleLike, onClick}) {
           <div className="post-actions">
             <button 
               className={`action-btn ${post.liked ? 'liked' : ''}`}
-              onClick={() => toggleLike(post.id)}
+              onClick={handleLikeClick}
             >
-              {post.liked ? <IoMdHeart size={24}/> : <IoMdHeartEmpty size={24}/>} <span>3</span>
+              {post.liked ? <IoMdHeart size={24}/> : <IoMdHeartEmpty size={24}/>} 
+              <span>{post.likeCount ?? 0}</span>
             </button>
             <button 
               className="action-btn"

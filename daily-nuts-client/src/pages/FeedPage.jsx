@@ -6,81 +6,60 @@ import TabHeaderLyaout from '../layers/TabHeaderLayout';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 
-const defaultPosts = [
-  // {
-  //   id: 1,
-  //   author: "Amit Das",
-  //   time: "2025-07-11",
-  //   avatar: "A",
-  //   title: "Your portfolio is stopping you from getting that job",
-  //   contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
-  //   category: "Portfolio",
-  //   readTime: "3 min read",
-  //   tag: "Selected for you",
-  //   image: "/api/placeholder/400/300",
-  //   hasImage: true,
-  //   liked: false
-  // },
-  // {
-  //   id: 2,
-  //   author: "Amit Das",
-  //   time: "2025-07-11",
-  //   avatar: "A",
-  //   title: "Melody mobile app: a UI UX case study",
-  //   contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
-  //   category: "UI ux Design",
-  //   readTime: "3 min read",
-  //   tag: "Selected for you",
-  //   image: "/api/placeholder/400/300",
-  //   hasImage: true,
-  //   liked: true
-  // },
-  // {
-  //   id: 3,
-  //   author: "Amit Das",
-  //   time: "2025-07-09",
-  //   avatar: "A",
-  //   title: "Wellness app: a UI UX case study",
-  //   contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
-  //   category: "UI ux Design",
-  //   readTime: "3 min read",
-  //   tag: "Selected for you",
-  //   image: "/api/placeholder/400/300",
-  //   hasImage: true,
-  //   liked: false
-  // }
-];
+// const defaultPosts = [
+//   {
+//     id: 1,
+//     author: "Amit Das",
+//     time: "2025-07-11",
+//     avatar: "A",
+//     title: "Your portfolio is stopping you from getting that job",
+//     contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
+//     category: "Portfolio",
+//     readTime: "3 min read",
+//     tag: "Selected for you",
+//     image: "/api/placeholder/400/300",
+//     hasImage: true,
+//     liked: false
+//   },
+//   {
+//     id: 2,
+//     author: "Amit Das",
+//     time: "2025-07-11",
+//     avatar: "A",
+//     title: "Melody mobile app: a UI UX case study",
+//     contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
+//     category: "UI ux Design",
+//     readTime: "3 min read",
+//     tag: "Selected for you",
+//     image: "/api/placeholder/400/300",
+//     hasImage: true,
+//     liked: true
+//   },
+//   {
+//     id: 3,
+//     author: "Amit Das",
+//     time: "2025-07-09",
+//     avatar: "A",
+//     title: "Wellness app: a UI UX case study",
+//     contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
+//     category: "UI ux Design",
+//     readTime: "3 min read",
+//     tag: "Selected for you",
+//     image: "/api/placeholder/400/300",
+//     hasImage: true,
+//     liked: false
+//   }
+// ];
 
 const categories = [
-  {
-    name: "전체",
-    type: "all"
-  },
-  {
-    name: "스트레스", 
-    type: "stress"
-  },
-  {
-    name: "대인관계",
-    type: "relationship"
-  },
-    {
-    name: "자기이해",
-    type: "self-understanding"
-  },
-    {
-    name: "불안",
-    type: "unrest"
-  },
-    {
-    name: "기억",
-    type: "memory"
-  },
-    {
-    name: "기타",
-    type: "other"
-  },
-]
+    { id: 0, name: '전체' },
+    { id: 1, name: '스트레스' },
+    { id: 2, name: '대인관계' },
+    { id: 3, name: '자기이해' },
+    { id: 4, name: '불안' },
+    { id: 5, name: '기억' },
+    { id: 6, name: '기타' },
+  ];
 
 // const FeedPage = () => {
 
@@ -106,38 +85,67 @@ const categories = [
 // export default FeedPage;
 
 const FeedPage = () => {
-  const [posts, setPosts] = useState(defaultPosts);
+  const [posts, setPosts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [sortCriteria, setSortCriteria] = useState("createdAt");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('/api/posts')
-    .then(res => {
-      const posts = res.data || [];
-      const sortedPosts = posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setPosts(sortedPosts);
-    })
-    .catch(err => {
-      console.error('글 목록 못 불러옴:', err);
-      setPosts([]);
-    });
-  }, []);
+    const fetchPosts = async () => {
+      const params = {
+        page: currentPage,
+        criteria: sortCriteria,
+      };
+      if (selectedCategory.id != 0) {
+        params.categoryId = selectedCategory.id;
+      }
+
+      try {
+        const res = await axios.get('/api/posts', {params});
+        console.log("응답 데이터 확인:", res.data);
+        setPosts(res.data.content || []);
+        setTotalPages(res.data.totalPages);
+      } catch (err) {
+        console.error('글 목록 못 불러옴:', err);
+        setPosts([]);
+      }
+    }
+    fetchPosts();
+  }, [selectedCategory, sortCriteria, currentPage]);
 
   const changeCategory = (category) => {
     console.log(category.target);
     setSelectedCategory(category);
+    setCurrentPage(0);
   }
 
-  const toggleLike = (postId) => {
-    setPosts(posts.map(post => 
-      post.id === postId 
-        ? { 
-            ...post, 
-            liked: !post.liked, 
-            // likes: post.liked ? post.likes - 1 : post.likes + 1 
-          }
-        : post
-    ));
+  const toggleLike = async (postId, liked) => {
+    try {
+      const url = `/api/post/${postId}/like`;
+      let res;
+
+      if (liked) {
+        res = await axios.delete(url);
+      } else {
+        res = await axios.post(url);
+      }
+
+      const {likeCount, isLiked} = res.data;
+
+      setPosts((prevPosts) => 
+        prevPosts.map((post) =>
+          post.id == postId
+            ? {...post, likeCount: likeCount, 
+              liked: isLiked} : post
+        )
+      );
+
+    } catch (err) {
+      console.error('좋아요 처리 오류:', err);
+    }
   };
 
     const postOnClick = (id) => {
@@ -166,6 +174,18 @@ const FeedPage = () => {
                   <PostItem key={idx} post={post} toggleLike={toggleLike} onClick={postOnClick}/>
                   )}
               </div>
+            </div>
+
+            <div className="pagination">
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i)}
+                  className={currentPage === i ? 'active' : ''}
+                >
+                  {i + 1}
+                </button>
+              ))}
             </div>
           </TabHeaderLyaout>
         </DefaultLayout>
