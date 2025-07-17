@@ -212,10 +212,10 @@
   .post-excerpt {
     font-size: 14px;
   }
-  
-  /* 댓글 버튼 hover */
-  .action-btn:nth-child(2):hover {
-    background: #e8f5fe;
-    color: #1da1f2;
-  }
+}
+
+/* 댓글 버튼 hover */
+.action-btn:nth-child(2):hover {
+  background: #e8f5fe;
+  color: #1da1f2;
 }
