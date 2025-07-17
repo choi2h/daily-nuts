@@ -24,6 +24,8 @@ public enum CustomErrorCode {
     COMMENT_CONTENT_INVALID(HttpStatus.BAD_REQUEST, "C003", "댓글 내용은 1자 이상 100자 이하로 입력해주세요."),
     COMMENT_PARENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C004", "존재하지 않는 부모 댓글입니다."),
     COMMENT_REPLY_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "C005", "대댓글에는 다시 답글을 달 수 없습니다."),
+    COMMENT_DELETE_UNAUTHORIZED(HttpStatus.FORBIDDEN, "C006", "댓글 작성자만 삭제할 수 있습니다."),
+
 
 
     // 구독 S

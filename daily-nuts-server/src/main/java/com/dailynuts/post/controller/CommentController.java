@@ -3,6 +3,7 @@ package com.dailynuts.post.controller;
 import com.dailynuts.post.dto.CommentRequestDto;
 import com.dailynuts.post.dto.CommentResponseDto;
 import com.dailynuts.post.dto.CommentsResponseDto;
+import com.dailynuts.post.dto.DeleteResponseDto;
 import com.dailynuts.post.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/post/{postId}")
 public class CommentController {
     private final CommentService commentService;
-
 
     //댓글 등록
     @PostMapping("/comment")
@@ -60,6 +60,17 @@ public class CommentController {
     ){
         Long memberId=1L; //로그인 사용자 대체
         CommentResponseDto response = commentService.updateComment(postId,commentId,memberId,request);
+        return ResponseEntity.ok(response);
+    }
+
+    //댓글 삭제
+    @DeleteMapping("/comment/{commentId}")
+    public ResponseEntity<DeleteResponseDto> deleteComment(
+            @PathVariable Long postId,
+            @PathVariable("commentId") ObjectId commentId,
+            @RequestParam Long memberId
+    ) {
+        DeleteResponseDto response = commentService.deleteComment(commentId, memberId);
         return ResponseEntity.ok(response);
     }
 }
