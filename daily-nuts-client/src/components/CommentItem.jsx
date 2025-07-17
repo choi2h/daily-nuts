@@ -1,4 +1,6 @@
 import defaultProfile from '../assets/images/default-profile.png';
+import '../assets/css/Comment.css';
+
 
 function CommentItem({comment}) {
     return (

@@ -33,7 +33,8 @@ const testComments = [
 const PostDetail = () => {
     const {id} = useParams();
     const [post, setPost] = useState(null);
-    const {tab} = useLocation();
+    const { tab } = useLocation();
+    const { id: postId } = useParams();
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState(testComments);
 
@@ -53,13 +54,23 @@ const PostDetail = () => {
         setComment(e.target.value);
     };
 
-    const handleCommentSubmit = (e) => {
+    const handleCommentSubmit = async (e) => {
         e.preventDefault();
         if (comment.trim()) {
-        console.log('댓글 등록:', comment);
-        setComment('');
-        // 여기에 실제 댓글 등록 로직을 추가하세요
+        try {
+        const response = await axios.post(
+            `http://localhost:8081/post/${postId}/comment`, // postId는 아래에서 설명
+            {
+            contents: comment,
+            writer: "test", // 혹은 고정 값 예: "테스터"
+            }
+        );
+        console.log('댓글 등록 성공:', response.data);
+        setComment(''); // 입력창 비우기
+        } catch (error) {
+        console.error('댓글 등록 실패:', error);
         }
+    }
     };
 
     const toggleLike = () => {
