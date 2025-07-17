@@ -5,6 +5,7 @@ import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.post.dto.CommentRequestDto;
 import com.dailynuts.post.dto.CommentResponseDto;
 import com.dailynuts.post.dto.CommentsResponseDto;
+import com.dailynuts.post.dto.DeleteResponseDto;
 import com.dailynuts.post.entity.Comment;
 import com.dailynuts.post.repository.CommentRepository;
 import com.dailynuts.post.service.mapper.CommentMapper;
@@ -103,5 +104,28 @@ public class CommentServiceImpl implements CommentService {
         Comment updated = commentRepository.save(comment);
 
         return commentMapper.toResponse(updated);
+    }
+
+    //댓글 삭제
+    @Override
+    public DeleteResponseDto deleteComment(ObjectId commentId, Long memberId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.COMMENT_NOT_FOUND));
+
+        // 작성자 확인
+        if (!comment.getMemberId().equals(memberId)) {
+            throw new CustomException(CustomErrorCode.COMMENT_DELETE_UNAUTHORIZED);
+        }
+
+        // 부모 댓글이면 대댓글도 같이 삭제
+        if (comment.getParentCommentId() == null) {
+            List<Comment> replies = commentRepository.findByParentCommentId(commentId);
+            commentRepository.deleteAll(replies);
+        }
+
+        // 댓글 삭제
+        commentRepository.delete(comment);
+
+        return new DeleteResponseDto("댓글 삭제 성공", commentId.toHexString());
     }
 }
