@@ -1,6 +1,7 @@
 package com.dailynuts.member.controller;
 
 import com.dailynuts.member.dto.ExpertSearchDto;
+import com.dailynuts.member.dto.ExpertSearchResponseDto;
 import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.service.ExpertSearchService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class ExpertSearchController {
 
         Long subscriberId = (member != null) ? member.getId() : null;
 
-        List<ExpertSearchDto> results = expertSearchService.searchExperts(name, subscriberId);
+        ExpertSearchResponseDto results = expertSearchService.searchExperts(name, subscriberId);
         return ResponseEntity.ok(results);
     }
 

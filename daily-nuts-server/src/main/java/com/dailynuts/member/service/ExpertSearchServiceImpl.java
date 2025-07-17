@@ -1,6 +1,7 @@
 package com.dailynuts.member.service;
 
 import com.dailynuts.member.dto.ExpertSearchDto;
+import com.dailynuts.member.dto.ExpertSearchResponseDto;
 import com.dailynuts.member.entity.ExpertInfo;
 import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.entity.type.Role;
@@ -24,10 +25,10 @@ public class ExpertSearchServiceImpl implements ExpertSearchService {
     private final ExpertSearchMapper expertSearchMapper;
 
     @Override
-    public List<ExpertSearchDto> searchExperts(String name, Long subscriberId) {
+    public ExpertSearchResponseDto searchExperts(String name, Long subscriberId) {
         List<Member> experts = memberRepository.findByNameContainingAndRole(name, Role.EXPERT);
 
-        return experts.stream()
+        List<ExpertSearchDto> dtoList = experts.stream()
                 .map(expert -> {
                     ExpertInfo expertInfo = expert.getExpertInfo();
                     String profileImageUrl = expertSearchMapper.extractProfileImageUrl(expertInfo);
@@ -42,5 +43,7 @@ public class ExpertSearchServiceImpl implements ExpertSearchService {
                     );
                 })
                 .collect(Collectors.toList());
+
+        return new ExpertSearchResponseDto(dtoList);
     }
 }

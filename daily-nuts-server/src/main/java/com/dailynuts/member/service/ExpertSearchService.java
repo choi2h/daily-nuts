@@ -1,9 +1,7 @@
 package com.dailynuts.member.service;
 
-import com.dailynuts.member.dto.ExpertSearchDto;
-
-import java.util.List;
+import com.dailynuts.member.dto.ExpertSearchResponseDto;
 
 public interface ExpertSearchService {
-    List<ExpertSearchDto> searchExperts(String name, Long subscriberId);
+    ExpertSearchResponseDto searchExperts(String name, Long subscriberId);
 }
