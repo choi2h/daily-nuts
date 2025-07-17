@@ -6,5 +6,5 @@ import org.springframework.http.ResponseCookie;
 
 public interface MemberService {
     Long createMember(MemberSignupRequestDto memberSignupRequestDto);
-    ResponseCookie loginMember(MemberLoginRequestDto memberLoginRequestDto);
+    ResponseCookie[] loginMember(MemberLoginRequestDto memberLoginRequestDto);
 }

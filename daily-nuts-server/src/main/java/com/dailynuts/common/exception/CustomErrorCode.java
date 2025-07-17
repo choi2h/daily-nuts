@@ -10,13 +10,14 @@ public enum CustomErrorCode {
     // 회원 M
     MEMBER_NOT_EXIST(HttpStatus.NOT_FOUND, "M001", "아이디 혹은 비밀번호를 확인해주세요"),
     PASSWORD_DOSE_NOT_MATCH(HttpStatus.UNAUTHORIZED, "M002", "아이디 혹은 비밀번호를 확인해주세요"),
-    TOKEN_NOT_VAILD(HttpStatus.UNAUTHORIZED, "M003", "로그인이 인증되지 않았습니다"),
+    TOKEN_NOT_VALID(HttpStatus.UNAUTHORIZED, "M003", "로그인이 인증되지 않았습니다"),
     PERMISSION_DENIED(HttpStatus.FORBIDDEN, "M004", "권한이 없습니다"),
 
     // 게시글 P
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "요청하신 게시글을 찾을 수 없습니다."),
     POST_LIKE_NOT_EXIST(HttpStatus.NOT_FOUND, "P002", "좋아요 기록이 존재하지 않습니다."),
     POST_LIKE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "P003", "이미 좋아요된 게시물입니다."),
+    SEARCH_KEYWORD_EMPTY(HttpStatus.BAD_REQUEST, "P004", "검색어를 입력해주세요"),
 
     // 댓글 C
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C001", "존재하지 않는 댓글입니다."),

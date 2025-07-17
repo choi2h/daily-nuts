@@ -24,4 +24,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     int findLikeCountById(Long postId);
 
     Page<Post> findByCategory_Id(Long categoryId, Pageable pageable);
+
+    long countByMemberId(Long memberId);
+
 }
