@@ -5,6 +5,7 @@ import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.security.jwt.JwtAuthenticationFilter;
 import com.dailynuts.security.jwt.JwtUtils;
 import com.dailynuts.security.service.JwtService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -72,19 +73,22 @@ public class SecurityConfig {
                 // 요청에 대한 인가(Authorization) 규칙 설정
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/member/signup", "/member/login").permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
 
 
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling
-                                .authenticationEntryPoint((req, res, authenticationException) -> {
-                                    throw new CustomException(CustomErrorCode.TOKEN_NOT_VAILD);
-                                }) // 인증 실패 시 처리
-                                .accessDeniedHandler((req, res, accessDeniedException) -> {
-                                    throw new CustomException(CustomErrorCode.PERMISSION_DENIED);
-                                }) // 인가 실패 시 처리
+                                .authenticationEntryPoint((req, res, authEx) -> {
+                                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                    res.setContentType("application/json;charset=UTF-8");
+                                    res.getWriter().write("{\"error\": \"TOKEN_NOT_VALID\"}");
+                                })
+                                .accessDeniedHandler((req, res, accessEx) -> {
+                                    res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                                    res.setContentType("application/json;charset=UTF-8");
+                                    res.getWriter().write("{\"error\": \"PERMISSION_DENIED\"}");
+                                })
                 )
 
                 // JwtAuthenticationFilter를 Spring Security 필터 체인에 추가
