@@ -1,7 +1,7 @@
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { GoComment } from "react-icons/go";
 import defaultProfile from '../assets/images/default-profile.png';
-import '../assets/css/feed.css';
+import '../assets/css/Feed.css';
 
 function PostItem({post, toggleLike, onClick}) {
   const handleCardClick = () => {
@@ -26,6 +26,7 @@ function PostItem({post, toggleLike, onClick}) {
                     <span className="post-date">· {post.time}</span>
                 </div>
             </div>
+          </div>
           
           <div className="post-title">{post.title}</div>
           <div className="post-excerpt">{post.contents}</div>
@@ -46,7 +47,6 @@ function PostItem({post, toggleLike, onClick}) {
             </button>
           </div>
         </div>
-      </div>
     );
 }
 

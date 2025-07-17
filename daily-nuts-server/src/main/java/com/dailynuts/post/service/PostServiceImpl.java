@@ -84,13 +84,13 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PostResponseDto> getPosts(Long categoryId, int pageNo, String criteria) {
+    public Page<PostResponseDto> getPosts(Long categoryId, int pageNo, int size, String criteria) {
         Set<String> allowedCriteria = Set.of("createdAt", "likeCount", "commentCount");
         if (!allowedCriteria.contains(criteria)) {
-            throw new IllegalArgumentException("지원하지 않는 정렬 기준입니다: " + criteria);
+            throw new IllegalArgumentException("없는 정렬 기준입니다: " + criteria);
         }
 
-        Pageable pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, criteria));
+        Pageable pageable = PageRequest.of(pageNo, size, Sort.by(Sort.Direction.DESC, criteria));
 
         Page<Post> postPage = (categoryId == null || categoryId == 0L)
                 ? postRepository.findAll(pageable)

@@ -27,8 +27,9 @@ public class PostController {
     public Page<PostResponseDto> getPosts(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String criteria)
     {
-        return postService.getPosts(categoryId, page, criteria);
+        return postService.getPosts(categoryId, page, size, criteria);
     }
 }

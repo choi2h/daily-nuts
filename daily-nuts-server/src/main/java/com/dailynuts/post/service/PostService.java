@@ -13,5 +13,5 @@ public interface PostService {
     //List<PostResponseDto> getAllPosts();
     PostResponseDto updatePost(Long id, PostRequestDto request);
     void deletePost(Long id);
-    Page<PostResponseDto> getPosts(Long categoryId, int pageNo, String criteria);
+    Page<PostResponseDto> getPosts(Long categoryId, int pageNo, int size, String criteria);
 }
