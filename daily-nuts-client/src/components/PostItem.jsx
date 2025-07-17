@@ -21,12 +21,11 @@ function PostItem({post, toggleLike, onClick}) {
                 <div className="profile-avatar">
                     <img className="profile-image" src={defaultProfile} alt="Profile" />
                 </div>
+                <div className="author-info">
+                    <span className="author-name">{post.author}</span>
+                    <span className="post-date">· {post.time}</span>
+                </div>
             </div>
-              <div className="author-info">
-                <span className="author-name">{post.author}</span>
-                <span className="post-date">· {post.time}</span>
-              </div>
-          </div>
           
           <div className="post-title">{post.title}</div>
           <div className="post-excerpt">{post.contents}</div>
@@ -47,6 +46,7 @@ function PostItem({post, toggleLike, onClick}) {
             </button>
           </div>
         </div>
+      </div>
     );
 }
 

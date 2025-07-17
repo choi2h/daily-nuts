@@ -1,16 +1,14 @@
 package com.dailynuts.post.controller;
 
-import com.dailynuts.post.dto.CommentListResponse;
-import com.dailynuts.post.dto.CommentRequest;
-import com.dailynuts.post.dto.CommentResponse;
+import com.dailynuts.post.dto.CommentRequestDto;
+import com.dailynuts.post.dto.CommentResponseDto;
+import com.dailynuts.post.dto.CommentsResponseDto;
 import com.dailynuts.post.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,48 +19,47 @@ public class CommentController {
 
     //댓글 등록
     @PostMapping("/comment")
-    public ResponseEntity<CommentResponse> createComment(
+    public ResponseEntity<CommentResponseDto> createComment(
             @PathVariable Long postId,
-            @RequestBody @Valid CommentRequest request
+            @RequestBody @Valid CommentRequestDto request
     ) {
         Long memberId = 1L; // 임시
         String writer = request.getWriter();
 
-        CommentResponse response = commentService.createComment(postId, memberId, writer, request);
+        CommentResponseDto response = commentService.createComment(postId, memberId, writer, request);
         return ResponseEntity.ok(response);
     }
 
     //대댓글 등록
     @PostMapping("/comment/{parentCommentId}/reply")
-    public ResponseEntity<CommentResponse> createReplyToComment(
+    public ResponseEntity<CommentResponseDto> createReplyToComment(
             @PathVariable Long postId,
             @PathVariable ObjectId parentCommentId,
-            @RequestBody @Valid CommentRequest request
+            @RequestBody @Valid CommentRequestDto request
     ) {
         Long memberId = 1L; // 테스트용 하드코딩
         String writer = request.getWriter();
 
-        CommentResponse response = commentService.createReplyToComment(postId, parentCommentId, memberId, writer, request);
+        CommentResponseDto response = commentService.createReplyToComment(postId, parentCommentId, memberId, writer, request);
         return ResponseEntity.ok(response);
     }
 
     //댓글+ 대댓글 조회
     @GetMapping("/comments")
-    public ResponseEntity<CommentListResponse> getCommentsByPostId(@PathVariable Long postId) {
-        List<CommentResponse> comments = commentService.getCommentsByPostId(postId);
-        CommentListResponse response = new CommentListResponse(comments);
+    public ResponseEntity<CommentsResponseDto> getCommentsByPostId(@PathVariable Long postId) {
+        CommentsResponseDto response = commentService.getCommentsByPostId(postId);
         return ResponseEntity.ok(response);
     }
 
     //댓글 수정
     @PutMapping("/comment/{commentId}")
-    public ResponseEntity<CommentResponse> updateComment(
+    public ResponseEntity<CommentResponseDto> updateComment(
             @PathVariable Long postId,
             @PathVariable String commentId,
-            @RequestBody @Valid CommentRequest request
+            @RequestBody @Valid CommentRequestDto request
     ){
         Long memberId=1L; //로그인 사용자 대체
-        CommentResponse response = commentService.updateComment(postId,commentId,memberId,request);
+        CommentResponseDto response = commentService.updateComment(postId,commentId,memberId,request);
         return ResponseEntity.ok(response);
     }
 }

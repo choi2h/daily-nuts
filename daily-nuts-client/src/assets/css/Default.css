@@ -1,10 +1,3 @@
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background-color: #ffffff;
-  color: #242424;
-  line-height: 1.4;
-}
-
 .app {
   display: flex;
   min-height: 100vh;
@@ -17,9 +10,9 @@ body {
   flex: 1;
   display: flex;
   flex-direction: row;
-  margin-left: 250px;
+  margin-left: 280px;
   min-height: 100vh;
-  max-width: 800px;
+  width: 800px;
   background-color: #ffffff;
 }
 
@@ -61,6 +54,11 @@ body {
   color: #242424;
   font-weight: 500;
   border-bottom: 2px solid #242424;
+}
+
+.back-button {
+  background-color: #fff;
+  color: #333;
 }
 
 .spacer {

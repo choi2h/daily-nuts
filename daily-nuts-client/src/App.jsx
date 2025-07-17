@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import PostWritePage from './pages/PostWritePage';
 import ProfilePage from './pages/ProfilePage';
 import NotificationPage from './pages/NotificationPage';
+import SubscribeListPage from './pages/SubscribeListPage';
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
         <Route path='/mypage' element={<MyPage/>}></Route>
         <Route path='/profile/:id' element={<ProfilePage/>}></Route>
         <Route path='/notification' element={<NotificationPage/>}></Route>
+        <Route path='/subscribe' element={<SubscribeListPage/>}></Route>
         <Route path='/signup' element={<SignupPage/>}></Route>
         <Route path='/login' element={<LoginPage/>}></Route>
       </Routes>

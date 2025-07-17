@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IoChevronDown } from 'react-icons/io5';
-import '../assets/css/post-write.css';
+import '../assets/css/PostWrite.css';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 

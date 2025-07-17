@@ -1,5 +1,5 @@
+import "../assets/css/SubscribeModal.css";
 import { useState } from "react";
-import "../assets/css/subscription-modal.css";
 import axios from "axios";
 
 const SubscriptionModal = ({ isOpen, onClose, expertId, expertName, price}) => {

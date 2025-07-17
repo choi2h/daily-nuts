@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class CommentResponse {
+public class CommentResponseDto {
 
     private String id;
     private Long postId;
@@ -21,5 +21,5 @@ public class CommentResponse {
     private LocalDateTime createdAt;
 
     @Builder.Default
-    private List<CommentResponse> replies = new ArrayList<>();
+    private List<CommentResponseDto> replies = new ArrayList<>();
 }
