@@ -12,6 +12,14 @@ input {
   color: #2c2c2c;
 }
 
+select {
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #e5eaf2;
+  border-radius: 5px;
+  color: #2c2c2c;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

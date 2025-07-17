@@ -34,12 +34,6 @@
   border-bottom: 1px solid #e5e5e5;
 }
 
-.author-info {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
 .author-avatar {
   width: 40px;
   height: 40px;
@@ -86,13 +80,6 @@
   color: #333333;
 }
 
-.like-button.liked {
-  color: #ff6b6b;
-}
-
-.like-button.liked .heart-icon {
-  color: #ff6b6b;
-}
 
 .heart-icon {
   font-size: 18px;

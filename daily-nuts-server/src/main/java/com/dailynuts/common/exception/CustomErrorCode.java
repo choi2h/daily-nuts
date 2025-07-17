@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@AllArgsConstructor
 public enum CustomErrorCode {
     // 회원 M
     MEMBER_NOT_EXIST(HttpStatus.NOT_FOUND, "M001", "아이디 혹은 비밀번호를 확인해주세요"),
@@ -36,16 +37,10 @@ public enum CustomErrorCode {
     INVALID_PAYMENT_REQUEST(HttpStatus.BAD_REQUEST, "A002", "유효하지 않은 결제 요청입니다."),
     INVALID_PAYMENT_INFO(HttpStatus.BAD_REQUEST, "A003", "결제 정보가 유효하지 않습니다."),
     PORTONE_CALL_FAILED(HttpStatus.BAD_REQUEST, "A004", "결제 정보 조회에 실패했습니다.");
-  
+
     // 알림 N
 
     private final HttpStatus status;
     private final String errorCode;
     private final String message;
-
-    CustomErrorCode(HttpStatus status, String errorCode, String message) {
-        this.status = status;
-        this.errorCode = errorCode;
-        this.message = message;
-    }
 }
