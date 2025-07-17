@@ -44,6 +44,9 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+    private ExpertInfo expertInfo;
+
     @CreationTimestamp
     @Column(name = "created_at", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime createdAt;

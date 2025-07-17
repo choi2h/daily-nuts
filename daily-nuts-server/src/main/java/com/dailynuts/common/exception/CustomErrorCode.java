@@ -17,6 +17,7 @@ public enum CustomErrorCode {
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "요청하신 게시글을 찾을 수 없습니다."),
     POST_LIKE_NOT_EXIST(HttpStatus.NOT_FOUND, "P002", "좋아요 기록이 존재하지 않습니다."),
     POST_LIKE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "P003", "이미 좋아요된 게시물입니다."),
+    SEARCH_KEYWORD_EMPTY(HttpStatus.BAD_REQUEST, "P004", "검색어를 입력해주세요"),
 
     // 댓글 C
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C001", "존재하지 않는 댓글입니다."),
