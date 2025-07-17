@@ -8,7 +8,8 @@ const login = async (loginInfo) => {
         withCredentials: true       // ← 이걸 설정해야 쿠키가 자동으로 저장됨
         })
         .then((res) => {
-            console.log(`res: 로그인 성공! ${res}`);
+            console.log(res);
+            // console.log(`res: 로그인 성공! ${res}`);
             return res;
         })
         .catch((err) => {

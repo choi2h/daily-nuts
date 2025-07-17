@@ -1,6 +1,7 @@
 package com.dailynuts.member.controller;
 
 import com.dailynuts.member.dto.MemberLoginRequestDto;
+import com.dailynuts.member.dto.MemberLoginResponseDto;
 import com.dailynuts.member.dto.MemberSignupRequestDto;
 import com.dailynuts.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -28,15 +29,15 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> loginMember(@RequestBody @Valid MemberLoginRequestDto req){
+    public ResponseEntity<MemberLoginResponseDto> loginMember(@RequestBody @Valid MemberLoginRequestDto req){
 
-        ResponseCookie[] cookies = memberService.loginMember(req);
+        MemberLoginResponseDto loginResponseDto = memberService.loginMember(req);
 
         return ResponseEntity.ok()
                              .header(HttpHeaders.SET_COOKIE,
-                                     cookies[0].toString(),
-                                     cookies[1].toString())
-                             .build();
+                                     loginResponseDto.getAccessCookie(),
+                                     loginResponseDto.getRefreshCookie())
+                             .body(loginResponseDto);
     }
 
 }

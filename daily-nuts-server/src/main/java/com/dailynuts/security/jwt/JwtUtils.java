@@ -66,10 +66,10 @@ public class JwtUtils {
     }
 
     // 리프레시 토큰 생성 메서드
-    public String provideRefreshToken(MemberLoginRequestDto req) {
+    public String provideRefreshToken(String loginId) {
 
         return Jwts.builder()
-                .subject(req.getLoginId())
+                .subject(loginId)
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(Instant.now().plusSeconds(refreshTokenSeconds)))
                 .signWith(secretKey)
