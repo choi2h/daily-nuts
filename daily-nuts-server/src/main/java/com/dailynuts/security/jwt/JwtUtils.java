@@ -38,14 +38,15 @@ public class JwtUtils {
     // 토큰 서명 알고리즘
     @PostConstruct
     public void init() {
+
         this.secretKey = Keys.hmacShaKeyFor(secretKeyString.getBytes());
     }
 
     // 토큰 생성 메서드
-    public String provideToken(MemberLoginRequestDto req) {
+    public String provideToken(String loginId) {
 
         return Jwts.builder()
-                .subject(req.getLoginId())
+                .subject(loginId)
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(Instant.now().plusSeconds(accessTokenSeconds)))
                 .signWith(secretKey)

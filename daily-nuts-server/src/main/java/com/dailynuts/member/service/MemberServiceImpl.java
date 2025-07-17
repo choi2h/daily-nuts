@@ -47,7 +47,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 토큰 생성
-        String accessToken = jwtUtils.provideToken(req);
+        String accessToken = jwtUtils.provideToken(req.getLoginId());
         String refreshToken = jwtUtils.provideRefreshToken(req);
 
         // 쿠키 생성

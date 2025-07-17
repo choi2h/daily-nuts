@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if(jwtUtils.validateToken(token)){
             loginId = jwtUtils.getLoginIdFromToken(token);
         } else {
-            throw new CustomException(CustomErrorCode.TOKEN_NOT_VAILD);
+            throw new CustomException(CustomErrorCode.TOKEN_NOT_VALID);
         }
 
         // 시큐리티 컨텍스트에 저장하기 위한 authentication 객체 생성
