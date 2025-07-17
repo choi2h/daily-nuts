@@ -2,6 +2,7 @@ package com.dailynuts.security.config;
 
 import com.dailynuts.security.jwt.JwtAuthenticationFilter;
 import com.dailynuts.security.jwt.JwtUtils;
+import com.dailynuts.security.jwt.RefreshTokenFilter;
 import com.dailynuts.security.service.JwtService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -68,13 +69,6 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // 요청에 대한 인가(Authorization) 규칙 설정
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/member/signup", "/member/login", "/security/refreshToken").permitAll()
-                                .anyRequest().authenticated()
-                )
-
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling
                                 .authenticationEntryPoint((req, res, authEx) -> {
@@ -89,8 +83,16 @@ public class SecurityConfig {
                                 })
                 )
 
-                // JwtAuthenticationFilter를 Spring Security 필터 체인에 추가
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtils, jwtService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtils, jwtService), UsernamePasswordAuthenticationFilter.class)
+
+                .addFilterAfter(new RefreshTokenFilter(jwtUtils, jwtService), JwtAuthenticationFilter.class)
+
+                // 요청에 대한 인가(Authorization) 규칙 설정
+                .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers("/member/signup", "/member/login", "/security/refreshToken").permitAll()
+                                .anyRequest().authenticated()
+                );
 
         // 빌드 및 반환
         return http.build();
