@@ -3,14 +3,37 @@ import { useState } from 'react';
 import { FaLock } from 'react-icons/fa';
 import '../assets/css/Login.css';
 import { useNavigate } from 'react-router';
+import { login } from '../service/MemberInfoService';
+import { HttpStatusCode } from 'axios';
 
 const LoginPage = () => {
+  const [loginInfo, setLoginInfo] = useState({loginId: '', password: ''});
   const [showPassword, setShowPassword] = useState(false);
   const togglePassword = () => setShowPassword(prev => !prev);
   const navigate = useNavigate();
 
   const handleJoin = () => {
     navigate('/signup');
+  }
+
+  const handleLogin = (e) => {
+      e.preventDefault(); // 폼의 기본 제출 동작 방지
+      console.log("login!!!");
+      login(loginInfo).then((res) => {
+        if(res.status === HttpStatusCode.Ok) {
+          navigate('/');
+        } else {
+          alert(res.data.message);
+        }
+      });
+  }
+
+  const handleLoginId = (e) => {
+      setLoginInfo({...loginInfo, loginId: e.target.value});
+  }
+
+   const handleLoginPassword = (e) => {
+      setLoginInfo({...loginInfo, password: e.target.value});
   }
 
   return (
@@ -27,6 +50,8 @@ const LoginPage = () => {
                   type="text"
                   placeholder="아이디를 입력해주세요"
                   autoComplete="off"
+                  value={loginInfo.id}
+                  onChange={(e) => handleLoginId(e)}
                 />
               </div>
             </div>
@@ -41,6 +66,8 @@ const LoginPage = () => {
                     type={showPassword ? 'text' : 'password'}
                     placeholder="비밀번호를 입력해주세요"
                     autoComplete="off"
+                    value={loginInfo.password}
+                    onChange={(e) => handleLoginPassword(e)}
                   />
                 </div>
                 <button
@@ -53,7 +80,7 @@ const LoginPage = () => {
               </div>
             </div>
 
-            <button type="submit" className="submit-btn">로그인</button>
+            <button type="submit" className="submit-btn" onClick={handleLogin}>로그인</button>
           </form>
 
           <p className="login-text" onClick={handleJoin}>
