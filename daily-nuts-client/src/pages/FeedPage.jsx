@@ -174,35 +174,6 @@ const FeedPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-  const fetchInitialPosts = async () => {
-    setLoading(true);
-
-    try {
-      const params = {
-        page: 0,
-        size: size,
-        criteria: sortCriteria,
-      };
-      if (selectedCategory.id !== 0) {
-        params.categoryId = selectedCategory.id;
-      }
-      const res = await axios.get('/api/posts', { params });
-
-      setPosts(res.data.content || []);
-      setHasMore(!res.data.last);
-      setCurrentPage(1);
-    } catch (err) {
-      console.error('초기 글 로딩 실패:', err);
-      setPosts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchInitialPosts();
-}, [selectedCategory, sortCriteria]);
-
   const changeCategory = (category) => {
     console.log(category.target);
     setSelectedCategory(category);
@@ -244,7 +215,7 @@ const FeedPage = () => {
   const isFetchingRef = useRef(false);
 
   const loadMorePosts = useCallback(async () => {
-    if (loading || !hasMore) return;
+    if (loading || !hasMore || isFetchingRef.current) return;
 
     isFetchingRef.current = true;
     setLoading(true);
@@ -283,6 +254,7 @@ const FeedPage = () => {
     setPosts([]);
     setCurrentPage(0);
     setHasMore(true);
+    loadMorePosts();
   }, [selectedCategory, sortCriteria]);
   
   // // 더 많은 포스트 로드
