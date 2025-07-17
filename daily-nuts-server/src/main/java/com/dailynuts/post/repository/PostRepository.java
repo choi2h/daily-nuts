@@ -20,4 +20,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT likeCount FROM Post WHERE id=:postId")
     int findLikeCountById(Long postId);
+
+    long countByMemberId(Long memberId);
+
 }
