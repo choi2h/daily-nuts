@@ -93,8 +93,8 @@ public class PostServiceImpl implements PostService{
         Pageable pageable = PageRequest.of(pageNo, size, Sort.by(Sort.Direction.DESC, criteria));
 
         Page<Post> postPage = (categoryId == null || categoryId == 0L)
-                ? postRepository.findAll(pageable)
-                : postRepository.findByCategory_Id(categoryId, pageable);
+                ? postRepository.findByIsPinnedTrue(pageable)
+                : postRepository.findByCategory_IdAndIsPinnedTrue(categoryId, pageable);
 
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         for (Post post : postPage.getContent()) {

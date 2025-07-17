@@ -175,7 +175,6 @@ const FeedPage = () => {
   const navigate = useNavigate();
 
   const changeCategory = (category) => {
-    console.log(category.target);
     setSelectedCategory(category);
     setCurrentPage(0);
   }
@@ -214,7 +213,8 @@ const FeedPage = () => {
   const size = 10;
   const isFetchingRef = useRef(false);
 
-  const loadMorePosts = useCallback(async () => {
+  const loadMorePosts = useCallback(async (page) => {
+    console.log('요청 page:', currentPage);
     if (loading || !hasMore || isFetchingRef.current) return;
 
     isFetchingRef.current = true;
@@ -222,16 +222,13 @@ const FeedPage = () => {
 
     try {
       const params = {
-        page: currentPage,
-        size: size,
+        page,
+        size,
         criteria: sortCriteria,
+        categoryId: selectedCategory.id,
       };
-      if (selectedCategory.id !== 0) {
-        params.categoryId = selectedCategory.id;
-      }
 
       const res = await axios.get('/api/posts', { params });
-
       const newPosts = res.data.content;
 
       setPosts((prev) => {
@@ -240,22 +237,30 @@ const FeedPage = () => {
         const updated = [...prev, ...uniqueNewPosts];
         return updated;
       });
+
       setHasMore(!res.data.last);
-      setCurrentPage((prev) => prev + 1);
+      setCurrentPage(page + 1);
     } catch (err) {
       console.error('포스트 로딩 오류:', err);
     } finally {
-      setLoading(false);
       isFetchingRef.current = false;
+
+      setLoading(false);
     }
   }, [loading, hasMore, currentPage, sortCriteria, selectedCategory]);
 
-  useEffect(() => {
-    setPosts([]);
-    setCurrentPage(0);
-    setHasMore(true);
-    loadMorePosts();
-  }, [selectedCategory, sortCriteria]);
+    useEffect(() => {
+      setPosts([]);
+      setCurrentPage(0);
+      setHasMore(true);
+      isFetchingRef.current = false;
+    }, [selectedCategory, sortCriteria]);
+
+    useEffect(() => {
+      if (currentPage === 0 && hasMore) {
+        loadMorePosts(0);
+      }
+    }, [currentPage, hasMore]);
   
   // // 더 많은 포스트 로드
   // const loadMorePosts = useCallback(async () => {
@@ -286,13 +291,13 @@ const FeedPage = () => {
       const documentHeight = document.documentElement.scrollHeight;
       
       if (scrollTop + windowHeight >= documentHeight - 1000 && !loading && hasMore) {
-        loadMorePosts();
+        loadMorePosts(currentPage);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loadMorePosts, loading, hasMore]);
+  }, [loadMorePosts, currentPage, loading, hasMore]);
 
   return (
     <>

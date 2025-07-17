@@ -27,4 +27,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     long countByMemberId(Long memberId);
 
+    Page<Post> findByIsPinnedTrue(Pageable pageable);
+
+    Page<Post> findByCategory_IdAndIsPinnedTrue(Long categoryId, Pageable pageable);
+
 }
