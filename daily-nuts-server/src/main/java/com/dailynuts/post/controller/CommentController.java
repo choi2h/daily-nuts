@@ -66,7 +66,6 @@ public class CommentController {
     //댓글 삭제
     @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<DeleteResponseDto> deleteComment(
-            @PathVariable Long postId,
             @PathVariable("commentId") ObjectId commentId,
             @RequestParam Long memberId
     ) {
