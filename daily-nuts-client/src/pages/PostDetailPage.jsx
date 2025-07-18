@@ -11,7 +11,7 @@ import axios from 'axios';
 const convertCommentData = (commentsFromServer) => {
   return commentsFromServer.map(comment => ({
     id: comment.id,
-      author: comment.writer,
+    author: comment.writer,
     authorId: comment.memberId,  
     date: comment.createdAt.substring(0, 10).replace(/-/g, '.'),
     content: comment.contents,
@@ -19,7 +19,7 @@ const convertCommentData = (commentsFromServer) => {
     isAuthor: true,
     replies: comment.replies?.map(reply => ({
       id: reply.id,
-        author: reply.writer,
+      author: reply.writer,
       authorId: reply.memberId,
       date: reply.createdAt.substring(0, 10).replace(/-/g, '.'),
       content: reply.contents,
@@ -34,7 +34,8 @@ const convertCommentData = (commentsFromServer) => {
 };
 
 const PostDetail = () => {
-    const currentMemberId = 1;
+  const currentMemberId = 1;
+    
   const { id: postId } = useParams();
   const [post, setPost] = useState(null);
   const [comment, setComment] = useState(''); 
@@ -42,7 +43,6 @@ const PostDetail = () => {
   const [editingCommentId, setEditingCommentId] = useState(null); //댓글 수정  
   const [editedContent, setEditedContent] = useState({});//댓글 수정
  
-
   // 게시글 상세 정보
   useEffect(() => {
     axios.get(`/api/post/${postId}`)
@@ -54,83 +54,83 @@ const PostDetail = () => {
       });
   }, [postId]);
 
-  const fetchComments = async () => {
-    try {
-      const res = await axios.get(`http://localhost:8081/post/${postId}/comments`);
-      const formattedComments = convertCommentData(res.data.comments);
-      setComments(formattedComments);
-    } catch (err) {
-      console.error('댓글 목록 가져오기 실패:', err);
-    }
-  };
+    const fetchComments = async () => {
+        try {
+        const res = await axios.get(`http://localhost:8081/post/${postId}/comments`);
+        const formattedComments = convertCommentData(res.data.comments);
+        setComments(formattedComments);
+        } catch (err) {
+        console.error('댓글 목록 가져오기 실패:', err);
+        }
+    };
 
   useEffect(() => {
     fetchComments();
   }, [postId]);
 
-  const handleCommentChange = (e) => {
-    setComment(e.target.value);
-  };
+    const handleCommentChange = (e) => {
+        setComment(e.target.value);
+    };
   //댓글 등록 
-  const handleCommentSubmit = async (e) => {
-    e.preventDefault();
-    if (comment.trim()) {
-      try {
-        await axios.post(
-          `http://localhost:8081/post/${postId}/comment`,
-          {
-            contents: comment,
-            writer: "test",
-          }
-        );
-        setComment('');
-        await fetchComments();
-      } catch (error) {
-        console.error('댓글 등록 실패:', error);
-      }
-    }
-  };
+    const handleCommentSubmit = async (e) => {
+        e.preventDefault();
+        if (comment.trim()) {
+        try {
+            await axios.post(
+            `http://localhost:8081/post/${postId}/comment`,
+            {
+                contents: comment,
+                writer: "test",
+            }
+            );
+            setComment('');
+            await fetchComments();
+        } catch (error) {
+            console.error('댓글 등록 실패:', error);
+        }
+        }
+    };
 
   // 대댓글 입력창 토글
-  const toggleReplyInput = (parentId) => {
-    setComments(prev =>
-      prev.map(comment =>
-        comment.id === parentId
-          ? { ...comment, isReplyOpen: !comment.isReplyOpen }
-          : comment
-      )
-    );
-  };
+    const toggleReplyInput = (parentId) => {
+        setComments(prev =>
+        prev.map(comment =>
+            comment.id === parentId
+            ? { ...comment, isReplyOpen: !comment.isReplyOpen }
+            : comment
+        )
+        );
+    };
 
   // 대댓글 입력 내용 변경
-  const handleReplyChange = (parentId, value) => {
-    setComments(prev =>
-      prev.map(comment =>
-        comment.id === parentId ? { ...comment, replyInput: value } : comment
-      )
-    );
-  };
+    const handleReplyChange = (parentId, value) => {
+        setComments(prev =>
+        prev.map(comment =>
+            comment.id === parentId ? { ...comment, replyInput: value } : comment
+        )
+        );
+    };
 
   // 대댓글 등록
-  const handleReplySubmit = async (parentId) => {
-    const parentComment = comments.find(c => c.id === parentId);
-    const replyContent = parentComment?.replyInput;
+    const handleReplySubmit = async (parentId) => {
+        const parentComment = comments.find(c => c.id === parentId);
+        const replyContent = parentComment?.replyInput;
 
-    if (!replyContent?.trim()) return;
+        if (!replyContent?.trim()) return;
 
-    try {
-      await axios.post(
-        `http://localhost:8081/post/${postId}/comment/${parentId}/reply`,
-        {
-          contents: replyContent,
-          writer: "test",
+        try {
+        await axios.post(
+            `http://localhost:8081/post/${postId}/comment/${parentId}/reply`,
+            {
+            contents: replyContent,
+            writer: "test",
+            }
+        );
+        await fetchComments();
+        } catch (err) {
+        console.error('대댓글 등록 실패:', err);
         }
-      );
-      await fetchComments();
-    } catch (err) {
-      console.error('대댓글 등록 실패:', err);
-    }
-  };
+    };
     
     // 수정 버튼 클릭 시
     const handleEditClick = (commentId, currentContent) => {
@@ -174,22 +174,22 @@ const PostDetail = () => {
 
     // 댓글 삭제
     const handleDeleteClick = async (commentId) => {
-  const currentMemberId = 1; // 실제 로그인된 ID로 교체하세요
+    const currentMemberId = 1; // 실제 로그인된 ID로 교체하세요
 
-  if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
+    if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
 
-  console.log('삭제 요청, commentId:', commentId, 'memberId:', currentMemberId);
+    console.log('삭제 요청, commentId:', commentId, 'memberId:', currentMemberId);
 
-  try {
-    const res = await axios.delete(`http://localhost:8081/post/${postId}/comment/${commentId}`, {
-      params: { memberId: currentMemberId }
-    });
-    console.log('삭제 성공:', res.data);
-    await fetchComments();
-  } catch (error) {
-    console.error('댓글 삭제 실패:', error.response || error.message);
-  }
-};
+    try {
+        const res = await axios.delete(`http://localhost:8081/post/${postId}/comment/${commentId}`, {
+        params: { memberId: currentMemberId }
+        });
+        console.log('삭제 성공:', res.data);
+        await fetchComments();
+    } catch (error) {
+        console.error('댓글 삭제 실패:', error.response || error.message);
+    }
+    };
 
   return (
     <DefaultLayout className="app">
@@ -222,8 +222,8 @@ const PostDetail = () => {
                     isEditing={editingCommentId === comment.id}
                     editedContent={editedContent}
                     onEditChange={handleEditChange}
-                        onEditSubmit={handleEditSubmit}
-                        onEditChange={handleEditChange}
+                    onEditSubmit={handleEditSubmit}
+                    onEditChange={handleEditChange}
                     onDeleteClick={handleDeleteClick}
                 />
                 {/* 대댓글 입력창 */}
@@ -247,9 +247,8 @@ const PostDetail = () => {
                 {comment.replies.map(reply => (
                 <ReplyItem 
                     key={reply.id} 
-                        reply={reply}
-                            currentMemberId={currentMemberId}
-
+                    reply={reply}
+                    currentMemberId={currentMemberId}
                     isEditing={editingCommentId === reply.id}
                     editedContent={editedContent}
                     onEditClick={handleEditClick}

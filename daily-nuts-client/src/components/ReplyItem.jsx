@@ -4,14 +4,14 @@ import defaultProfile from '../assets/images/default-profile.png';
 function ReplyItem({
     reply,
     currentMemberId,
-  isEditing,
-  editedContent,
-  onEditClick,
-  onEditChange,
-  onEditSubmit,
-  onDeleteClick
+    isEditing,
+    editedContent,
+    onEditClick,
+    onEditChange,
+    onEditSubmit,
+    onDeleteClick
 }) {
-      const isAuthor = reply.authorId === currentMemberId;
+    const isAuthor = reply.authorId === currentMemberId;
 
   return (
     <div key={reply.id} className="reply-item">

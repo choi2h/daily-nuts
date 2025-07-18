@@ -5,14 +5,14 @@ import '../assets/css/Comment.css';
 function CommentItem({
     comment,
     currentMemberId,
-  onReplyClick,
-  onEditClick,
+    onReplyClick,
+    onEditClick,
     onDeleteClick,
     onEditChange,
-  setEditedContent,
-  isEditing,
-  editedContent,
-  onEditSubmit
+    setEditedContent,
+    isEditing,
+    editedContent,
+    onEditSubmit
 }) {
     const isAuthor = comment.authorId === currentMemberId;
   return (
@@ -52,7 +52,6 @@ function CommentItem({
             <div className="comment-text">{comment.content}</div>
             )}
 
-
         <div className="comment-actions">
           <button className="reply-button" onClick={() => onReplyClick(comment.id)}>답글달기</button>
         </div>
@@ -60,6 +59,5 @@ function CommentItem({
     </div>
   );
 }
-
 
 export default CommentItem;
