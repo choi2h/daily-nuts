@@ -3,6 +3,10 @@ export const validators = {
     // 5~16자, 소문자로 시작 + 영문/숫자만
     v => v.length === 0 || (v.length >= 5 && v.length <= 16),
     v => v.length === 0 || /^[a-z][a-z0-9]*$/.test(v),
+    (v, { loginIdChecked, loginIdExists }) =>
+          !loginIdChecked
+            ? false
+            : !loginIdExists,
   ],
   password: [
     // 6~12자

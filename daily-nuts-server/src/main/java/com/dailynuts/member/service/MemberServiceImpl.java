@@ -12,6 +12,7 @@ import com.dailynuts.member.service.mapper.MemberMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -64,6 +65,12 @@ public class MemberServiceImpl implements MemberService {
         }
       
         return tokens;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByLoginId(String loginId) {
+        return memberRepository.existsByLoginId(loginId);
     }
 
     private Member createHashedMember(MemberSignupRequestDto req) {

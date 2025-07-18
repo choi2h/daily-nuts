@@ -93,7 +93,7 @@ public class SecurityConfig {
                 // 요청에 대한 인가(Authorization) 규칙 설정
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/member/signup", "/member/login", "/member/refresh").permitAll()
+                                .requestMatchers("/member/signup", "/member/login", "/member/refresh", "/member/exist").permitAll()
                                 .anyRequest().authenticated()
                 );
 

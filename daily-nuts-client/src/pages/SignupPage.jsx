@@ -14,11 +14,13 @@ import {
 import { useNavigate } from "react-router";
 import { validators } from "../utils/validators";
 import { validationMessages } from "../utils/validationMessages";
-import { signup } from "../service/MemberInfoService";
+import { signup, existsLoginId } from "../service/MemberInfoService";
 
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loginIdChecked, setLoginIdChecked] = useState(false);
+  const [loginIdExists, setLoginIdExists] = useState(false);
   const navigate = useNavigate();
 
   const togglePassword = () => setShowPassword((prev) => !prev);
@@ -34,9 +36,15 @@ const SignupPage = () => {
     confirmPassword: "",
   });
 
+  // 변경된 값을 필드로 갖고있기
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSignupInfo((prev) => ({ ...prev, [name]: value }));
+    // 변경 값의 name이 loiginId면 중복 체크 여부 초기화
+    if (name === "loginId") {
+      setLoginIdChecked(false);
+      setLoginIdExists(false);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -52,13 +60,34 @@ const SignupPage = () => {
     });
   };
 
-  // 필드값이 검증을 통과하는가
+  const handleCheckLoginId = async () => {
+    if (!signupInfo.loginId) return;
+    const exists = await existsLoginId(signupInfo.loginId);
+    setLoginIdChecked(true);
+    setLoginIdExists(exists);
+  };
+
+  // 프론트에서 하는 유효성 검증 펑션
   const fieldValid = (field) => {
-    return validators[field].every((fn) =>
-      field === "confirmPassword"
-        ? fn(signupInfo[field], signupInfo)
-        : fn(signupInfo[field])
-    );
+    // 로그인 중복 체크 기본 로그인ID valid 체크
+    // 로그인 중복 체크 통과 여부
+    if (field === "loginId") {
+      const baseValid = validators.loginId.every((fn) =>
+        fn(signupInfo.loginId, { loginIdChecked, loginIdExists })
+      );
+
+      return baseValid && loginIdChecked && !loginIdExists;
+    }
+
+    // 비밀번호 확인 체크
+    if (field === "confirmPassword") {
+      return validators.confirmPassword.every((fn) =>
+        fn(signupInfo.confirmPassword, signupInfo)
+      );
+    }
+
+    // 나머지 필드도 valid체크 확인
+    return validators[field].every((fn) => fn(signupInfo[field]));
   };
 
   // 값이 비어있는가
@@ -132,19 +161,28 @@ const SignupPage = () => {
               <span className="tooltip">
                 <ul>
                   {validationMessages.loginId
-                    .map((msg, i) => ({
-                      msg,
-                      valid: validators.loginId[i](signupInfo.loginId),
-                    }))
-                    .filter((item) => !item.valid)
-                    .map((item, idx) => (
-                      <li key={idx}>{item.msg}</li>
-                    ))}
+                    .slice(0, 2)
+                    .map((msg, i) =>
+                      !validators.loginId[i](signupInfo.loginId) ? (
+                        <li key={i}>{msg}</li>
+                      ) : null
+                    )}
+
+                  {!loginIdChecked ? (
+                    <li>{validationMessages.loginId[2]}</li>
+                  ) : loginIdExists ? (
+                    <li>{validationMessages.loginId[3]}</li>
+                  ) : null}
                 </ul>
               </span>
             )}
 
-            <button type="button" className="check-btn">
+            <button
+              type="button"
+              className="check-btn"
+              onClick={handleCheckLoginId}
+              disabled={!signupInfo.loginId}
+            >
               중복검사
             </button>
           </div>

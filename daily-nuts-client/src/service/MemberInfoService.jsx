@@ -1,8 +1,8 @@
 import axios, { HttpStatusCode } from "axios"
 
+// 로그인
 const login = async (loginInfo) => {
     return axios.post('/member/login', loginInfo, {
-       // ← 이걸 설정해야 쿠키가 자동으로 저장됨
         })
         .then((res) => {
             console.log(res);
@@ -25,8 +25,7 @@ const login = async (loginInfo) => {
         });
 }
 
-export {login};
-
+// 회원가입
 const signup = async (signupInfo) => {
      if (
     !signupInfo ||
@@ -56,4 +55,13 @@ const signup = async (signupInfo) => {
         });
 }
 
-export {signup};
+// 아이디 중복 체크
+const existsLoginId = async (loginId) => {
+  const res = await axios.get("/member/exist", {
+    params: { loginId },
+  });
+  // { exists: true/false } 가 반환됨
+  return res.data.exists;
+};
+
+export { signup, existsLoginId, login };
