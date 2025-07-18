@@ -35,7 +35,7 @@ const navs = [
 function Sidebar() {
     const {pathname} = useLocation();
     const navigate = useNavigate();
-    const isLogin = true;
+    const isLogin = localStorage.getItem("loginId");
 
     const handleNav = (nav) => {
         navigate(nav.api);

@@ -2,6 +2,7 @@ package com.dailynuts.member.service;
 
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
+import com.dailynuts.member.dto.MemberLoginResponseDto;
 import com.dailynuts.security.jwt.JwtUtils;
 import com.dailynuts.member.dto.MemberLoginRequestDto;
 import com.dailynuts.member.dto.MemberSignupRequestDto;
@@ -31,12 +32,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public ResponseCookie[] loginMember(MemberLoginRequestDto req) {
-
-        return processLoginAndGenerateCookie(req);
-    }
-
-    private ResponseCookie[] processLoginAndGenerateCookie(MemberLoginRequestDto req) {
+    public MemberLoginResponseDto loginMember(MemberLoginRequestDto req) {
         // 아이디 존재 확인
         Member member = memberRepository.findByLoginId(req.getLoginId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
@@ -46,15 +42,28 @@ public class MemberServiceImpl implements MemberService {
             throw new CustomException(CustomErrorCode.PASSWORD_DOSE_NOT_MATCH);
         }
 
-        // 토큰 생성
-        String accessToken = jwtUtils.provideToken(req.getLoginId());
-        String refreshToken = jwtUtils.provideRefreshToken(req);
+        String accessToken = getAccessTokenCookie(req.getLoginId());
+        String refreshToken = getRefreshTokenCookie(req.getLoginId());
 
-        // 쿠키 생성
+        return MemberLoginResponseDto.builder()
+                .loginId(member.getLoginId())
+                .name(member.getName())
+                .role(member.getRole())
+                .accessCookie(accessToken)
+                .refreshCookie(refreshToken)
+                .build();//새로운 DTO 세팅해서 반납 DTO는 @builder로 처리하기
+    }
+
+    private String getAccessTokenCookie(String loginId) {
+        String accessToken = jwtUtils.provideToken(loginId);
         ResponseCookie accessCookie = jwtUtils.provideCookie(accessToken);
-        ResponseCookie refreshCookie = jwtUtils.provideRefreshCookie(refreshToken);
+        return accessCookie.toString();
+    }
 
-        return new ResponseCookie[]{accessCookie, refreshCookie};
+    private String getRefreshTokenCookie(String loginId) {
+        String refreshToken = jwtUtils.provideRefreshToken(loginId);
+        ResponseCookie refreshCookie = jwtUtils.provideRefreshCookie(refreshToken);
+        return refreshCookie.toString();
     }
 
     private Member createHashedMember(MemberSignupRequestDto req) {
