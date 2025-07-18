@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router';
-import { IoHome, IoHeartOutline, IoBookmarkOutline, IoPersonOutline, IoNotificationsOutline, IoLogOutOutline } from 'react-icons/io5';
+import { IoHome, IoHeartOutline, IoBookmarkOutline, IoPersonOutline, IoNotificationsOutline, IoLogOutOutline, IoAddOutline } from 'react-icons/io5';
 import '../assets/css/Sidebar.css';
 import logo from '../assets/images/daily-nuts-logo.png';
 import defaultProfile from '../assets/images/default-profile.png';
@@ -53,6 +53,11 @@ function Sidebar() {
         // 예: navigate('/login');
     };
 
+    const handleCreatePost = () => {
+        console.log('게시글 작성');
+        navigate('/post/write');
+    };
+
     return (
         <div className='sidebar'>
             <div>
@@ -72,6 +77,13 @@ function Sidebar() {
                                 <p>@loginId</p>
                             </div>
                         </div>
+
+                        {/* 게시글 작성 버튼 */}
+                        <div className="create-post-btn" onClick={handleCreatePost}>
+                            <IoAddOutline className="create-post-icon" />
+                            <span>게시글 작성</span>
+                        </div>
+
                         {
                             navs.map((nav) => (
                                 <NavItem nav={nav} handleNav={handleNav} currentPath={pathname}/>

@@ -2,8 +2,16 @@ import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { GoComment } from "react-icons/go";
 import defaultProfile from '../assets/images/default-profile.png';
 
-function PostDetailItem({post, toggleLike}) {
+function PostDetailItem({post, toggleLike, setPost}) {
     if (!post) return null;
+
+    const onEditClick = () => {
+        console.log("수정버튼");
+    }
+
+     const onDeleteClick = () => {
+        console.log("수정버튼");
+    }
 
     return (
             <div>
@@ -20,6 +28,10 @@ function PostDetailItem({post, toggleLike}) {
                         <span className="author-name">{post.writer}</span>
                     </div>
                     <span className="post-date">{post.createdAt}</span>
+                </div>
+                <div className="post-modify-actions">
+                    <button className="action-button" onClick={() => onEditClick()}>수정</button>
+                    <button className="action-button" onClick={() => onDeleteClick()}>삭제</button>
                 </div>
 
                 <div className="post-detail-content">

@@ -5,10 +5,8 @@ import BlankHeaderLayout from '../layers/BlankHeaderLayout';
 const PostWritePage = () => {
     return (
         <DefaultLayout className="app">
-            <BlankHeaderLayout>
-                <div className="post-detail">
+            <BlankHeaderLayout title="글 작성" type="card">
                     <PostForm />
-                </div>
             </BlankHeaderLayout>
         </DefaultLayout>
     );
