@@ -40,7 +40,7 @@ public class NotificationInfoService {
                 .message(message)
                 .build();
         notificationRepository.save(notification);
-        notificationConnectService.sendToClient(targetMemberId, message);
+        notificationConnectService.sendMessageToClient(targetMemberId, message);
     }
 
     public NotificationResponseDto getNotifications(Long memberId) {
