@@ -33,4 +33,10 @@ public class Image {
     @CreationTimestamp
     @Column(name = "created_at", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime createdAt;
+
+    public Image(String name, String url, ImageType type) {
+        this.name = name;
+        this.url = url;
+        this.type = type;
+    }
 }

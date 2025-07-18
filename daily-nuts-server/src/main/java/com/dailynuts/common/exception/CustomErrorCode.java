@@ -11,6 +11,13 @@ public enum CustomErrorCode {
     MEMBER_NOT_EXIST(HttpStatus.NOT_FOUND, "M001", "아이디 혹은 비밀번호를 확인해주세요"),
     PASSWORD_DOSE_NOT_MATCH(HttpStatus.UNAUTHORIZED, "M002", "아이디 혹은 비밀번호를 확인해주세요"),
     TOKEN_NOT_VALID(HttpStatus.UNAUTHORIZED, "M003", "로그인이 인증되지 않았습니다"),
+    PERMISSION_DENIED(HttpStatus.FORBIDDEN, "M004", "권한이 없습니다"),
+    EXPERT_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "M005", "이미 존재하는 전문가 정보가 있습니다."),
+    EXPERT_NOT_EXIST(HttpStatus.NOT_FOUND, "M006", "전문가 정보가 존재하지 않습니다."),
+
+    // 파일 F
+    FILE_SAVE_FAIL(HttpStatus.SERVICE_UNAVAILABLE, "F001", "파일을 저장하지 못했습니다."),
+
 
     // 게시글 P
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "요청하신 게시글을 찾을 수 없습니다."),
