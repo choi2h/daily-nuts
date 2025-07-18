@@ -45,7 +45,8 @@ function PostDetailItem({post, toggleLike, setPost}) {
                     className={`action-btn ${post.liked ? 'liked' : ''}`}
                     onClick={() => toggleLike(post.id)}
                     >
-                    {post.liked ? <IoMdHeart size={24}/> : <IoMdHeartEmpty size={24}/>} <span>3</span>
+                    {post.liked ? <IoMdHeart size={24}/> : <IoMdHeartEmpty size={24}/>} 
+                    <span>{post.likeCount ?? 0}</span>
                     </button>
                     <button 
                     className="action-btn"
