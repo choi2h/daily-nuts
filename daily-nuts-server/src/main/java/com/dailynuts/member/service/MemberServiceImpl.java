@@ -48,7 +48,6 @@ public class MemberServiceImpl implements MemberService {
         return MemberLoginResponseDto.builder()
                 .loginId(member.getLoginId())
                 .name(member.getName())
-                .role(member.getRole())
                 .accessCookie(accessToken)
                 .refreshCookie(refreshToken)
                 .build();//새로운 DTO 세팅해서 반납 DTO는 @builder로 처리하기
@@ -63,6 +62,7 @@ public class MemberServiceImpl implements MemberService {
     private String getRefreshTokenCookie(String loginId) {
         String refreshToken = jwtUtils.provideRefreshToken(loginId);
         ResponseCookie refreshCookie = jwtUtils.provideRefreshCookie(refreshToken);
+
         return refreshCookie.toString();
     }
 

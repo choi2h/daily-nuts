@@ -31,13 +31,13 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<MemberLoginResponseDto> loginMember(@RequestBody @Valid MemberLoginRequestDto req){
 
-        MemberLoginResponseDto loginResponseDto = memberService.loginMember(req);
+        MemberLoginResponseDto response = memberService.loginMember(req);
 
         return ResponseEntity.ok()
                              .header(HttpHeaders.SET_COOKIE,
-                                     loginResponseDto.getAccessCookie(),
-                                     loginResponseDto.getRefreshCookie())
-                             .body(loginResponseDto);
+                                     response.getAccessCookie(),
+                                     response.getRefreshCookie())
+                             .body(response);
     }
 
 }
