@@ -21,6 +21,12 @@ const LoginPage = () => {
       console.log("login!!!");
       login(loginInfo).then((res) => {
         if(res.status === HttpStatusCode.Ok) {
+          const accessToken  = res.headers['authorization'];      
+          const refreshToken = res.headers['refresh-token'];
+
+          if (accessToken)  localStorage.setItem('accessToken', accessToken);
+          if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+
           localStorage.setItem("loginId", res.data.loginId);
           localStorage.setItem("name", res.data.name);
           localStorage.setItem("role", res.data.role);
