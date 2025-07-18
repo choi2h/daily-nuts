@@ -181,7 +181,7 @@ const FeedPage = () => {
 
   const toggleLike = async (postId, liked) => {
     try {
-      const url = `/api/post/${postId}/like`;
+      const url = `/post/${postId}/like`;
       let res;
 
       if (liked) {
@@ -228,7 +228,7 @@ const FeedPage = () => {
         categoryId: selectedCategory.id,
       };
 
-      const res = await axios.get('/api/posts', { params });
+      const res = await axios.get('/posts', { params });
       const newPosts = res.data.posts;
       if (!newPosts || !Array.isArray(newPosts)) {
         return;

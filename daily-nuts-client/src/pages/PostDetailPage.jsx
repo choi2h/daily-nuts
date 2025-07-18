@@ -45,7 +45,7 @@ const PostDetail = () => {
  
   // 게시글 상세 정보
   useEffect(() => {
-    axios.get(`/api/post/${postId}`)
+    axios.get(`/post/${postId}`)
       .then((res) => {
         setPost(res.data);
       })
@@ -59,14 +59,14 @@ const PostDetail = () => {
 
         try {
             if (post.liked) {
-            const res = await axios.delete(`/api/post/${post.id}/like`);
+            const res = await axios.delete(`/post/${post.id}/like`);
             setPost(prev => ({
                 ...prev,
                 liked: false,
                 likeCount: res.data.likeCount
             }));
             } else {
-            const res = await axios.post(`/api/post/${post.id}/like`);
+            const res = await axios.post(`/post/${post.id}/like`);
             setPost(prev => ({
                 ...prev,
                 liked: true,
