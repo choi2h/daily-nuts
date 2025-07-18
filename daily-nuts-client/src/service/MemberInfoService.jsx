@@ -26,3 +26,34 @@ const login = async (loginInfo) => {
 }
 
 export {login};
+
+const signup = async (signupInfo) => {
+     if (
+    !signupInfo ||
+    !signupInfo.name ||
+    !signupInfo.loginId ||
+    !signupInfo.email ||
+    !signupInfo.birth ||
+    !signupInfo.phoneNumber ||
+    !signupInfo.password ||
+    !signupInfo.confirmPassword
+  ) {
+    console.warn('signupInfo에 필수 값이 누락되어 있습니다:', signupInfo);
+    // 에러 객체를 반환할 수도 있고, 원하는 로직에 맞춰 처리하세요.
+    return Promise.reject(new Error('필수 회원가입 정보가 누락되었습니다.'));
+  }
+
+    return axios.post('/member/signup', signupInfo, {
+        })
+        .then((res) => {
+            alert('회원가입이 완료되었습니다!');
+            // console.log(`res: 회원가입 성공! ${res}`);
+            return res;
+        })
+        .catch((err) => {
+            console.log(`error: 회원가입 실패 ${err}`);
+            return err.response;
+        });
+}
+
+export {signup};

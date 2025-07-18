@@ -42,7 +42,7 @@ public class Member {
 
     @Column(name = "role", columnDefinition = "VARCHAR(20)", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;
 
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private ExpertInfo expertInfo;
@@ -63,7 +63,6 @@ public class Member {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.birth = birth;
-        this.role = role;
     }
 
 }
