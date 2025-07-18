@@ -229,13 +229,15 @@ const FeedPage = () => {
       };
 
       const res = await axios.get('/api/posts', { params });
-      const newPosts = res.data.content;
+      const newPosts = res.data.posts;
+      if (!newPosts || !Array.isArray(newPosts)) {
+        return;
+      }
 
       setPosts((prev) => {
         const prevIds = new Set(prev.map(p => p.id));
         const uniqueNewPosts = newPosts.filter(p => !prevIds.has(p.id));
-        const updated = [...prev, ...uniqueNewPosts];
-        return updated;
+        return [...prev, ...uniqueNewPosts];
       });
 
       setHasMore(!res.data.last);

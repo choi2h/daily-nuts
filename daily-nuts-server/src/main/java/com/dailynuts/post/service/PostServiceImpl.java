@@ -6,6 +6,7 @@ import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.post.dto.PostRequestDto;
 import com.dailynuts.post.dto.PostResponseDto;
+import com.dailynuts.post.dto.PostsResponseDto;
 import com.dailynuts.post.entity.Category;
 import com.dailynuts.post.entity.Post;
 import com.dailynuts.post.repository.CategoryRepository;
@@ -84,7 +85,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PostResponseDto> getPosts(Long categoryId, int pageNo, int size, String criteria) {
+    public PostsResponseDto getPosts(Long categoryId, int pageNo, int size, String criteria) {
         Set<String> allowedCriteria = Set.of("createdAt", "likeCount", "commentCount");
         if (!allowedCriteria.contains(criteria)) {
             throw new IllegalArgumentException("없는 정렬 기준입니다: " + criteria);
@@ -97,11 +98,17 @@ public class PostServiceImpl implements PostService{
                 : postRepository.findByCategory_IdAndIsPinnedTrue(categoryId, pageable);
 
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+
         for (Post post : postPage.getContent()) {
-            postResponseDtoList.add(postMapper.getPostResponseDto(post));
+            PostResponseDto postResponseDto = postMapper.getPostResponseDto(post);
+            postResponseDtoList.add(postResponseDto);
         }
 
-        return new PageImpl<>(postResponseDtoList, pageable, postPage.getTotalElements());
+        return new PostsResponseDto(
+                postResponseDtoList,
+                postPage.getTotalPages(),
+                postPage.getNumber()
+        );
     }
 
 }
