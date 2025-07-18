@@ -8,6 +8,7 @@ import com.dailynuts.post.dto.CommentsResponseDto;
 import com.dailynuts.post.dto.DeleteResponseDto;
 import com.dailynuts.post.entity.Comment;
 import com.dailynuts.post.repository.CommentRepository;
+import com.dailynuts.post.repository.PostRepository;
 import com.dailynuts.post.service.mapper.CommentMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +24,16 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
+    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
 
     //댓글 등록
     @Override
     public CommentResponseDto createComment(Long postId, Long memberId, String writer, CommentRequestDto request) {
+        postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
+
         validateContentLength(request.getContents());
         Comment comment = commentMapper.toEntity(request, postId, memberId, writer, null);
         Comment saved = commentRepository.save(comment);
