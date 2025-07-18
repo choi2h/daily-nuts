@@ -42,7 +42,7 @@ const PostForm = () => {
     }
 
     try {
-      const res = await axios.post('/api/post', {
+      const res = await axios.post('/post', {
         title, contents: content, categoryId,
       });
 
