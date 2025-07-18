@@ -3,7 +3,6 @@ package com.dailynuts.security.jwt;
 import com.dailynuts.security.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -33,47 +32,28 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = null;
+        String refreshToken = req.getHeader("Refresh-Token");
 
-        Cookie[] cookies = req.getCookies();
-        if (cookies == null || cookies.length == 0) {
-            filterChain.doFilter(req, res);
-            return;
-        }
+        if (refreshToken != null && jwtUtils.validateToken(refreshToken)) {
 
-        for (Cookie cookie : cookies){
-            if("refreshToken".equals(cookie.getName())){
-                token = cookie.getValue();
-                break;
-            }
-        }
+            // 토큰 생성 세트
+            String loginId = jwtUtils.getLoginIdFromToken(refreshToken);
+            String newAccessToken = jwtUtils.provideToken(loginId);
+            String newRefreshToken = jwtUtils.provideRefreshToken(loginId);
 
-        if (token == null) {
-            filterChain.doFilter(req,res);
-            return;
-        }
+            // 응답 헤더에 실어주기
+            res.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + newAccessToken);
+            res.setHeader("Refresh-Token", newRefreshToken);
 
-        if (!jwtUtils.validateToken(token)) {
-            filterChain.doFilter(req,res);
-            return;
-        }
+            log.info("리프레시 토큰으로 새 액서스 토큰 발급 : {}", newAccessToken);
 
-        res.addHeader(HttpHeaders.SET_COOKIE,
-                jwtService.tokenRefresh(token).toString());
-
-        log.info("리프레시 토큰으로 새 액서스 토큰 발급 : {}", token);
-
-        String loginId = jwtUtils.getLoginIdFromToken(token);
-
-        // 시큐리티 컨텍스트에 저장하기 위한 authentication 객체 생성
-        if (loginId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // 시큐리티 컨텍스트에 인증 객체 담기
             UserDetails userDetails = jwtService.cookByLoginId(loginId);
-            if (userDetails != null) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(req, res);

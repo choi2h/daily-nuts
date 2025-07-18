@@ -8,7 +8,6 @@ import com.dailynuts.security.jwt.JwtMember;
 import com.dailynuts.security.jwt.JwtUtils;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -26,17 +25,5 @@ public class JwtServiceImpl implements JwtService {
 
         return new JwtMember(member);
     }
-
-    @Override
-    public ResponseCookie tokenRefresh(String refreshToken) {
-
-        String loginId = jwtUtils.getLoginIdFromToken(refreshToken);
-
-        // 토큰 생성
-        String accessToken = jwtUtils.provideToken(loginId);
-
-        return jwtUtils.provideCookie(accessToken);
-    }
-
 
 }

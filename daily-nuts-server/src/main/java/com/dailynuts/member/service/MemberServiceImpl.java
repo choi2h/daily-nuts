@@ -10,7 +10,6 @@ import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.member.service.mapper.MemberMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberLoginResponseDto loginMember(MemberLoginRequestDto req) {
+    public MemberLoginResponseDto LoginMember(MemberLoginRequestDto req) {
         // 아이디 존재 확인
         Member member = memberRepository.findByLoginId(req.getLoginId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
@@ -41,29 +40,29 @@ public class MemberServiceImpl implements MemberService {
         if (!passwordEncoder.matches(req.getPassword(), member.getPassword())) {
             throw new CustomException(CustomErrorCode.PASSWORD_DOSE_NOT_MATCH);
         }
+        String accessToken = jwtUtils.provideToken(member.getLoginId());
+        String refreshToken = jwtUtils.provideRefreshToken(member.getLoginId());
 
-        String accessToken = getAccessTokenCookie(req.getLoginId());
-        String refreshToken = getRefreshTokenCookie(req.getLoginId());
-
-        return MemberLoginResponseDto.builder()
-                .loginId(member.getLoginId())
-                .name(member.getName())
-                .role(member.getRole())
-                .accessCookie(accessToken)
-                .refreshCookie(refreshToken)
-                .build();//새로운 DTO 세팅해서 반납 DTO는 @builder로 처리하기
+        return MemberLoginResponseDto.builder().loginId(member.getLoginId()).name(member.getName()).role(member.getRole()).accessToken(accessToken)
+                .refreshToken(refreshToken).build();
     }
 
-    private String getAccessTokenCookie(String loginId) {
-        String accessToken = jwtUtils.provideToken(loginId);
-        ResponseCookie accessCookie = jwtUtils.provideCookie(accessToken);
-        return accessCookie.toString();
-    }
+    public String[] refreshToken(String refreshToken) {
 
-    private String getRefreshTokenCookie(String loginId) {
-        String refreshToken = jwtUtils.provideRefreshToken(loginId);
-        ResponseCookie refreshCookie = jwtUtils.provideRefreshCookie(refreshToken);
-        return refreshCookie.toString();
+        String newRefreshToken = null;
+        String newAccessToken = null;
+
+        if(jwtUtils.validateToken(refreshToken)) {
+            String loginId = jwtUtils.getLoginIdFromToken(refreshToken);
+            newAccessToken = jwtUtils.provideToken(loginId);
+            newRefreshToken = jwtUtils.provideRefreshToken(loginId);
+        } else {
+            throw new CustomException(CustomErrorCode.TOKEN_NOT_VALID);
+        }
+
+        String[] tokens = new String[] {newAccessToken, newRefreshToken};
+
+        return tokens;
     }
 
     private Member createHashedMember(MemberSignupRequestDto req) {

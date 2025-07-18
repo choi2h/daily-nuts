@@ -85,7 +85,7 @@ public class SecurityConfig {
 
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils, jwtService), UsernamePasswordAuthenticationFilter.class)
 
-                .addFilterAfter(new RefreshTokenFilter(jwtUtils, jwtService), JwtAuthenticationFilter.class)
+                //.addFilterAfter(new RefreshTokenFilter(jwtUtils, jwtService), JwtAuthenticationFilter.class)
 
                 // 요청에 대한 인가(Authorization) 규칙 설정
                 .authorizeHttpRequests(authorizeRequests ->
