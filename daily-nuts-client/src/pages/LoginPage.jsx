@@ -21,9 +21,6 @@ const LoginPage = () => {
       console.log("login!!!");
       login(loginInfo).then((res) => {
         if(res.status === HttpStatusCode.Ok) {
-          localStorage.setItem("loginId", res.data.loginId);
-          localStorage.setItem("name", res.data.name);
-          localStorage.setItem("role", res.data.role);
           navigate('/');
         } else {
           alert(res.data.message);

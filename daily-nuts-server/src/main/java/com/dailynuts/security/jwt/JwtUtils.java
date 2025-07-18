@@ -1,13 +1,11 @@
 package com.dailynuts.security.jwt;
 
-import com.dailynuts.member.dto.MemberLoginRequestDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -53,18 +51,6 @@ public class JwtUtils {
                 .compact();
     }
 
-    // 쿠키 생성 메서드
-    public ResponseCookie provideCookie(String token) {
-
-        return ResponseCookie.from("accessToken", token)
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(accessCookieSeconds)
-                .sameSite("None")
-                .build();
-    }
-
     // 리프레시 토큰 생성 메서드
     public String provideRefreshToken(String loginId) {
 
@@ -74,18 +60,6 @@ public class JwtUtils {
                 .expiration(Date.from(Instant.now().plusSeconds(refreshTokenSeconds)))
                 .signWith(secretKey)
                 .compact();
-    }
-
-    // 리프레시 쿠키 생성 메서드
-    public ResponseCookie provideRefreshCookie(String token) {
-
-        return ResponseCookie.from("refreshToken", token)
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(refreshCookieSeconds)
-                .sameSite("None")
-                .build();
     }
 
     // 토큰 유효성 검사
@@ -98,15 +72,15 @@ public class JwtUtils {
             return true;
 
         } catch (SignatureException e) {
-            log.error("JWT 서명 오류: {}", e.getMessage());
+            log.warn("JWT 서명 오류: {}", e.getMessage());
         } catch (MalformedJwtException e) {
-            log.error("JWT 구조 오류: {}", e.getMessage());
+            log.warn("JWT 구조 오류: {}", e.getMessage());
         } catch (ExpiredJwtException e) { // 토큰 만료
-            log.error("토큰 만료: {}", e.getMessage());
+            log.warn("토큰 만료: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.error("지원되지 않는 JWT 토큰: {}", e.getMessage());
+            log.warn("지원되지 않는 JWT 토큰: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
-            log.error("JWT 클레임 문자열 비어있음: {}", e.getMessage());
+            log.warn("JWT 클레임 문자열 비어있음: {}", e.getMessage());
         }
         return false;
     }

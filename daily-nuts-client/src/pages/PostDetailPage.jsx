@@ -45,7 +45,7 @@ const PostDetail = () => {
  
   // 게시글 상세 정보
   useEffect(() => {
-    axios.get(`/api/post/${postId}`)
+    axios.get(`/post/${postId}`)
       .then((res) => {
         setPost(res.data);
       })
@@ -53,6 +53,29 @@ const PostDetail = () => {
         console.error('게시글 불러오기 실패:', err);
       });
   }, [postId]);
+
+  const toggleLike = async () => {
+        if (!post) return;
+
+        try {
+            if (post.liked) {
+            const res = await axios.delete(`/post/${post.id}/like`);
+            setPost(prev => ({
+                ...prev,
+                liked: false,
+                likeCount: res.data.likeCount
+            }));
+            } else {
+            const res = await axios.post(`/post/${post.id}/like`);
+            setPost(prev => ({
+                ...prev,
+                liked: true,
+                likeCount: res.data.likeCount
+            }));
+            }
+        } catch (err) {
+            console.error("좋아요 처리 실패:", err);
+        }};
 
     const fetchComments = async () => {
         try {
@@ -194,7 +217,7 @@ const PostDetail = () => {
   return (
     <DefaultLayout className="app">
       <BlankHeaderLayout>
-        <PostDetailItem post={post} toggleLike={() => {}} />
+        <PostDetailItem post={post} toggleLike={toggleLike} />
         <div className="comment-section">
           <div className="comment-title">댓글</div>
           <form onSubmit={handleCommentSubmit} className="comment-form">
@@ -223,7 +246,6 @@ const PostDetail = () => {
                     editedContent={editedContent}
                     onEditChange={handleEditChange}
                     onEditSubmit={handleEditSubmit}
-                    onEditChange={handleEditChange}
                     onDeleteClick={handleDeleteClick}
                 />
                 {/* 대댓글 입력창 */}

@@ -2,7 +2,6 @@ package com.dailynuts.security.config;
 
 import com.dailynuts.security.jwt.JwtAuthenticationFilter;
 import com.dailynuts.security.jwt.JwtUtils;
-import com.dailynuts.security.jwt.RefreshTokenFilter;
 import com.dailynuts.security.service.JwtService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -52,8 +51,12 @@ public class SecurityConfig {
                     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // 허용 HTTP 메서드
                     configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
                     configuration.setAllowCredentials(true); // 인증정보 포함 허용
+                    configuration.addExposedHeader("Authorization");
+                    configuration.addExposedHeader("Refresh-Token");
                     return configuration;
                 }))
+
+
 
                 // CSRF (Cross-Site Request Forgery) 보호 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
@@ -85,12 +88,12 @@ public class SecurityConfig {
 
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils, jwtService), UsernamePasswordAuthenticationFilter.class)
 
-                .addFilterAfter(new RefreshTokenFilter(jwtUtils, jwtService), JwtAuthenticationFilter.class)
+                //.addFilterAfter(new RefreshTokenFilter(jwtUtils, jwtService), JwtAuthenticationFilter.class)
 
                 // 요청에 대한 인가(Authorization) 규칙 설정
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/member/signup", "/member/login", "/security/refreshToken").permitAll()
+                                .requestMatchers("/member/signup", "/member/login", "/member/refresh").permitAll()
                                 .anyRequest().authenticated()
                 );
 

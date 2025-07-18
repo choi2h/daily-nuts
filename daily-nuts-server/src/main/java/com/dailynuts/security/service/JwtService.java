@@ -5,6 +5,4 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface JwtService {
     UserDetails cookByLoginId(String loginId);
-
-    ResponseCookie tokenRefresh(String refreshToken);
 }

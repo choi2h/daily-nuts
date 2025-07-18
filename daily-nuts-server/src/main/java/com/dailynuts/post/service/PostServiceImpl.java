@@ -6,16 +6,20 @@ import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.post.dto.PostRequestDto;
 import com.dailynuts.post.dto.PostResponseDto;
+import com.dailynuts.post.dto.PostsResponseDto;
 import com.dailynuts.post.entity.Category;
 import com.dailynuts.post.entity.Post;
 import com.dailynuts.post.repository.CategoryRepository;
 import com.dailynuts.post.repository.PostRepository;
 import com.dailynuts.post.service.mapper.PostMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -50,12 +54,12 @@ public class PostServiceImpl implements PostService{
         return postMapper.getPostResponseDto(post);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<PostResponseDto> getAllPosts() {
-        List<Post> postList = postRepository.findAll();
-        return postMapper.getPostResponseDtoList(postList);
-    }
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<PostResponseDto> getAllPosts() {
+//        List<Post> postList = postRepository.findAll();
+//        return postMapper.getPostResponseDtoList(postList);
+//    }
 
     @Override
     @Transactional
@@ -78,4 +82,33 @@ public class PostServiceImpl implements PostService{
 
         postRepository.delete(post);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PostsResponseDto getPosts(Long categoryId, int pageNo, int size, String criteria) {
+        Set<String> allowedCriteria = Set.of("createdAt", "likeCount", "commentCount");
+        if (!allowedCriteria.contains(criteria)) {
+            throw new CustomException(CustomErrorCode.INVALID_SORT_CRITERIA);
+        }
+
+        Pageable pageable = PageRequest.of(pageNo, size, Sort.by(Sort.Direction.DESC, criteria));
+
+        Page<Post> postPage = (categoryId == null || categoryId == 0L)
+                ? postRepository.findByIsPinnedTrue(pageable)
+                : postRepository.findByCategory_IdAndIsPinnedTrue(categoryId, pageable);
+
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+
+        for (Post post : postPage.getContent()) {
+            PostResponseDto postResponseDto = postMapper.getPostResponseDto(post);
+            postResponseDtoList.add(postResponseDto);
+        }
+
+        return new PostsResponseDto(
+                postResponseDtoList,
+                postPage.getTotalPages(),
+                postPage.getNumber()
+        );
+    }
+
 }

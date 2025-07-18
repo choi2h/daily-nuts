@@ -19,6 +19,6 @@ public class NotificationConnectController {
 
     @PostMapping(value="/send/message")
     public void sendMessage(@RequestBody SendMessageRequest request) {
-        notificationService.sendToClient(request.getMemberId(), request.getMessage());
+        notificationService.sendMessageToClient(request.getMemberId(), request.getMessage());
     }
 }

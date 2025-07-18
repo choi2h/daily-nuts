@@ -1,14 +1,13 @@
 package com.dailynuts.security.jwt;
 
-import com.dailynuts.common.exception.CustomErrorCode;
-import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.security.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -26,55 +26,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
+        log.debug("JWT Authentication Filter start.");
+        String header = req.getHeader(HttpHeaders.AUTHORIZATION);
+        String accessToken = null;
 
-        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+        // 헤더에서 토큰 파싱
+        if (header != null && header.startsWith("Bearer ")) {
+            accessToken = header.substring(7);
+        } else {
+            log.debug("Not exist token in header. header: {}", header);
             filterChain.doFilter(req, res);
             return;
         }
 
-        // req에서 token 꺼내기
-        String token = null;
+        // 토큰 검증 jwtUtils.validateToken(accessToken)
+        // 검증 통과되면
+        log.debug("Receive accessToken: {}", accessToken);
+        if (jwtUtils.validateToken(accessToken)) {
+            String loginId = jwtUtils.getLoginIdFromToken(accessToken);
 
-        Cookie[] cookies = req.getCookies();
-
-        if (cookies == null || cookies.length == 0) {
-            filterChain.doFilter(req,res);
-            return;
-        }
-
-        for (Cookie cookie : cookies){
-            if("accessToken".equals(cookie.getName())){
-                token = cookie.getValue();
-                break;
-            }
-        }
-
-        if (token == null) {
-            filterChain.doFilter(req,res);
-            return;
-        }
-
-        String loginId = null;
-
-        // token 유효성 검사
-        // token 파싱 -> loginId
-        if(jwtUtils.validateToken(token)){
-            loginId = jwtUtils.getLoginIdFromToken(token);
-        } else {
-            throw new CustomException(CustomErrorCode.TOKEN_NOT_VALID);
-        }
-
-        // 시큐리티 컨텍스트에 저장하기 위한 authentication 객체 생성
-        if (loginId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // 시큐리티 컨텍스트에 인증 객체 담기
             UserDetails userDetails = jwtService.cookByLoginId(loginId);
-            if (userDetails != null) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+            log.debug("Find username by loginId from token: {}", userDetails.getUsername());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
+        log.debug("JWT Authentication Filter end.");
         filterChain.doFilter(req, res);
     }
 
