@@ -54,6 +54,29 @@ const PostDetail = () => {
       });
   }, [postId]);
 
+  const toggleLike = async () => {
+        if (!post) return;
+
+        try {
+            if (post.liked) {
+            const res = await axios.delete(`/api/post/${post.id}/like`);
+            setPost(prev => ({
+                ...prev,
+                liked: false,
+                likeCount: res.data.likeCount
+            }));
+            } else {
+            const res = await axios.post(`/api/post/${post.id}/like`);
+            setPost(prev => ({
+                ...prev,
+                liked: true,
+                likeCount: res.data.likeCount
+            }));
+            }
+        } catch (err) {
+            console.error("좋아요 처리 실패:", err);
+        }};
+
     const fetchComments = async () => {
         try {
         const res = await axios.get(`http://localhost:8081/post/${postId}/comments`);
@@ -91,29 +114,6 @@ const PostDetail = () => {
         }
     };
 
-    const toggleLike = async () => {
-        if (!post) return;
-
-        try {
-            if (post.liked) {
-            const res = await axios.delete(`/api/post/${post.id}/like`);
-            setPost(prev => ({
-                ...prev,
-                liked: false,
-                likeCount: res.data.likeCount
-            }));
-            } else {
-            const res = await axios.post(`/api/post/${post.id}/like`);
-            setPost(prev => ({
-                ...prev,
-                liked: true,
-                likeCount: res.data.likeCount
-            }));
-            }
-        } catch (err) {
-            console.error("좋아요 처리 실패:", err);
-        }
-      };
   // 대댓글 입력창 토글
     const toggleReplyInput = (parentId) => {
         setComments(prev =>
@@ -217,7 +217,7 @@ const PostDetail = () => {
   return (
     <DefaultLayout className="app">
       <BlankHeaderLayout>
-        <PostDetailItem post={post} toggleLike={{toggleLike}} />
+        <PostDetailItem post={post} toggleLike={toggleLike} />
         <div className="comment-section">
           <div className="comment-title">댓글</div>
           <form onSubmit={handleCommentSubmit} className="comment-form">
