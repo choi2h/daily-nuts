@@ -26,5 +26,4 @@ public class MemberLoginResponseDto {
 
     @JsonIgnore
     private String refreshToken;
-
 }

@@ -42,9 +42,14 @@ public class MemberServiceImpl implements MemberService {
         }
         String accessToken = jwtUtils.provideToken(member.getLoginId());
         String refreshToken = jwtUtils.provideRefreshToken(member.getLoginId());
-
-        return MemberLoginResponseDto.builder().loginId(member.getLoginId()).name(member.getName()).role(member.getRole()).accessToken(accessToken)
-                .refreshToken(refreshToken).build();
+      
+        return MemberLoginResponseDto.builder()
+             .loginId(member.getLoginId())
+             .name(member.getName())
+             .role(member.getRole())
+             .accessToken(accessToken)
+             .refreshToken(refreshToken)
+             .build();
     }
 
     public String[] refreshToken(String refreshToken) {
@@ -57,7 +62,7 @@ public class MemberServiceImpl implements MemberService {
         } else {
             throw new CustomException(CustomErrorCode.TOKEN_NOT_VALID);
         }
-
+      
         return tokens;
     }
 

@@ -32,7 +32,6 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<MemberLoginResponseDto> loginMember(@RequestBody @Valid MemberLoginRequestDto req) {
-
         MemberLoginResponseDto LoginResponse = memberService.loginMember(req);
 
         return ResponseEntity.ok()
