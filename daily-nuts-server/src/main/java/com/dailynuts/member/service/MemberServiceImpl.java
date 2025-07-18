@@ -31,7 +31,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberLoginResponseDto LoginMember(MemberLoginRequestDto req) {
+    public MemberLoginResponseDto loginMember(MemberLoginRequestDto req) {
         // 아이디 존재 확인
         Member member = memberRepository.findByLoginId(req.getLoginId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
@@ -48,19 +48,15 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public String[] refreshToken(String refreshToken) {
-
-        String newRefreshToken = null;
-        String newAccessToken = null;
+        String[] tokens = new String[2];
 
         if(jwtUtils.validateToken(refreshToken)) {
             String loginId = jwtUtils.getLoginIdFromToken(refreshToken);
-            newAccessToken = jwtUtils.provideToken(loginId);
-            newRefreshToken = jwtUtils.provideRefreshToken(loginId);
+            tokens[0] = jwtUtils.provideToken(loginId);
+            tokens[1] = jwtUtils.provideRefreshToken(loginId);
         } else {
             throw new CustomException(CustomErrorCode.TOKEN_NOT_VALID);
         }
-
-        String[] tokens = new String[] {newAccessToken, newRefreshToken};
 
         return tokens;
     }

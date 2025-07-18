@@ -9,26 +9,32 @@ const refreshApi = axios.create({
 });
 
 axios.interceptors.request.use(async config => {
-  let accessToken  = localStorage.getItem('accessToken');
-  let refreshToken = localStorage.getItem('refreshToken');
+  const accessToken  = localStorage.getItem('accessToken');
+  const refreshToken = localStorage.getItem('refreshToken');
 
   // 액세스 토큰이 없거나 만료됐다면
   if (!accessToken && refreshToken) {
     try {
-      const { data } = await refreshApi.post('/member/refresh', { refreshToken });
-      accessToken  = data.accessToken;
-      refreshToken = data.refreshToken;
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
+      const res = await refreshApi.get('/member/refresh', {headers: {"Refresh-Token" : refreshToken }});
+      console.log("Refresh token!!!!" + res.headers);
+      const newAccessToken  = res.headers.authorization;      
+      const newRefreshToken = res.headers['refresh-token'];
+
+      console.log('new Access!!!!', newAccessToken);
+      console.log('new Refresh!!!!', newRefreshToken);
+
+      if (newAccessToken)  localStorage.setItem('accessToken', newAccessToken);
+      if (newRefreshToken) localStorage.setItem('refreshToken', newRefreshToken);
     } catch (err) {
+      console.log(err);
       // 리프레시 실패 시 로그인 페이지 이동
-      window.location.href = '/login';
+      // window.location.href = '/login';
       return Promise.reject(err);
     }
   }
 
   if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
+    config.headers.Authorization = `${accessToken}`;
   }
   return config;
 }, error => Promise.reject(error));

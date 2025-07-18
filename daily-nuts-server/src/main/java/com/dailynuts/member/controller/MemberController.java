@@ -33,7 +33,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<MemberLoginResponseDto> loginMember(@RequestBody @Valid MemberLoginRequestDto req) {
 
-        MemberLoginResponseDto LoginResponse = memberService.LoginMember(req);
+        MemberLoginResponseDto LoginResponse = memberService.loginMember(req);
 
         return ResponseEntity.ok()
                              .header(HttpHeaders.AUTHORIZATION, "Bearer " + LoginResponse.getAccessToken())
@@ -41,13 +41,13 @@ public class MemberController {
                              .body(LoginResponse);
     }
 
-    @PostMapping("/refresh")
+    @GetMapping("/refresh")
     public ResponseEntity<Void> refreshToken(@RequestHeader("Refresh-Token") String refreshToken) {
-
         if (refreshToken == null) {
             log.warn("리프레시 토큰이 없음");
             throw new CustomException(CustomErrorCode.TOKEN_NOT_VALID);
         }
+
         String[] tokens = memberService.refreshToken(refreshToken);
 
         return ResponseEntity.ok()
