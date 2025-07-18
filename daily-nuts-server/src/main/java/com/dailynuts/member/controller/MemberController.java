@@ -3,6 +3,7 @@ package com.dailynuts.member.controller;
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.member.dto.MemberLoginRequestDto;
+import com.dailynuts.member.dto.MemberLoginResponseDto;
 import com.dailynuts.member.dto.MemberSignupRequestDto;
 import com.dailynuts.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -30,14 +31,14 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> loginMember(@RequestBody @Valid MemberLoginRequestDto req) {
+    public ResponseEntity<MemberLoginResponseDto> loginMember(@RequestBody @Valid MemberLoginRequestDto req) {
 
-        String[] tokens = memberService.loginMember(req);
+        MemberLoginResponseDto LoginResponse = memberService.LoginMember(req);
 
         return ResponseEntity.ok()
-                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokens[0])
-                             .header("Refresh-Token", tokens[1])
-                             .build();
+                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + LoginResponse.getAccessToken())
+                             .header("Refresh-Token", LoginResponse.getRefreshToken())
+                             .body(LoginResponse);
     }
 
     @PostMapping("/refresh")

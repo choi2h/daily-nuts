@@ -22,9 +22,9 @@ public class MemberLoginResponseDto {
     private Role role;
 
     @JsonIgnore
-    private String accessCookie;
+    private String accessToken;
 
     @JsonIgnore
-    private String refreshCookie;
+    private String refreshToken;
 
 }

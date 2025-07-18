@@ -10,7 +10,6 @@ import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.member.service.mapper.MemberMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String[] loginMember(MemberLoginRequestDto req) {
+    public MemberLoginResponseDto LoginMember(MemberLoginRequestDto req) {
         // 아이디 존재 확인
         Member member = memberRepository.findByLoginId(req.getLoginId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
@@ -44,9 +43,8 @@ public class MemberServiceImpl implements MemberService {
         String accessToken = jwtUtils.provideToken(member.getLoginId());
         String refreshToken = jwtUtils.provideRefreshToken(member.getLoginId());
 
-        String[] tokens = new String[] {accessToken, refreshToken};
-
-        return tokens;
+        return MemberLoginResponseDto.builder().loginId(member.getLoginId()).name(member.getName()).role(member.getRole()).accessToken(accessToken)
+                .refreshToken(refreshToken).build();
     }
 
     public String[] refreshToken(String refreshToken) {
