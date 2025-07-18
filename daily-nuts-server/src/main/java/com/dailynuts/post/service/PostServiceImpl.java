@@ -88,7 +88,7 @@ public class PostServiceImpl implements PostService{
     public PostsResponseDto getPosts(Long categoryId, int pageNo, int size, String criteria) {
         Set<String> allowedCriteria = Set.of("createdAt", "likeCount", "commentCount");
         if (!allowedCriteria.contains(criteria)) {
-            throw new IllegalArgumentException("없는 정렬 기준입니다: " + criteria);
+            throw new CustomException(CustomErrorCode.INVALID_SORT_CRITERIA);
         }
 
         Pageable pageable = PageRequest.of(pageNo, size, Sort.by(Sort.Direction.DESC, criteria));
