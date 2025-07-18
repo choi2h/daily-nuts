@@ -76,22 +76,6 @@ const SignupPage = () => {
             </button>
           </div>
 
-          <div className="birth-gender-wrapper">
-            <div className="birth-wrapper">
-              <label htmlFor="birth">생년월일</label>
-              <input id="birth" type="text" placeholder="YYYY-MM-DD" autoComplete="off" />
-            </div>
-            <div className="gender-wrapper">
-              <label htmlFor="gender">성별</label>
-              <select id="gender" defaultValue="">
-                <option value="" disabled>선택</option>
-                <option value="male">남성</option>
-                <option value="female">여성</option>
-                <option value="other">기타</option>
-              </select>
-            </div>
-          </div>
-
           <button type="submit" className="submit-btn">회원가입</button>
         </form>
 
