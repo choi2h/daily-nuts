@@ -26,9 +26,13 @@ axios.interceptors.request.use(async config => {
       if (newAccessToken)  localStorage.setItem('accessToken', newAccessToken);
       if (newRefreshToken) localStorage.setItem('refreshToken', newRefreshToken);
     } catch (err) {
-      console.log(err);
-      // 리프레시 실패 시 로그인 페이지 이동
-      // window.location.href = '/login';
+      console.log(err)
+
+        // 리프레시 실패 시 로그인 페이지 이동
+      localStorage.clear();
+      delete axios.defaults.headers.common['Authorization'];
+      delete axios.defaults.headers.common['Refresh-Token'];
+      window.location.href = '/login';
       return Promise.reject(err);
     }
   }
