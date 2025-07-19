@@ -25,6 +25,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        // JWT 검사에서 제외할 public endpoint 목록
+        String path = request.getServletPath();
+        return  path.equals("/member/signup") ||
+                path.equals("/member/login")  ||
+                path.equals("/member/refresh")||
+                path.equals("/member/exist");
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
         log.debug("JWT Authentication Filter start.");
         String header = req.getHeader(HttpHeaders.AUTHORIZATION);
