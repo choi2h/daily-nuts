@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/member")
 @AllArgsConstructor @Slf4j
@@ -38,6 +40,15 @@ public class MemberController {
                              .header(HttpHeaders.AUTHORIZATION, "Bearer " + LoginResponse.getAccessToken())
                              .header("Refresh-Token", LoginResponse.getRefreshToken())
                              .body(LoginResponse);
+    }
+
+    @GetMapping("/exist")
+    public ResponseEntity<Map<String, Boolean>> isLoginIdExists(
+            @RequestParam String loginId) {
+
+        boolean exists = memberService.existsByLoginId(loginId);
+
+        return ResponseEntity.ok(Map.of("exists", exists));
     }
 
     @GetMapping("/refresh")

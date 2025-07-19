@@ -16,7 +16,6 @@ public class MemberMapper {
                 .phoneNumber(req.getPhoneNumber())
                 .email(req.getEmail())
                 .birth(req.getBirth())
-                .role(req.getRole())
                 .build();
     }
 }
