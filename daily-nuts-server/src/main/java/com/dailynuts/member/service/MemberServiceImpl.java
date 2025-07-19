@@ -3,6 +3,7 @@ package com.dailynuts.member.service;
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.member.dto.MemberLoginResponseDto;
+import com.dailynuts.member.dto.MemberMyPageResponseDto;
 import com.dailynuts.security.jwt.JwtMember;
 import com.dailynuts.security.jwt.JwtUtils;
 import com.dailynuts.member.dto.MemberLoginRequestDto;
@@ -79,6 +80,21 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public boolean existsByLoginId(String loginId) {
         return memberRepository.existsByLoginId(loginId);
+    }
+
+    /**
+     * JWT로 인증된 회원 정보를 바탕으로
+     * 마이페이지 화면에 필요한 DTO를 생성합니다.
+     *
+     * @param jwtMember 스프링 시큐리티의 @AuthenticationPrincipal로 주입된
+     *                   인증된 회원 정보(JwtMember)
+     * @return 마이페이지 렌더링에 사용될
+     *         MemberMyPageResponseDto 객체
+     */
+    @Override
+    public MemberMyPageResponseDto buildMyPage(JwtMember jwtMember) {
+
+        return memberMapper.convertToMemberMyPageResponse(jwtMember);
     }
 
     // 비밀번호 해시화 로직

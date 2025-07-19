@@ -4,14 +4,17 @@ import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.member.dto.MemberLoginRequestDto;
 import com.dailynuts.member.dto.MemberLoginResponseDto;
+import com.dailynuts.member.dto.MemberMyPageResponseDto;
 import com.dailynuts.member.dto.MemberSignupRequestDto;
 import com.dailynuts.member.service.MemberService;
+import com.dailynuts.security.jwt.JwtMember;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -44,6 +47,20 @@ public class MemberController {
                              .header(HttpHeaders.AUTHORIZATION, "Bearer " + LoginResponse.getAccessToken())
                              .header("Refresh-Token", LoginResponse.getRefreshToken())
                              .body(LoginResponse);
+    }
+
+    /**
+     * 마이페이지 렌더링 기능
+     *
+     * @AuthenticationPrincipal로 주입된 객체를 사용하여
+     * 마이페이지 렌더링에 필요한 로그인 사용자의 정보를 반환합니다.
+     **/
+    @GetMapping("")
+    public ResponseEntity<MemberMyPageResponseDto> mypageMember(@AuthenticationPrincipal JwtMember jwtMember){
+
+        MemberMyPageResponseDto memberMypageResponseDto = memberService.buildMyPage(jwtMember);
+
+        return ResponseEntity.ok(memberMypageResponseDto);
     }
 
     // 아이디 중복 기능

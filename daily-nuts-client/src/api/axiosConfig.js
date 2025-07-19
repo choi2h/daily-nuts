@@ -38,7 +38,9 @@ axios.interceptors.request.use(async config => {
   }
 
   if (accessToken) {
+    console.log('accessToken:', accessToken);
     config.headers.Authorization = `${accessToken}`;
+    console.log('Authorization header set to:', config.headers.Authorization);
   }
   return config;
 }, error => Promise.reject(error));

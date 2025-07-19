@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
 
@@ -41,8 +42,8 @@ public class JwtUtils {
     // 토큰 서명 알고리즘
     @PostConstruct
     public void init() {
-
-        this.secretKey = Keys.hmacShaKeyFor(secretKeyString.getBytes());
+        byte[] keyBytes = secretKeyString.getBytes(StandardCharsets.UTF_8);
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
     // 토큰 생성 메서드
