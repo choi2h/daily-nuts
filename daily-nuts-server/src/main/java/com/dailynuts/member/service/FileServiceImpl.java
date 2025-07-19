@@ -9,32 +9,40 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
 @Service
 public class FileServiceImpl implements FileService {
 
+    private static final String DATE_FORMAT = "yyyyMMdd";
+    private static final String FILE_FULL_PATH_FORMAT = "%s%s_%s_%s";
+
     @Value("${image.path}")
     private String imagePath;
 
     @Override
-    public void createFiles(List<MultipartFile> files) {
+    public void createFiles(String loginId, List<MultipartFile> files) {
         log.info("UploadFiles: {}", files.size());
         for(MultipartFile file : files) {
-            createFile(file);
+            createFile(loginId, file);
         }
     }
 
     @Override
-    public String createFile(MultipartFile file) {
+    public String createFile(String loginId, MultipartFile file) {
         log.info("UploadFile: {}", file.getOriginalFilename());
-        String fullPath = imagePath + file.getOriginalFilename();
+
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT));
+        String fullPath = String.format(FILE_FULL_PATH_FORMAT, imagePath, loginId, date, file.getOriginalFilename());
         log.debug("Full path: {}", fullPath);
 
         try {
             file.transferTo(new File(fullPath));
         } catch (IOException e) {
+            e.printStackTrace();
             throw new CustomException(CustomErrorCode.FILE_SAVE_FAIL);
         }
 

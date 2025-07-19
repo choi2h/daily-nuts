@@ -43,6 +43,6 @@ public class ExpertController {
             @RequestPart(name = "files", required = false) List<MultipartFile> files,
             @AuthenticationPrincipal JwtMember memberInfo) {
         ExpertInfoResponseDto response = expertInfoService.updateExpertInfo(expertInfoRequest, files, memberInfo);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -44,14 +44,16 @@ public class ExpertInfo {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime updatedAt;
 
-    public ExpertInfo(String description) {
+    public ExpertInfo(Member member, String description) {
         this.description = description;
+        this.member = member;
         this.images = new HashSet<>();
         this.isApproved = false;
     }
 
     public void addImage(ExpertCertificationImage image) {
         image.setExpertInfo(this);
+        images.add(image);
     }
 
     public void updateDescription(String description) {
