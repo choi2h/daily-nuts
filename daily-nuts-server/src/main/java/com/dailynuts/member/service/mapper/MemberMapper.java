@@ -37,7 +37,7 @@ public class MemberMapper {
                 .loginId(jwtMember.getLoginId())
                 .email(jwtMember.getEmail())
                 .birth(jwtMember.getBirth())
-                .phone(formatKoreanMobile(jwtMember.getPhoneNumber()))
+                .phoneNumber(formatKoreanMobile(jwtMember.getPhoneNumber()))
                 .updatedAt(jwtMember.getUpdatedAt().toLocalDate())
                 .build();
     }

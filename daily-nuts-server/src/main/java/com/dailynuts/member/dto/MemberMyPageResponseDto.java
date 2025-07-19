@@ -29,7 +29,7 @@ public class MemberMyPageResponseDto {
     private LocalDate birth;
 
     @NotBlank @NotNull
-    private String phone;
+    private String phoneNumber;
 
     @NotBlank @NotNull
     private String email;
