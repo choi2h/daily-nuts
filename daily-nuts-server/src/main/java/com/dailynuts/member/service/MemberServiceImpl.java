@@ -3,6 +3,7 @@ package com.dailynuts.member.service;
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.member.dto.MemberLoginResponseDto;
+import com.dailynuts.security.jwt.JwtMember;
 import com.dailynuts.security.jwt.JwtUtils;
 import com.dailynuts.member.dto.MemberLoginRequestDto;
 import com.dailynuts.member.dto.MemberSignupRequestDto;
@@ -14,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+// MemberController와 비즈니스 로직이 연결된
+// 하나밖에 없는 Service
+// 컨트롤러의 모든 로직은 여기서 나온다.
 @Service
 @AllArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -23,6 +27,7 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
+    // 멤버 아이디를 db에 저장
     @Override
     public Long createMember(MemberSignupRequestDto req) {
         Member member = memberRepository.save(createHashedMember(req));
@@ -31,6 +36,7 @@ public class MemberServiceImpl implements MemberService {
         return member.getId();
     }
 
+    // 멤버 아이디를 db와 비교
     @Override
     public MemberLoginResponseDto loginMember(MemberLoginRequestDto req) {
         // 아이디 존재 확인
@@ -53,6 +59,7 @@ public class MemberServiceImpl implements MemberService {
              .build();
     }
 
+    // 토큰을 생성 (리프레시용)
     public String[] refreshToken(String refreshToken) {
         String[] tokens = new String[2];
 
@@ -67,12 +74,21 @@ public class MemberServiceImpl implements MemberService {
         return tokens;
     }
 
+    // 로그인 아이디를 db와 비교
     @Override
     @Transactional(readOnly = true)
     public boolean existsByLoginId(String loginId) {
         return memberRepository.existsByLoginId(loginId);
     }
 
+    // 토큰을 생성 (로그아웃용)
+    @Override
+    public String logoutMember(JwtMember jwtMember) {
+
+        return jwtUtils.provideLogoutToken(jwtMember.getLoginId());
+    }
+
+    // 비밀번호 해시화 로직
     private Member createHashedMember(MemberSignupRequestDto req) {
 
         // 비밀번호 해시화

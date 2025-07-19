@@ -12,6 +12,11 @@ import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Date;
 
+
+// MemService에게 토큰에 대한 로직을 위임 받은 클래스
+// 각 기능에 맞게끔 토큰을 생성함
+// 토큰의 유효성 검증 및 토큰 파싱으로 LoginId를 추출
+// (기회가 된다면 기능에 필요한 인자를 따로 주고 토큰 생성 로직을 하나로 합치고 싶음)
 @Component
 @Slf4j
 public class JwtUtils {
@@ -58,6 +63,17 @@ public class JwtUtils {
                 .subject(loginId)
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(Instant.now().plusSeconds(refreshTokenSeconds)))
+                .signWith(secretKey)
+                .compact();
+    }
+
+    // 로그아웃 토큰 생성 메서드
+    public String provideLogoutToken(String loginId){
+
+        return Jwts.builder()
+                .subject(loginId)
+                .issuedAt(Date.from(Instant.now()))
+                .expiration(new Date(0))
                 .signWith(secretKey)
                 .compact();
     }
