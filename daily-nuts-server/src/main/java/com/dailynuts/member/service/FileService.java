@@ -6,6 +6,6 @@ import java.io.IOException;
 import java.util.List;
 
 public interface FileService {
-    void createFiles(List<MultipartFile> files);
-    String createFile(MultipartFile file);
+    void createFiles(String loginId, List<MultipartFile> files);
+    String createFile(String loginId, MultipartFile file);
 }

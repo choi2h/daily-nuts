@@ -7,9 +7,11 @@ import com.dailynuts.member.dto.ExpertInfoResponseDto;
 import com.dailynuts.member.entity.ExpertCertificationImage;
 import com.dailynuts.member.entity.ExpertInfo;
 import com.dailynuts.member.entity.Image;
+import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.entity.type.ImageType;
 import com.dailynuts.member.repository.ExpertInfoRepository;
 import com.dailynuts.member.repository.ImageRepository;
+import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.member.service.mapper.ExpertInfoMapper;
 import com.dailynuts.security.jwt.JwtMember;
 import jakarta.transaction.Transactional;
@@ -31,6 +33,7 @@ public class ExpertInfoServiceImpl implements ExpertInfoService {
     private final ImageRepository imageRepository;
     private final FileService fileService;
     private final ExpertInfoMapper mapper;
+    private final MemberRepository memberRepository;
 
     @Override
     public ExpertInfoResponseDto createExpertInfo(ExpertInfoRequestDto request, List<MultipartFile> files, JwtMember memberInfo) {
@@ -39,7 +42,10 @@ public class ExpertInfoServiceImpl implements ExpertInfoService {
             throw new CustomException(CustomErrorCode.EXPERT_ALREADY_EXIST);
         }
 
-        ExpertInfo expertInfo = new ExpertInfo(request.getDescription());
+        Member member = memberRepository.findByLoginId(memberInfo.getLoginId())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
+
+        ExpertInfo expertInfo = new ExpertInfo(member, request.getDescription());
         List<Image> images = getImagesAndSetToExpertInfo(files, expertInfo, memberInfo.getLoginId());
         expertInfoRepository.save(expertInfo);
 
@@ -72,8 +78,8 @@ public class ExpertInfoServiceImpl implements ExpertInfoService {
     private List<Image> getImagesAndSetToExpertInfo(List<MultipartFile> files, ExpertInfo expertInfo, String loginId) {
         List<Image> images = new ArrayList<>();
         files.forEach(file -> {
-            String url = fileService.createFile(file);
-            String name = loginId + "_" + file.getOriginalFilename();
+            String url = fileService.createFile(loginId, file);
+            String name = file.getOriginalFilename();
             Image image = new Image(name, url, ImageType.CERTIFICATION);
             ExpertCertificationImage expertCertificationImage = new ExpertCertificationImage();
             expertCertificationImage.setImage(image);
