@@ -10,5 +10,4 @@ public interface MemberService {
     MemberLoginResponseDto loginMember(MemberLoginRequestDto memberLoginRequestDto);
     String[] refreshToken(String refreshToken);
     boolean existsByLoginId(String loginId);
-    String logoutMember(JwtMember jwtMember);
 }

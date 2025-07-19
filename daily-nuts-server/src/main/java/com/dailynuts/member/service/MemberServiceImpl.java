@@ -81,13 +81,6 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.existsByLoginId(loginId);
     }
 
-    // 토큰을 생성 (로그아웃용)
-    @Override
-    public String logoutMember(JwtMember jwtMember) {
-
-        return jwtUtils.provideLogoutToken(jwtMember.getLoginId());
-    }
-
     // 비밀번호 해시화 로직
     private Member createHashedMember(MemberSignupRequestDto req) {
 

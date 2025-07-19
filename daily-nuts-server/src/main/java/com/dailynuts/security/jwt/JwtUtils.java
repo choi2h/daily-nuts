@@ -67,17 +67,6 @@ public class JwtUtils {
                 .compact();
     }
 
-    // 로그아웃 토큰 생성 메서드
-    public String provideLogoutToken(String loginId){
-
-        return Jwts.builder()
-                .subject(loginId)
-                .issuedAt(Date.from(Instant.now()))
-                .expiration(new Date(0))
-                .signWith(secretKey)
-                .compact();
-    }
-
     // 토큰 유효성 검사
     public boolean validateToken(String token) {
         try {

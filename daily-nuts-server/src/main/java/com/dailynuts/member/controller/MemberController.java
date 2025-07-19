@@ -6,14 +6,12 @@ import com.dailynuts.member.dto.MemberLoginRequestDto;
 import com.dailynuts.member.dto.MemberLoginResponseDto;
 import com.dailynuts.member.dto.MemberSignupRequestDto;
 import com.dailynuts.member.service.MemberService;
-import com.dailynuts.security.jwt.JwtMember;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -60,16 +58,12 @@ public class MemberController {
     }
 
     // 로그아웃 기능
-    // 만료시간이 0인 토큰을 지급해서 헤더를 덮어씌우는 방식
+    // 다른 검증 로직은 없음 무조건 ok때리고
     // 이후 정리 작업은 프론트에서 해결
-    @PostMapping("logout")
-    public ResponseEntity<Void> logoutMember(@AuthenticationPrincipal JwtMember jwtMember) {
-
-        String token = memberService.logoutMember(jwtMember);
+    @GetMapping("logout")
+    public ResponseEntity<Void> logoutMember() {
 
         return ResponseEntity.ok()
-                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                             .header("Refresh-Token", token)
                              .build();
     }
 

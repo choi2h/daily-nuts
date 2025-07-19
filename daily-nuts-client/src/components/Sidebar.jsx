@@ -52,7 +52,7 @@ function Sidebar() {
         // 로그아웃 로직 구현
         if (window.confirm("정말 로그아웃 하시겠습니까?")) {
             try {
-                await axios.post('/member/logout');
+                await axios.get('/member/logout');
             } catch (err) {
                 console.warn('로그아웃 실패', err);
             } finally {
