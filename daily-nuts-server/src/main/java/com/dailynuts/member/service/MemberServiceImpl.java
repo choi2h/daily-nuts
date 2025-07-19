@@ -2,12 +2,9 @@ package com.dailynuts.member.service;
 
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
-import com.dailynuts.member.dto.MemberLoginResponseDto;
-import com.dailynuts.member.dto.MemberMyPageResponseDto;
+import com.dailynuts.member.dto.*;
 import com.dailynuts.security.jwt.JwtMember;
 import com.dailynuts.security.jwt.JwtUtils;
-import com.dailynuts.member.dto.MemberLoginRequestDto;
-import com.dailynuts.member.dto.MemberSignupRequestDto;
 import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.member.service.mapper.MemberMapper;
@@ -15,6 +12,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 // MemberController와 비즈니스 로직이 연결된
 // 하나밖에 없는 Service
@@ -50,28 +50,28 @@ public class MemberServiceImpl implements MemberService {
         }
         String accessToken = jwtUtils.provideToken(member.getLoginId());
         String refreshToken = jwtUtils.provideRefreshToken(member.getLoginId());
-      
+
         return MemberLoginResponseDto.builder()
-             .loginId(member.getLoginId())
-             .name(member.getName())
-             .role(member.getRole())
-             .accessToken(accessToken)
-             .refreshToken(refreshToken)
-             .build();
+                .loginId(member.getLoginId())
+                .name(member.getName())
+                .role(member.getRole())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     // 토큰을 생성 (리프레시용)
     public String[] refreshToken(String refreshToken) {
         String[] tokens = new String[2];
 
-        if(jwtUtils.validateToken(refreshToken)) {
+        if (jwtUtils.validateToken(refreshToken)) {
             String loginId = jwtUtils.getLoginIdFromToken(refreshToken);
             tokens[0] = jwtUtils.provideToken(loginId);
             tokens[1] = jwtUtils.provideRefreshToken(loginId);
         } else {
             throw new CustomException(CustomErrorCode.TOKEN_NOT_VALID);
         }
-      
+
         return tokens;
     }
 
@@ -87,14 +87,28 @@ public class MemberServiceImpl implements MemberService {
      * 마이페이지 화면에 필요한 DTO를 생성합니다.
      *
      * @param jwtMember 스프링 시큐리티의 @AuthenticationPrincipal로 주입된
-     *                   인증된 회원 정보(JwtMember)
+     *                  인증된 회원 정보(JwtMember)
      * @return 마이페이지 렌더링에 사용될
-     *         MemberMyPageResponseDto 객체
+     * MemberMyPageResponseDto 객체
      */
     @Override
     public MemberMyPageResponseDto buildMyPage(JwtMember jwtMember) {
 
         return memberMapper.convertToMemberMyPageResponse(jwtMember);
+    }
+
+    @Override
+    @Transactional
+    public void updateMember(MemberEditRequestDto req, JwtMember jwtMember) {
+        Member member = memberRepository.findByLoginId(jwtMember.getLoginId())
+                .orElseThrow(() -> new IllegalArgumentException("회원이 없습니다."));
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate birth = LocalDate.parse(req.getBirth(), fmt);
+
+        member.setPhoneNumber(req.getPhoneNumber());
+        member.setBirth(birth);
+        member.setEmail(req.getEmail());
     }
 
     // 비밀번호 해시화 로직

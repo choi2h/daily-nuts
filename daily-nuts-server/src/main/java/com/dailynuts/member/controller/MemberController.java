@@ -2,10 +2,7 @@ package com.dailynuts.member.controller;
 
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
-import com.dailynuts.member.dto.MemberLoginRequestDto;
-import com.dailynuts.member.dto.MemberLoginResponseDto;
-import com.dailynuts.member.dto.MemberMyPageResponseDto;
-import com.dailynuts.member.dto.MemberSignupRequestDto;
+import com.dailynuts.member.dto.*;
 import com.dailynuts.member.service.MemberService;
 import com.dailynuts.security.jwt.JwtMember;
 import jakarta.validation.Valid;
@@ -21,7 +18,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/member")
-@AllArgsConstructor @Slf4j
+@AllArgsConstructor
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
@@ -44,9 +42,9 @@ public class MemberController {
         MemberLoginResponseDto LoginResponse = memberService.loginMember(req);
 
         return ResponseEntity.ok()
-                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + LoginResponse.getAccessToken())
-                             .header("Refresh-Token", LoginResponse.getRefreshToken())
-                             .body(LoginResponse);
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + LoginResponse.getAccessToken())
+                .header("Refresh-Token", LoginResponse.getRefreshToken())
+                .body(LoginResponse);
     }
 
     /**
@@ -56,11 +54,18 @@ public class MemberController {
      * 마이페이지 렌더링에 필요한 로그인 사용자의 정보를 반환합니다.
      **/
     @GetMapping("")
-    public ResponseEntity<MemberMyPageResponseDto> mypageMember(@AuthenticationPrincipal JwtMember jwtMember){
+    public ResponseEntity<MemberMyPageResponseDto> mypageMember(@AuthenticationPrincipal JwtMember jwtMember) {
 
         MemberMyPageResponseDto memberMypageResponseDto = memberService.buildMyPage(jwtMember);
 
         return ResponseEntity.ok(memberMypageResponseDto);
+    }
+
+    @PatchMapping("/edit")
+    public ResponseEntity<Void> updateMember(@RequestBody MemberEditRequestDto req, @AuthenticationPrincipal JwtMember jwtMember) {
+        memberService.updateMember(req, jwtMember);
+        return ResponseEntity.ok()
+                             .build();
     }
 
     // 아이디 중복 기능
@@ -81,7 +86,7 @@ public class MemberController {
     public ResponseEntity<Void> logoutMember() {
 
         return ResponseEntity.ok()
-                             .build();
+                .build();
     }
 
     // 리프레시 토큰 지급 기능
@@ -97,9 +102,9 @@ public class MemberController {
         String[] tokens = memberService.refreshToken(refreshToken);
 
         return ResponseEntity.ok()
-                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokens[0])
-                             .header("Refresh-Token", tokens[1])
-                             .build();
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokens[0])
+                .header("Refresh-Token", tokens[1])
+                .build();
     }
 
 }

@@ -4,11 +4,6 @@ import "../assets/css/MyPage.css";
 import defaultProfile from "../assets/images/default-profile.png";
 import { validators } from "../utils/validators";
 import { validationMessages } from "../utils/validationMessages";
-import { 
-  FaCalendarAlt,
-  FaPhoneAlt,
-  FaEnvelope
-} from "react-icons/fa";
 
 function MyPageCard() {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -63,9 +58,25 @@ function MyPageCard() {
       !fieldValid("email")
     )
       return;
-    // TODO: 서버 저장 요청 추가
-    setProfileData({ ...editData });
-    setIsEditMode(false);
+    axios
+      .patch("/member/edit", {
+        birth: editData.birth,
+        phoneNumber: editData.phoneNumber,
+        email: editData.email,
+      })
+      .then((res) => {
+        const d = res.data;
+        setProfileData({
+          ...profileData,
+          birth: d.birth,
+          phoneNumber: d.phoneNumber,
+          email: d.email,
+        });
+        setIsEditMode(false);
+      })
+      .catch((err) => {
+        console.error("정보 저장 실패:", err);
+      });
   };
 
   const handleCancel = () => {

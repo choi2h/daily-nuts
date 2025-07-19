@@ -1,9 +1,6 @@
 package com.dailynuts.member.service;
 
-import com.dailynuts.member.dto.MemberLoginRequestDto;
-import com.dailynuts.member.dto.MemberLoginResponseDto;
-import com.dailynuts.member.dto.MemberMyPageResponseDto;
-import com.dailynuts.member.dto.MemberSignupRequestDto;
+import com.dailynuts.member.dto.*;
 import com.dailynuts.security.jwt.JwtMember;
 
 public interface MemberService {
@@ -12,4 +9,5 @@ public interface MemberService {
     String[] refreshToken(String refreshToken);
     boolean existsByLoginId(String loginId);
     MemberMyPageResponseDto buildMyPage(JwtMember jwtMember);
+    void updateMember(MemberEditRequestDto req, JwtMember jwtMember);
 }
