@@ -42,8 +42,17 @@ const PostForm = () => {
     }
 
     try {
+      const token = localStorage.getItem("accessToken");
+      console.log("토큰 확인:", token);
+
       const res = await axios.post('/post', {
         title, contents: content, categoryId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
 
       const postId = res.data.id;
