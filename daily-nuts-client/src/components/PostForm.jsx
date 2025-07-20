@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IoChevronDown } from 'react-icons/io5';
 import '../assets/css/PostWrite.css';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 
-const PostForm = () => {
+const PostForm = ({ initialData = null, isEditMode = false }) => {
   const categories = [
     { id: 0, name: '전체' },
     { id: 1, name: '스트레스' },
@@ -20,9 +20,16 @@ const PostForm = () => {
   const [content, setContent] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  //const categories = ['카테고리', '전체', '스트레스', '대인관계', '자기이해', '불안', '기억', '기타'];
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (initialData) {
+      setTitle(initialData.title);
+      setContent(initialData.contents);
+      const matched = categories.find(c => c.name === initialData.categoryName);
+      if (matched) setCategory(matched);
+    }
+  }, [initialData]);
 
   const handleSubmit = async() => {
     if (!title.trim()) {
@@ -34,43 +41,46 @@ const PostForm = () => {
       alert('내용을 입력해주세요.');
       return;
     }
-
-    const categoryId = category.id;
+    
     if (!category || category.id === 0) {
       alert('카테고리를 선택해주세요.');
       return;
     }
 
+    const token = localStorage.getItem("accessToken");
+    const requestBody = {
+      title,
+      contents: content,
+      categoryId: category.id,
+    };
+
     try {
-      const token = localStorage.getItem("accessToken");
-      console.log("토큰 확인:", token);
-
-      const res = await axios.post('/post', {
-        title, contents: content, categoryId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      const postId = res.data.id;
-      navigate(`/post/${postId}`);
+     if (isEditMode) {
+        await axios.put(`/post/${initialData.id}`, requestBody, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        alert("수정 완료");
+        navigate(`/post/${initialData.id}`);
+      } else {
+        const res = await axios.post('/post', requestBody, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        navigate(`/post/${res.data.id}`);
+      }
     } catch (err) {
-      console.error('글 작성 실패:' + err);
-      alert('글 작성에 실패했습니다.');
+      alert(`글 ${isEditMode ? '수정' : '작성'} 실패`);
+      console.error(err);
     }
-
-    // console.log('게시글 제출:', { category, content });
-    // setContent('');
-    // setCategory('카테고리');
   };
 
   const handleCancel = () => {
-    setContent('');
-    setCategory(categories[0]);
-    setIsDropdownOpen(false);
+    navigate(-1);
   };
 
   const selectCategory = (selectedCategory) => {
@@ -137,7 +147,7 @@ const PostForm = () => {
           취소하기
         </button>
         <button className="submit-button" onClick={handleSubmit}>
-          작성하기
+          {isEditMode ? '수정하기' : '작성하기'}
         </button>
       </div>
     </div>

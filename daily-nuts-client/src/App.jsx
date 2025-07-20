@@ -9,6 +9,7 @@ import PostWritePage from './pages/PostWritePage';
 import ProfilePage from './pages/ProfilePage';
 import NotificationPage from './pages/NotificationPage';
 import SubscribeListPage from './pages/SubscribeListPage';
+import PostEditPage from './pages/PostEditPage';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
         <Route path='/subscribe' element={<SubscribeListPage/>}></Route>
         <Route path='/signup' element={<SignupPage/>}></Route>
         <Route path='/login' element={<LoginPage/>}></Route>
+        <Route path="/post/edit/:id" element={<PostEditPage />}></Route>
       </Routes>
     </BrowserRouter>
   )

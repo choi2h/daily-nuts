@@ -50,6 +50,7 @@ public class MemberServiceImpl implements MemberService {
              .role(member.getRole())
              .accessToken(accessToken)
              .refreshToken(refreshToken)
+             .memberId(member.getId())
              .build();
     }
 
