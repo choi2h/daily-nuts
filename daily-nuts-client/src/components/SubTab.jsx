@@ -34,10 +34,8 @@ function SubTab ({categories, selectedCategory, changeCategory}) {
             }
           </div>
 
-            {/* 빈 공간 */}
         <div className="spacer"></div>
 
-        {/* 검색창 */}
         <div className="search-container">
           <div className="search-input-container">
             <IoSearchOutline className="search-icon" size={16} />
