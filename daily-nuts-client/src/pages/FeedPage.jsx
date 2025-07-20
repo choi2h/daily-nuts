@@ -142,6 +142,18 @@ const FeedPage = () => {
             changeCategory={changeCategory}
             type="feed"
           >
+            <div className="feed-toolbar">
+              <select
+                className="sort-dropdown"
+                value={sortCriteria}
+                onChange={(e) => setSortCriteria(e.target.value)}
+              >
+                <option value="createdAt">최신순</option>
+                <option value="likeCount">좋아요순</option>
+                <option value="commentCount">댓글순</option>
+              </select>
+            </div>
+            
             <div className="main-content">
               <div className="posts-container">
                 {posts.map((post) => 
