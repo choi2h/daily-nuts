@@ -65,6 +65,12 @@ const SignupPage = () => {
     const exists = await existsLoginId(signupInfo.loginId);
     setLoginIdChecked(true);
     setLoginIdExists(exists);
+
+    if (exists) {
+      alert("이미 사용 중인 아이디 입니다.")
+    } else {
+      alert("사용 가능한 아이디 입니다.")
+    }
   };
 
   // 프론트에서 하는 유효성 검증 펑션
@@ -98,6 +104,12 @@ const SignupPage = () => {
   const allValid = Object.keys(validators).every((field) => fieldValid(field));
   // 폼이 값을 갖고 있는가
   const hasValue = (field) => signupInfo[field].length > 0;
+
+  // 로그인 아이디 중복 체크용 (중복 외 valid 통과)
+  const formatValid = signupInfo.loginId
+  && validators.loginId
+       .slice(0, 2)            // 0: 길이 검사, 1: 패턴 검사
+       .every((fn) => fn(signupInfo.loginId));
 
   return (
     <div className="signup-wrapper">
@@ -157,7 +169,7 @@ const SignupPage = () => {
               onChange={handleChange}
               autoComplete="off"
             />
-            {hasValue("loginId") && !fieldValid("loginId") && (
+            {hasValue("loginId") && (
               <span className="tooltip">
                 <ul>
                   {validationMessages.loginId
@@ -168,11 +180,11 @@ const SignupPage = () => {
                       ) : null
                     )}
 
-                  {!loginIdChecked ? (
+                  { formatValid && (!loginIdChecked ? (
                     <li>{validationMessages.loginId[2]}</li>
                   ) : loginIdExists ? (
                     <li>{validationMessages.loginId[3]}</li>
-                  ) : null}
+                  ) : null)}
                 </ul>
               </span>
             )}
@@ -181,7 +193,7 @@ const SignupPage = () => {
               type="button"
               className="check-btn"
               onClick={handleCheckLoginId}
-              disabled={!signupInfo.loginId}
+              disabled={!signupInfo.loginId || !formatValid}
             >
               중복검사
             </button>
