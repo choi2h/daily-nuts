@@ -4,7 +4,7 @@ import PostItem from '../components/PostItem';
 import DefaultLayout from '../layers/DefaultLayout';
 import TabHeaderLyaout from '../layers/TabHeaderLayout';
 import { useNavigate } from 'react-router';
-import axios from 'axios';
+import axios from '../api/axiosConfig';
 
 // const defaultPosts = [
 //   {
