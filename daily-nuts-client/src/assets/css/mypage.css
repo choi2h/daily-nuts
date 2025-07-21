@@ -44,7 +44,7 @@
 
 .mypage-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     margin-bottom: 24px;
 }
@@ -160,7 +160,7 @@
 
   .mypage-row {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       margin-bottom: 24px;
   }
@@ -176,17 +176,20 @@
       min-width: 80px;
   }
 
-  .mypage-input, .mypage-select {
-      font-size: 14px;
-      color: #333333;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 8px 12px;
-      flex: 1;
-      margin-left: 16px;
-      background-color: #ffffff;
-      outline: none;
-  }
+  .mypage-input,
+  .mypage-select {
+        font-size: 14px;
+        color: #333333;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 8px 12px;
+        flex: 1;
+        margin-left: 16px;
+        background-color: #ffffff;
+        outline: none;
+        max-width: 260px;
+        width: 100%;
+    }
 
   .mypage-input:focus, .mypage-select:focus {
       border-color: #B57138;

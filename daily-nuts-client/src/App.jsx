@@ -10,6 +10,7 @@ import ProfilePage from './pages/ProfilePage';
 import NotificationPage from './pages/NotificationPage';
 import SubscribeListPage from './pages/SubscribeListPage';
 import PostEditPage from './pages/PostEditPage';
+import SearchResultPage from './pages/SearchResultPage';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
         <Route path='/signup' element={<SignupPage/>}></Route>
         <Route path='/login' element={<LoginPage/>}></Route>
         <Route path="/post/edit/:id" element={<PostEditPage />}></Route>
+        <Route path="/search" element={<SearchResultPage/>}></Route>
       </Routes>
     </BrowserRouter>
   )

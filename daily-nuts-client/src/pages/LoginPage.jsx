@@ -1,6 +1,6 @@
 import '../assets/css/Login.css';
 import { useState } from 'react';
-import { FaLock } from 'react-icons/fa';
+import { FaLock, FaKey } from 'react-icons/fa';
 import '../assets/css/Login.css';
 import { useNavigate } from 'react-router';
 import { login } from '../service/MemberInfoService';
@@ -51,6 +51,7 @@ const LoginPage = () => {
             <div style={{textAlign:'left'}}>
               <label htmlFor="userid">아이디</label>
               <div className="input-icon-wrapper">
+                <FaKey className="input-icon" />
                 <input
                   id="userid"
                   type="text"
