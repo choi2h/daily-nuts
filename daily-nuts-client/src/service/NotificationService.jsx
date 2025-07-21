@@ -31,7 +31,6 @@ const connectEventSource = () => {
     };
 
     eventSource.onerror = (error) => {
-      console.error("SSE Error:", error);
       eventSource.close();
 
       if (retryCount < MAX_RETRY) {
@@ -39,6 +38,7 @@ const connectEventSource = () => {
         console.log(`Retrying SSE connection... (${retryCount}/${MAX_RETRY})`);
         setTimeout(createConnection, 2000);
       } else {
+        console.error("SSE Error:", error);
         console.log("Max retry attempts reached. SSE connection stopped.");
       }
     };
