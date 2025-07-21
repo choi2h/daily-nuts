@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import '../assets/css/PostDetail.css';
-import { useLocation, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import DefaultLayout from '../layers/DefaultLayout';
 import PostDetailItem from '../components/PostDetailItem';
 import ReplyItem from '../components/ReplyItem';
 import CommentItem from '../components/CommentItem';
 import BlankHeaderLayout from '../layers/BlankHeaderLayout';
-import axios from 'axios';
+import {addLike, cancleLike} from '../service/PostLikeService';
+import axios, { HttpStatusCode } from 'axios';
 
 const convertCommentData = (commentsFromServer,myMemberId) => {
   return commentsFromServer.map(comment => ({
@@ -34,7 +35,6 @@ const convertCommentData = (commentsFromServer,myMemberId) => {
 };
 
 const PostDetail = () => {
-    
   const { id: postId } = useParams();
   const [post, setPost] = useState(null);
   const [myMemberId, setMyMemberId] = useState(null);
@@ -63,28 +63,54 @@ const PostDetail = () => {
       });
   }, [postId]);
 
-  const toggleLike = async () => {
-        if (!post) return;
+    const toggleLike = async () => {
+          console.log(post);
+          if (!post) return;
+          console.log(post.liked);
+          try {
+              if (post.liked) {
+                handleCancleLike();
+              } else {
+                handleAddLike();
+              }
+          } catch (err) {
+              console.error("좋아요 처리 실패:", err);
+          }};
 
-        try {
-            if (post.liked) {
-            const res = await axios.delete(`/post/${post.id}/like`);
+    const handleAddLike = () => {
+      addLike(post.id).then((res) => {
+        if(res.status === HttpStatusCode.Created) {
             setPost(prev => ({
-                ...prev,
-                liked: false,
-                likeCount: res.data.likeCount
+              ...prev,
+              liked: true,
+              likeCount: res.data.likeCount
             }));
-            } else {
-            const res = await axios.post(`/post/${post.id}/like`);
+        } else {
+          console.log(res.data.message);
+          alert(res.data.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    }
+
+    const handleCancleLike = () => {
+      console.log('cancle like!!');
+      cancleLike(post.id).then((res) => {
+        console.log(res.data);
+        if(res.status === HttpStatusCode.Created) {
             setPost(prev => ({
-                ...prev,
-                liked: true,
-                likeCount: res.data.likeCount
+              ...prev,
+              liked: true,
+              likeCount: res.data.likeCount
             }));
-            }
-        } catch (err) {
-            console.error("좋아요 처리 실패:", err);
-        }};
+        } else {
+          console.log(res.data.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    }
 
     const fetchComments = async () => {
         try {
@@ -228,7 +254,7 @@ const PostDetail = () => {
     <DefaultLayout className="app">
       <BlankHeaderLayout>
         <PostDetailItem post={post} toggleLike={toggleLike} 
-        isAuthor={post?.memberId === myMemberId}/>
+        isAuthor={post?.memberId === myMemberId} commentCount={comments.length}/>
         <div className="comment-section">
           <div className="comment-title">댓글</div>
           <form onSubmit={handleCommentSubmit} className="comment-form">

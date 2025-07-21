@@ -1,11 +1,12 @@
 import '../assets/css/Profile.css';
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import PostItem from '../components/PostItem';
 import defaultProfile from '../assets/images/default-profile.png';
 import DefaultLayout from '../layers/DefaultLayout';
 import BlankHeaderLayout from '../layers/BlankHeaderLayout';
 import SubscriptionModal from "../components/SubscriptionModal"; // 모달 컴포넌트 import
+import { getExpertProfile } from '../service/MemberInfoService';
 
 const defaultPosts = [
   {
@@ -53,9 +54,25 @@ const defaultPosts = [
 ];
 
 const ProfilePage = () => {
+    const { id } = useParams();
     const navigate = useNavigate();
+    const [memberInfo, setMemberInfo] = useState({
+      name: '',
+      subscriberCount: 0,
+      subscribed: false,
+      description: ''
+    });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [posts, setPosts] = useState(defaultPosts);
+
+    useEffect(() => {
+      getExpertProfile(id).then((res) => {
+        console.log(res.data);
+        setMemberInfo(res.data);
+      }).catch((err) => {
+        console.log(err);
+      })
+    }, [id]);
 
     const toggleLike = (postId) => {
         setPosts(posts.map(post => 
@@ -78,7 +95,6 @@ const ProfilePage = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-
   return (
     <DefaultLayout className="app">
         <BlankHeaderLayout>
@@ -90,32 +106,27 @@ const ProfilePage = () => {
                         <div className="profile-avatar">
                             <img className="profile-image" src={defaultProfile} alt="프로필 사진" />
                         </div>
-                        <div className="profile-name">김00</div>
+                        <div className="profile-name">{memberInfo.name}</div>
                     </div>
                     <div className="profile-info">
                         <div className="subscription-info">
                           <span className="subscription-label">구독자</span>
-                          <span className="subscription-count">30</span>
+                          <span className="subscription-count">{memberInfo.subscriberCount}</span>
                         </div>
-                        <button className="subscribe-button" onClick={isModalOpen ? closeModal : openModal}>구독하기</button>
+                        <button className="subscribe-button" onClick={memberInfo.subscribed && isModalOpen ? closeModal : openModal}>
+                          {memberInfo.subscribed ? '구독중' : '구독하기' }
+                        </button>
                     </div>
                 </div>
 
-                <div className="profile-description">
-                  <p>성격심리학 박사 | 발달심리 전문가 | 종단연구 분석가</p>
-                  <p>- 연세대학교 심리학 박사</p>
-                  <p>- 성격 및 발달 종단 연구 다수 참여 (청소년 ~ 장노년층 대상)</p>
-                  <p>- 『성격의 안정성과 변화 가능성』 주제로 국내외 학술지 논문 다수 게재</p>
-                  <p>- 성격의 유전율과 환경 영향, 성인기 이후 성격 변화에 대한 연구 중점</p>
-                  <p>- 대중심리 컬럼, 기업 인성검사 자문, 방송 심리자문 등 경험 보유</p>
-                </div>
+                <div className="profile-description">{memberInfo.description}</div>
 
 
                 {/* ✅ 모달 */}
                 <SubscriptionModal
                   isOpen={isModalOpen}
                   onClose={closeModal}
-                  expertName='김00'
+                  memberInfo={memberInfo}
                   price='2900'
                 />
             </div>

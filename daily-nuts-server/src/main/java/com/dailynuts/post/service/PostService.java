@@ -10,5 +10,5 @@ public interface PostService {
     PostResponseDto getPost(Long id, JwtMember userDetails);
     PostResponseDto updatePost(Long id, PostRequestDto request, JwtMember userDetails);
     void deletePost(Long id, JwtMember userDetails);
-    PostsResponseDto getPosts(Long categoryId, int pageNo, int size, String criteria);
+    PostsResponseDto getPosts(Long categoryId, int pageNo, int size, String criteria, Long memberId);
 }

@@ -32,6 +32,13 @@
   margin-bottom: 12px;
 }
 
+.post-avatar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
 .profile-avatar {
   width: 44px;
   height: 44px;
@@ -40,7 +47,7 @@
   flex-shrink: 0;
 }
 
-.profile-image {
+.post-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -48,16 +55,19 @@
 
 .author-info {
   display: flex;
-  gap: 10px;
-  font-size: 14px;
+  align-items: center;
+  gap: 6px;
 }
 
 .author-name {
   font-weight: 600;
+  font-size: 15px;
+  color: #14171a;
 }
 
 .post-date {
   color: #657786;
+  font-size: 15px;
 }
 
 /* 본문 */

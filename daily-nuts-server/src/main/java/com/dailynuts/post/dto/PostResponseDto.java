@@ -19,4 +19,5 @@ public class PostResponseDto {
     private boolean isPinned;
     private LocalDateTime createdAt;
     private Long memberId;
+    private boolean isLiked;
 }
