@@ -19,6 +19,7 @@ public class Notification {
     private Long memberId;
     @Enumerated(EnumType.STRING)
     private NotificationType type;
+    @Setter
     private Long postId;
     private String message;
     private LocalDateTime createdAt;
@@ -32,5 +33,9 @@ public class Notification {
         this.message = message;
         this.createdAt = LocalDateTime.now();
         this.isRead = false;
+    }
+
+    public void readNotification() {
+        this.isRead = true;
     }
 }

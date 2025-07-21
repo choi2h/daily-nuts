@@ -29,7 +29,7 @@ public class PostLikeServiceImpl implements PostLikeService {
     @Transactional
     public PostLikeResponseDto createPostLike(Long postId, Long memberId) {
         // 게시글 작성자 확인
-        Long writerMemberId = postRepository.findMemberIdByPostId(postId);
+        Long writerMemberId = postRepository.findWriterMemberIdByPostId(postId);
         if(writerMemberId == null) {
             throw new CustomException(CustomErrorCode.POST_NOT_FOUND);
         }
