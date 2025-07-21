@@ -12,6 +12,8 @@ import com.dailynuts.post.entity.Post;
 import com.dailynuts.post.repository.CategoryRepository;
 import com.dailynuts.post.repository.PostRepository;
 import com.dailynuts.post.service.mapper.PostMapper;
+import com.dailynuts.security.jwt.JwtMember;
+import com.dailynuts.subscription.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -29,16 +31,18 @@ public class PostServiceImpl implements PostService{
     private final PostMapper postMapper;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
     @Override
     @Transactional
-    public PostResponseDto createPost(PostRequestDto request) {
-        //테스트용 멤버
-        Member member = memberRepository.findById(1L)
+    public PostResponseDto createPost(PostRequestDto request, JwtMember userDetails) {
+        Long memberId = userDetails.getId();
+
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
 
-        //테스트용 카테고리
-        Category category = categoryRepository.findById(request.getCategoryId()).get();
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND));
 
         Post post = postMapper.getPostEntity(request, member, category);
         Post saved = postRepository.save(post);
@@ -47,28 +51,40 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional(readOnly = true)
-    public PostResponseDto getPost(Long id) {
+    public PostResponseDto getPost(Long id, JwtMember userDetails) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
+
+        Long viewerId = userDetails.getId();;
+        Long writerId = post.getMember().getId();
+
+        boolean isAuthor = viewerId.equals(writerId);
+        boolean isPinned = post.isPinned();
+
+        boolean isSubscribed= subscriptionRepository.existsBySubscriberIdAndExpertId(viewerId, writerId);
+
+        if (!(isAuthor || isPinned || isSubscribed)) {
+            throw new CustomException(CustomErrorCode.PERMISSION_DENIED);
+        }
 
         return postMapper.getPostResponseDto(post);
     }
 
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<PostResponseDto> getAllPosts() {
-//        List<Post> postList = postRepository.findAll();
-//        return postMapper.getPostResponseDtoList(postList);
-//    }
-
     @Override
     @Transactional
-    public PostResponseDto updatePost(Long id, PostRequestDto request) {
+    public PostResponseDto updatePost(Long id, PostRequestDto request, JwtMember userDetails) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
 
-        //테스트용 카테고리
-        Category category = categoryRepository.findById(request.getCategoryId()).get();
+        Long memberId = userDetails.getId();
+        Long writerId = post.getMember().getId();
+
+        if (!memberId.equals(writerId)) {
+            throw new CustomException(CustomErrorCode.PERMISSION_DENIED);
+        }
+
+        Category category = categoryRepository.findById(request.getCategoryId())
+                        .orElseThrow(() -> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND));
 
         post.update(request.getTitle(), request.getContents(), category);
         return postMapper.getPostResponseDto(post);
@@ -76,9 +92,16 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public void deletePost(Long id) {
+    public void deletePost(Long id, JwtMember userDetails) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
+
+        Long memberId = userDetails.getId();
+        Long writerId = post.getMember().getId();
+
+        if (!memberId.equals(writerId)) {
+            throw new CustomException(CustomErrorCode.PERMISSION_DENIED);
+        }
 
         postRepository.delete(post);
     }

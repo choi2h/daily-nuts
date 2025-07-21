@@ -36,6 +36,7 @@ public class PostMapper {
                 .likeCount(post.getLikeCount())
                 .isPinned(post.isPinned())
                 .createdAt(post.getCreatedAt())
+                .memberId(post.getMember().getId())
                 .build();
     }
 

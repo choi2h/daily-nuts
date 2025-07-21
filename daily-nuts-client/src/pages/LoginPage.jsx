@@ -21,6 +21,12 @@ const LoginPage = () => {
       console.log("login!!!");
       login(loginInfo).then((res) => {
         if(res.status === HttpStatusCode.Ok) {
+          const memberId = res.data.memberId;
+          if (memberId != null) {
+            localStorage.setItem("memberId", memberId.toString());
+          } else {
+            console.warn("로그인 응답에 memberId가 없음", res.data);
+          }
           navigate('/');
         } else {
           alert(res.data.message);

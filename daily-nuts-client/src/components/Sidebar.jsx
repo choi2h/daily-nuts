@@ -37,6 +37,7 @@ function Sidebar() {
     const {pathname} = useLocation();
     const navigate = useNavigate();
     const isLogin = localStorage.getItem("loginId");
+    const userRole = localStorage.getItem("userRole");
     const memberName = localStorage.getItem("name");
 
     const handleNav = (nav) => {
@@ -67,6 +68,14 @@ function Sidebar() {
 
     const handleCreatePost = () => {
         console.log('게시글 작성');
+        const role = localStorage.getItem("role");
+        const isExpert = role === "EXPERT";
+
+        if (!isExpert) {
+            alert("전문가만 글을 작성할 수 있습니다!");
+            return;
+        }
+
         navigate('/post/write');
     };
 

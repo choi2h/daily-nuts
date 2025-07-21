@@ -1,17 +1,38 @@
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { GoComment } from "react-icons/go";
 import defaultProfile from '../assets/images/default-profile.png';
+import { useNavigate } from "react-router";
+import axios from "axios";
 
-function PostDetailItem({post, toggleLike, setPost}) {
+function PostDetailItem({post, toggleLike, setPost, isAuthor}) {
+    const navigate = useNavigate();
+
     if (!post) return null;
 
     const onEditClick = () => {
-        console.log("수정버튼");
+        navigate(`/post/edit/${post.id}`);
     }
 
-     const onDeleteClick = () => {
-        console.log("수정버튼");
-    }
+     const onDeleteClick = async () => {
+        const confirmed = window.confirm("게시글을 삭제하시겠습니까?");
+        if (!confirmed) return;
+
+         try {
+            const token = localStorage.getItem("token");
+
+            await axios.delete(`/post/${post.id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            alert("삭제가 완료되었습니다.");
+            navigate("/");
+        } catch (err) {
+            console.error("삭제 실패:", err);
+            alert("삭제에 실패했습니다.");
+        }
+    };
 
     return (
             <div>
@@ -29,10 +50,13 @@ function PostDetailItem({post, toggleLike, setPost}) {
                     </div>
                     <span className="post-date">{post.createdAt}</span>
                 </div>
-                <div className="post-modify-actions">
-                    <button className="action-button" onClick={() => onEditClick()}>수정</button>
-                    <button className="action-button" onClick={() => onDeleteClick()}>삭제</button>
-                </div>
+
+                {isAuthor && (
+                    <div className="post-modify-actions">
+                    <button className="action-button" onClick={onEditClick}>수정</button>
+                    <button className="action-button" onClick={onDeleteClick}>삭제</button>
+                    </div>
+                )}
 
                 <div className="post-detail-content">
                     <p>

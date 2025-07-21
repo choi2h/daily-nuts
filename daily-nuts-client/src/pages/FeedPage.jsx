@@ -6,153 +6,6 @@ import TabHeaderLyaout from '../layers/TabHeaderLayout';
 import { useNavigate } from 'react-router';
 import axios from '../api/axiosConfig';
 
-// const defaultPosts = [
-//   {
-//     id: 1,
-//     author: "Amit Das",
-//     time: "2025-07-11",
-//     avatar: "A",
-//     title: "Your portfolio is stopping you from getting that job",
-//     contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
-//     category: "Portfolio",
-//     readTime: "3 min read",
-//     tag: "Selected for you",
-//     image: "/api/placeholder/400/300",
-//     hasImage: true,
-//     liked: false
-//   },
-//   {
-//     id: 2,
-//     author: "Amit Das",
-//     time: "2025-07-11",
-//     avatar: "A",
-//     title: "Melody mobile app: a UI UX case study",
-//     contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
-//     category: "UI ux Design",
-//     readTime: "3 min read",
-//     tag: "Selected for you",
-//     image: "/api/placeholder/400/300",
-//     hasImage: true,
-//     liked: true
-//   },
-//   {
-//     id: 3,
-//     author: "Amit Das",
-//     time: "2025-07-09",
-//     avatar: "A",
-//     title: "Wellness app: a UI UX case study",
-//     contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
-//     category: "UI ux Design",
-//     readTime: "3 min read",
-//     tag: "Selected for you",
-//     image: "/api/placeholder/400/300",
-//     hasImage: true,
-//     liked: false
-//   },
-//   {
-//     id: 4,
-//     author: "Amit Das",
-//     time: "2025-07-09",
-//     avatar: "A",
-//     title: "Wellness app: a UI UX case study",
-//     contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
-//     category: "UI ux Design",
-//     readTime: "3 min read",
-//     tag: "Selected for you",
-//     image: "/api/placeholder/400/300",
-//     hasImage: true,
-//     liked: false
-//   },
-//   {
-//     id: 5,
-//     author: "Amit Das",
-//     time: "2025-07-09",
-//     avatar: "A",
-//     title: "Wellness app: a UI UX case study",
-//     contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
-//     category: "UI ux Design",
-//     readTime: "3 min read",
-//     tag: "Selected for you",
-//     image: "/api/placeholder/400/300",
-//     hasImage: true,
-//     liked: false
-//   },
-//   {
-//     id: 6,
-//     author: "Amit Das",
-//     time: "2025-07-09",
-//     avatar: "A",
-//     title: "Wellness app: a UI UX case study",
-//     contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
-//     category: "UI ux Design",
-//     readTime: "3 min read",
-//     tag: "Selected for you",
-//     image: "/api/placeholder/400/300",
-//     hasImage: true,
-//     liked: false
-//   },
-//   {
-//     id: 7,
-//     author: "Amit Das",
-//     time: "2025-07-09",
-//     avatar: "A",
-//     title: "Wellness app: a UI UX case study",
-//     contents: "An intense way to learn about the process and practice your designs skills — My 1st hackathon Hackathons have been on my mind since I heard it was a good way to gain experience as a junior UX designer. As my portfolio...",
-//     category: "UI ux Design",
-//     readTime: "3 min read",
-//     tag: "Selected for you",
-//     image: "/api/placeholder/400/300",
-//     hasImage: true,
-//     liked: false
-//   }
-// ];
-
-// // 더미 데이터 생성 함수
-// const generateMorePosts = (startId) => {
-//   const titles = [
-//     "10 Tips for Better UX Design",
-//     "React Best Practices in 2024",
-//     "The Future of Web Development",
-//     "Design Systems That Actually Work",
-//     "Mobile First Design Principles",
-//     "Color Theory for Designers",
-//     "Typography in Digital Design",
-//     "User Research Methods",
-//     "Accessibility in Web Design",
-//     "Figma Tips and Tricks"
-//   ];
-  
-//   const contents = [
-//     "Learn the essential principles that make great user experiences. From research to implementation, discover what works...",
-//     "Stay up to date with the latest React patterns and best practices. Performance optimization, hooks, and more...",
-//     "Explore emerging technologies and trends that will shape how we build digital products in the coming years...",
-//     "Building scalable design systems that teams actually use. Component libraries, tokens, and documentation...",
-//     "Why mobile-first approach is crucial for modern web development. Responsive design patterns and techniques...",
-//     "Understanding color psychology and how to use it effectively in your designs. Palettes, contrast, and accessibility...",
-//     "The art of choosing and pairing fonts for digital interfaces. Hierarchy, readability, and brand consistency...",
-//     "Effective methods for understanding your users. Interviews, surveys, usability testing, and analytics...",
-//     "Making your designs inclusive and accessible to all users. WCAG guidelines, testing, and implementation...",
-//     "Power user tips for getting the most out of Figma. Plugins, shortcuts, and advanced techniques..."
-//   ];
-  
-//   const categories = ["Design", "Development", "UX Research", "Typography", "Accessibility"];
-  
-//   return Array.from({ length: 5 }, (_, i) => ({
-//     id: startId + i,
-//     author: `User ${startId + i}`,
-//     time: `2025-07-${10 - Math.floor(i / 3)}`,
-//     avatar: `U${startId + i}`,
-//     title: titles[i % titles.length],
-//     contents: contents[i % contents.length],
-//     category: categories[i % categories.length],
-//     readTime: `${Math.floor(Math.random() * 5) + 2} min read`,
-//     tag: "Selected for you",
-//     image: "/api/placeholder/400/300",
-//     hasImage: Math.random() > 0.3,
-//     liked: Math.random() > 0.7
-//   }));
-// };
-
 const categories = [
     { id: 0, name: '전체' },
     { id: 1, name: '스트레스' },
@@ -263,27 +116,6 @@ const FeedPage = () => {
         loadMorePosts(0);
       }
     }, [currentPage, hasMore]);
-  
-  // // 더 많은 포스트 로드
-  // const loadMorePosts = useCallback(async () => {
-  //   if (loading || !hasMore) return;
-    
-  //   setLoading(true);
-    
-  //   // API 호출 시뮬레이션
-  //   setTimeout(() => {
-  //     const nextId = posts.length + 1;
-  //     const newPosts = generateMorePosts(nextId);
-      
-  //     setPosts(prev => [...prev, ...newPosts]);
-  //     setLoading(false);
-      
-  //     // 임시로 30개 이후에는 더 이상 로드하지 않음
-  //     if (posts.length >= 25) {
-  //       setHasMore(false);
-  //     }
-  //   }, 1000);
-  // }, [loading, hasMore, posts.length]);
 
   // 무한 스크롤 이벤트 핸들러
   useEffect(() => {
@@ -310,6 +142,18 @@ const FeedPage = () => {
             changeCategory={changeCategory}
             type="feed"
           >
+            <div className="feed-toolbar">
+              <select
+                className="sort-dropdown"
+                value={sortCriteria}
+                onChange={(e) => setSortCriteria(e.target.value)}
+              >
+                <option value="createdAt">최신순</option>
+                <option value="likeCount">좋아요순</option>
+                <option value="commentCount">댓글순</option>
+              </select>
+            </div>
+            
             <div className="main-content">
               <div className="posts-container">
                 {posts.map((post) => 
