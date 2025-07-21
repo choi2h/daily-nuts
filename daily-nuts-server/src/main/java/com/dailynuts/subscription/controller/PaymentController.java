@@ -1,10 +1,9 @@
 package com.dailynuts.subscription.controller;
 
-import com.dailynuts.member.entity.Member;
+import com.dailynuts.security.jwt.JwtMember;
 import com.dailynuts.subscription.dto.PaymentRequestDto;
 import com.dailynuts.subscription.dto.PaymentResponseDto;
 import com.dailynuts.subscription.service.PaymentService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,18 +18,18 @@ public class PaymentController {
 
     @PostMapping("/prepare")
     public ResponseEntity<PaymentResponseDto.PrepareResponse> prepare(@RequestBody PaymentRequestDto.PrepareRequest request,
-                                                                      @AuthenticationPrincipal Member member) {
-        return ResponseEntity.ok(paymentService.createPrepare(member.getId(), request));
+                                                                      @AuthenticationPrincipal JwtMember jwtMember) {
+        return ResponseEntity.ok(paymentService.createPrepare(jwtMember.getId(), request));
     }
 
     @PostMapping("/confirm")
     public ResponseEntity<PaymentResponseDto.ConfirmResponse> confirm(@RequestBody PaymentRequestDto.ConfirmRequest request,
-                                                                      @AuthenticationPrincipal Member member) {
-        return ResponseEntity.ok(paymentService.createConfirm(member.getId(), request));
+                                                                      @AuthenticationPrincipal JwtMember jwtMember) {
+        return ResponseEntity.ok(paymentService.createConfirm(jwtMember.getId(), request));
     }
 
     @GetMapping("/status")
-    public ResponseEntity<PaymentResponseDto.StatusResponse> getStatus(@AuthenticationPrincipal Member member) {
-        return ResponseEntity.ok(paymentService.getStatusList(member.getId()));
+    public ResponseEntity<PaymentResponseDto.StatusResponse> getStatus(@AuthenticationPrincipal JwtMember jwtMember) {
+        return ResponseEntity.ok(paymentService.getStatusList(jwtMember.getId()));
     }
 }
