@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import '../assets/css/PostDetail.css';
-import { useLocation, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import DefaultLayout from '../layers/DefaultLayout';
 import PostDetailItem from '../components/PostDetailItem';
 import ReplyItem from '../components/ReplyItem';
 import CommentItem from '../components/CommentItem';
 import BlankHeaderLayout from '../layers/BlankHeaderLayout';
-import axios from 'axios';
+import {addLike, cancleLike} from '../service/PostLikeService';
+import axios, { HttpStatusCode } from 'axios';
 
-const convertCommentData = (commentsFromServer) => {
+const convertCommentData = (commentsFromServer,myMemberId) => {
   return commentsFromServer.map(comment => ({
     id: comment.id,
     author: comment.writer,
@@ -16,7 +17,7 @@ const convertCommentData = (commentsFromServer) => {
     date: comment.createdAt.substring(0, 10).replace(/-/g, '.'),
     content: comment.contents,
     avatar: '/api/placeholder/40/40',
-    isAuthor: true,
+    isAuthor: comment.memberId === myMemberId,
     replies: comment.replies?.map(reply => ({
       id: reply.id,
       author: reply.writer,
@@ -24,7 +25,7 @@ const convertCommentData = (commentsFromServer) => {
       date: reply.createdAt.substring(0, 10).replace(/-/g, '.'),
       content: reply.contents,
       avatar: '/api/placeholder/40/40',
-      isAuthor: true,
+      isAuthor: comment.memberId === myMemberId,
       isReply: true,
       parentId: comment.id,
     })) || [],
@@ -34,8 +35,6 @@ const convertCommentData = (commentsFromServer) => {
 };
 
 const PostDetail = () => {
-  const currentMemberId = 1;
-    
   const { id: postId } = useParams();
   const [post, setPost] = useState(null);
   const [myMemberId, setMyMemberId] = useState(null);
@@ -43,6 +42,7 @@ const PostDetail = () => {
   const [comments, setComments] = useState([]);
   const [editingCommentId, setEditingCommentId] = useState(null); //댓글 수정  
   const [editedContent, setEditedContent] = useState({});//댓글 수정
+  
 
   useEffect(() => {
     const storedId = localStorage.getItem("memberId");
@@ -63,33 +63,60 @@ const PostDetail = () => {
       });
   }, [postId]);
 
-  const toggleLike = async () => {
-        if (!post) return;
+    const toggleLike = async () => {
+          console.log(post);
+          if (!post) return;
+          console.log(post.liked);
+          try {
+              if (post.liked) {
+                handleCancleLike();
+              } else {
+                handleAddLike();
+              }
+          } catch (err) {
+              console.error("좋아요 처리 실패:", err);
+          }};
 
-        try {
-            if (post.liked) {
-            const res = await axios.delete(`/post/${post.id}/like`);
+    const handleAddLike = () => {
+      addLike(post.id).then((res) => {
+        if(res.status === HttpStatusCode.Created) {
             setPost(prev => ({
-                ...prev,
-                liked: false,
-                likeCount: res.data.likeCount
+              ...prev,
+              liked: true,
+              likeCount: res.data.likeCount
             }));
-            } else {
-            const res = await axios.post(`/post/${post.id}/like`);
+        } else {
+          console.log(res.data.message);
+          alert(res.data.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    }
+
+    const handleCancleLike = () => {
+      console.log('cancle like!!');
+      cancleLike(post.id).then((res) => {
+        console.log(res.data);
+        if(res.status === HttpStatusCode.Created) {
             setPost(prev => ({
-                ...prev,
-                liked: true,
-                likeCount: res.data.likeCount
+              ...prev,
+              liked: true,
+              likeCount: res.data.likeCount
             }));
-            }
-        } catch (err) {
-            console.error("좋아요 처리 실패:", err);
-        }};
+        } else {
+          console.log(res.data.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    }
 
     const fetchComments = async () => {
         try {
         const res = await axios.get(`http://localhost:8081/post/${postId}/comments`);
-        const formattedComments = convertCommentData(res.data.comments);
+        const formattedComments = convertCommentData(res.data.comments, myMemberId);
+
         setComments(formattedComments);
         } catch (err) {
         console.error('댓글 목록 가져오기 실패:', err);
@@ -111,8 +138,8 @@ const PostDetail = () => {
             await axios.post(
             `http://localhost:8081/post/${postId}/comment`,
             {
-                contents: comment,
-                writer: "test",
+              contents: comment,
+              memberId: myMemberId
             }
             );
             setComment('');
@@ -155,7 +182,7 @@ const PostDetail = () => {
             `http://localhost:8081/post/${postId}/comment/${parentId}/reply`,
             {
             contents: replyContent,
-            writer: "test",
+            memberId: myMemberId,
             }
         );
         await fetchComments();
@@ -188,7 +215,7 @@ const PostDetail = () => {
     try {
         await axios.put(`http://localhost:8081/post/${postId}/comment/${commentId}`, {
         contents: content,
-        writer: "작성자", // 필요시 수정
+        memberId: myMemberId // 필요시 수정
         });
 
         await fetchComments();
@@ -227,7 +254,7 @@ const PostDetail = () => {
     <DefaultLayout className="app">
       <BlankHeaderLayout>
         <PostDetailItem post={post} toggleLike={toggleLike} 
-        isAuthor={post?.memberId === myMemberId}/>
+        isAuthor={post?.memberId === myMemberId} commentCount={comments.length}/>
         <div className="comment-section">
           <div className="comment-title">댓글</div>
           <form onSubmit={handleCommentSubmit} className="comment-form">
@@ -248,7 +275,7 @@ const PostDetail = () => {
                 <CommentItem
                     key={comment.id}
                         comment={comment}
-                          currentMemberId={currentMemberId}
+                          currentMemberId={myMemberId}
 
                     onReplyClick={() => toggleReplyInput(comment.id)}
                     onEditClick={handleEditClick}
@@ -280,7 +307,7 @@ const PostDetail = () => {
                 <ReplyItem 
                     key={reply.id} 
                     reply={reply}
-                    currentMemberId={currentMemberId}
+                    currentMemberId={myMemberId}
                     isEditing={editingCommentId === reply.id}
                     editedContent={editedContent}
                     onEditClick={handleEditClick}

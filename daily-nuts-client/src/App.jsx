@@ -13,6 +13,7 @@ import PostEditPage from './pages/PostEditPage';
 import SearchResultPage from './pages/SearchResultPage';
 import { NotificationProvider } from './context/NotificationContext';
 import NotificationContainer from './components/NotificationContainer';
+import LikedFeedPage from './pages/LikedFeedPage';
 
 function App() {
 
@@ -22,7 +23,7 @@ function App() {
         <Routes>
           <Route path='/' element={<FeedPage/>}></Route>
           <Route path='/posts' element={<FeedPage/>}></Route>
-          <Route path='/posts/likes' element={<FeedPage/>}></Route>
+          <Route path='/posts/likes' element={<LikedFeedPage/>}></Route>
           <Route path='/post/:id' element={<PostDetail/>}></Route>
           <Route path='/post/write' element={<PostWritePage/>}></Route>
           <Route path='/mypage' element={<MyPage/>}></Route>

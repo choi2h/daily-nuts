@@ -25,7 +25,7 @@ public class PostMapper {
                 .build();
     }
 
-    public PostResponseDto getPostResponseDto(Post post) {
+    public PostResponseDto getPostResponseDto(Post post, boolean isLiked) {
         return PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -37,17 +37,7 @@ public class PostMapper {
                 .isPinned(post.isPinned())
                 .createdAt(post.getCreatedAt())
                 .memberId(post.getMember().getId())
+                .isLiked(isLiked)
                 .build();
-    }
-
-    public List<PostResponseDto> getPostResponseDtoList(List<Post> postList) {
-        List<PostResponseDto> responseDtoList = new ArrayList<>();
-
-        for (Post post : postList) {
-            PostResponseDto responseDto = getPostResponseDto(post);
-            responseDtoList.add(responseDto);
-        }
-
-        return responseDtoList;
     }
 }

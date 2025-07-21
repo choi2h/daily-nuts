@@ -75,12 +75,12 @@
 
 /* 정상(valid) 입력된 필드 */
 .input-icon-wrapper.valid input {
-  border: 1px solid green;
+  background-color: rgba(230, 255, 237, 0.5);;
 }
 
 /* 잘못(invalid) 입력된 필드 */
 .input-icon-wrapper.invalid input {
-  border: 1px solid red;
+  background-color: rgba(255, 230, 230, 0.5);
 }
 
 .tooltip {
