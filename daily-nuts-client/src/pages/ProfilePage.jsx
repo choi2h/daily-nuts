@@ -113,7 +113,7 @@ const ProfilePage = () => {
                           <span className="subscription-label">구독자</span>
                           <span className="subscription-count">{memberInfo.subscriberCount}</span>
                         </div>
-                        <button className="subscribe-button" onClick={memberInfo.subscribed && isModalOpen ? closeModal : openModal}>
+                        <button className={`subscribe-button ${memberInfo.subscribed ? 'disable' : ''}`} onClick={memberInfo.subscribed && isModalOpen ? closeModal : openModal}>
                           {memberInfo.subscribed ? '구독중' : '구독하기' }
                         </button>
                     </div>
