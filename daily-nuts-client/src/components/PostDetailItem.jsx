@@ -4,7 +4,7 @@ import defaultProfile from '../assets/images/default-profile.png';
 import { useNavigate } from "react-router";
 import axios from "axios";
 
-function PostDetailItem({post, toggleLike, setPost, isAuthor}) {
+function PostDetailItem({post, toggleLike, setPost, isAuthor, commentCount}) {
     const navigate = useNavigate();
 
     if (!post) return null;
@@ -75,7 +75,7 @@ function PostDetailItem({post, toggleLike, setPost, isAuthor}) {
                     <button 
                     className="action-btn"
                     >
-                    <GoComment size={22} /> <span>3</span>
+                    <GoComment size={22} /> <span>{commentCount}</span>
                     </button>
                 </div>
             </div>

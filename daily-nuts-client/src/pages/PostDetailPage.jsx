@@ -228,7 +228,7 @@ const PostDetail = () => {
     <DefaultLayout className="app">
       <BlankHeaderLayout>
         <PostDetailItem post={post} toggleLike={toggleLike} 
-        isAuthor={post?.memberId === myMemberId}/>
+        isAuthor={post?.memberId === myMemberId} commentCount={comments.length}/>
         <div className="comment-section">
           <div className="comment-title">댓글</div>
           <form onSubmit={handleCommentSubmit} className="comment-form">
