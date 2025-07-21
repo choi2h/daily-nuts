@@ -10,4 +10,5 @@ public interface MemberService {
     boolean existsByLoginId(String loginId);
     MemberMyPageResponseDto buildMyPage(JwtMember jwtMember);
     void updateMember(MemberEditRequestDto req, JwtMember jwtMember);
+    MemberDetailInfoResponseDto getExpertMemberInfo(Long targetMemberId, Long requestMemberId);
 }

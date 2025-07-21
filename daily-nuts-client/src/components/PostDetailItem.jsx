@@ -34,6 +34,10 @@ function PostDetailItem({post, toggleLike, setPost, isAuthor, commentCount}) {
         }
     };
 
+    const moveProfile = () => {
+        navigate(`/profile/${post.memberId}`);
+    }
+
     return (
             <div>
                 <div className="post-detail-header">
@@ -43,7 +47,7 @@ function PostDetailItem({post, toggleLike, setPost, isAuthor, commentCount}) {
 
                 <div className="post-detail-meta">
                     <div className="author-info">
-                        <div className="profile-avatar">
+                        <div className="profile-avatar" onClick={moveProfile}>
                             <img className="profile-image" src={defaultProfile} alt="Profile" />
                         </div>
                         <span className="author-name">{post.writer}</span>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import '../assets/css/PostDetail.css';
-import { useLocation, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import DefaultLayout from '../layers/DefaultLayout';
 import PostDetailItem from '../components/PostDetailItem';
 import ReplyItem from '../components/ReplyItem';

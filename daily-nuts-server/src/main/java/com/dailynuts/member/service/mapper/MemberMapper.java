@@ -1,5 +1,6 @@
 package com.dailynuts.member.service.mapper;
 
+import com.dailynuts.member.dto.MemberDetailInfoResponseDto;
 import com.dailynuts.member.dto.MemberMyPageResponseDto;
 import com.dailynuts.member.dto.MemberSignupRequestDto;
 import com.dailynuts.member.entity.Member;
@@ -39,6 +40,17 @@ public class MemberMapper {
                 .birth(jwtMember.getBirth())
                 .phoneNumber(formatKoreanMobile(jwtMember.getPhoneNumber()))
                 .updatedAt(jwtMember.getUpdatedAt().toLocalDate())
+                .build();
+    }
+
+    public MemberDetailInfoResponseDto convertToMemberDetailInfoResponseDto
+            (Member member, String description, Long subscriberCount, boolean isSubscribed) {
+        return MemberDetailInfoResponseDto.builder()
+                .memberId(member.getId())
+                .name(member.getName())
+                .description(description)
+                .subscriberCount(subscriberCount)
+                .isSubscribed(isSubscribed)
                 .build();
     }
 

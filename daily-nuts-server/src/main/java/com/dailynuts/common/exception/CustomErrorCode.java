@@ -14,6 +14,7 @@ public enum CustomErrorCode {
     PERMISSION_DENIED(HttpStatus.FORBIDDEN, "M004", "권한이 없습니다"),
     EXPERT_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "M005", "이미 존재하는 전문가 정보가 있습니다."),
     EXPERT_NOT_EXIST(HttpStatus.NOT_FOUND, "M006", "전문가 정보가 존재하지 않습니다."),
+    NOT_EXPERT_MEMBER(HttpStatus.BAD_REQUEST, "M007", "전문가 회원이 아닙니다."),
 
     // 파일 F
     FILE_SAVE_FAIL(HttpStatus.SERVICE_UNAVAILABLE, "F001", "파일을 저장하지 못했습니다."),
