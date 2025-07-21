@@ -1,11 +1,21 @@
 import defaultProfile from '../assets/images/default-profile.png';
 import '../assets/css/SearchResult.css';
+import { useNavigate } from 'react-router';
 
 function ExpertSearchItem({ expert }) {
   console.log('expert:', expert);
-  console.log('isSubscribed:', expert.isSubscribed);
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (expert && expert.memberId) {
+      navigate(`/profile/${expert.memberId}`);
+    } else {
+      console.warn('잘못된 expert 데이터:', expert);
+    }
+  };
+
   return (
-    <div className="approval-item">
+    <div className="approval-item" onClick={handleClick} style={{ cursor: 'pointer' }}>
       <div className="approval-content">
         <div className="payment-info-profile">
           <div className="profile-image-wrapper">
