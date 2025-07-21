@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import '../assets/css/PostDetail.css';
-import { useLocation, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import DefaultLayout from '../layers/DefaultLayout';
 import PostDetailItem from '../components/PostDetailItem';
 import ReplyItem from '../components/ReplyItem';
@@ -34,7 +34,7 @@ const convertCommentData = (commentsFromServer,myMemberId) => {
 };
 
 const PostDetail = () => {
-    
+  const navigate = useNavigate();
   const { id: postId } = useParams();
   const [post, setPost] = useState(null);
   const [myMemberId, setMyMemberId] = useState(null);
@@ -53,15 +53,23 @@ const PostDetail = () => {
  
   // 게시글 상세 정보
   useEffect(() => {
-    axios.get(`/post/${postId}`)
-      .then((res) => {
+    const fetchPost = async () => {
+      try {
+        const res = await axios.get(`/post/${postId}`);
         console.log(res.data);
         setPost(res.data);
-      })
-      .catch((err) => {
-        console.error('게시글 불러오기 실패:', err);
-      });
-  }, [postId]);
+      } catch (err) {
+        if (err.response?.status === 403) {
+          alert("구독하지 않은 전문가의 글입니다.");
+          navigate(`/`);
+        } else {
+          console.error('게시글 불러오기 실패:', err);
+        }
+      }
+    };
+
+    fetchPost();
+  }, [postId, navigate]);
 
   const toggleLike = async () => {
         if (!post) return;
