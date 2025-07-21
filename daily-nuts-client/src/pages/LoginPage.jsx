@@ -5,6 +5,7 @@ import '../assets/css/Login.css';
 import { useNavigate } from 'react-router';
 import { login } from '../service/MemberInfoService';
 import { HttpStatusCode } from 'axios';
+import { connectEventSource } from '../service/NotificationService';
 
 const LoginPage = () => {
   const [loginInfo, setLoginInfo] = useState({loginId: '', password: ''});
@@ -21,6 +22,7 @@ const LoginPage = () => {
       console.log("login!!!");
       login(loginInfo).then((res) => {
         if(res.status === HttpStatusCode.Ok) {
+          connectEventSource();
           navigate('/');
         } else {
           alert(res.data.message);

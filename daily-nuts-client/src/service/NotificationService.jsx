@@ -1,12 +1,24 @@
-const connectEventSource = (id) => {
+import axios from "axios";
+import { EventSourcePolyfill } from "event-source-polyfill";
+
+const BASE_URL = import.meta.env.VITE_API_SERVER_ADDRESS;
+const NOTIFICATION_API_PREFIX = "/notification";
+const connectEventSource = () => {
   let retryCount = 0; // ✅ 개별 SSE마다 관리
   const MAX_RETRY = 1;
 
   const createConnection = () => {
-    const url = `http://localhost:8081/notification/subscribe/${id}`;
+    const url = `${BASE_URL}${NOTIFICATION_API_PREFIX}/subscribe`;
     console.log("Connecting SSE to:", url);
 
-    const eventSource = new EventSource(url);
+    const eventSource = new EventSourcePolyfill(url, 
+      {
+        headers: {
+          Authorization: localStorage.getItem("accessToken"),
+        },
+        withCredentials: true,
+      }
+    );
 
     eventSource.onopen = () => {
       console.log("SSE Connected");
@@ -37,4 +49,26 @@ const connectEventSource = (id) => {
   return createConnection(); // 첫 연결
 };
 
-export { connectEventSource };
+const getNotifications = async () => {
+  return axios.get( `${NOTIFICATION_API_PREFIX}/subscribe`)
+    .then((res) => {
+      console.log(res);
+      return res;
+    })
+    .catch((err) => {
+      console.log(err);
+      return err;
+    });
+}
+
+const updateReadNotification = async (id) => {
+  return axios.put(`/notification/${id}`)
+    .then((res) => {
+      console.log(res);
+      return res;
+    }).catch((err) => {
+      console.log(err);
+    })
+}
+
+export { connectEventSource, getNotifications, updateReadNotification };
