@@ -65,6 +65,7 @@
 }
 
 .post-detail-content p {
+  white-space: pre-line;
   font-size: 16px;
   color: #333333;
   line-height: 1.8;
