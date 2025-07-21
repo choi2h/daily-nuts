@@ -41,6 +41,7 @@ const ExpertInfo = () => {
         setIsEditing(false);
         setIsRegistering(false);
         setInfo(res.data);
+        localStorage.setItem("role", res.data.role);
       } else {
         alert(res.data.message);
       }

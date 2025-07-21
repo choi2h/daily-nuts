@@ -10,7 +10,6 @@ const saveExpertInfo = async (description, files) => {
 
     const json = JSON.stringify({ description });
     formData.append("info", new Blob([json], { type: "application/json" }));
-
     files.forEach((file) => formData.append("files", file));
 
     return axios.post(EXPERT_INFO_URL, formData, {
