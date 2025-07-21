@@ -4,10 +4,7 @@ import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.security.entity.type.TokenType;
 import com.dailynuts.security.jwt.mapper.TokenProvideMapper;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
@@ -24,7 +21,7 @@ import java.nio.charset.StandardCharsets;
  *
  * 1. Jwt를 제공한다.
  * 2. Jwt를 검증한다.
- * 3. Jwt토큰을 파싱하여 username(Subject)을 읽어온다.
+ * 3. Jwt토큰을 파싱하여 Subject(loginId)를 읽어온다.
  **/
 @Component
 @Slf4j
@@ -115,18 +112,22 @@ public class JwtUtils {
     /**
      * 3. 토큰을 파싱하여 Subject를 추출하는 메서드
      *
-     *
+     * 토큰의 서명 검사 / 만료시간 검사 / 구조 유효성 검사 이후 token의 subject를 추출합니다.
      * @param token jwt를 받습니다.
      * @return 토큰을 만들 때 입력했던 Subject값을 반환합니다.
      */
-    public String getLoginIdFromToken(String token){
+    public String getLoginIdFromToken(String token) {
+        try {
 
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject();
+        } catch (JwtException e) {
+            log.warn("getLoginIdFromToken 메서드에서 토큰의 유효성 검증 실패");
+            throw new CustomException(CustomErrorCode.TOKEN_VALIDATION_FAILED);
+        }
     }
-
 }
