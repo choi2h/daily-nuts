@@ -3,7 +3,7 @@ import { EventSourcePolyfill } from "event-source-polyfill";
 
 const BASE_URL = import.meta.env.VITE_API_SERVER_ADDRESS;
 const NOTIFICATION_API_PREFIX = "/notification";
-const connectEventSource = () => {
+const connectEventSource = (onMessageCallback) => {
   let retryCount = 0; // ✅ 개별 SSE마다 관리
   const MAX_RETRY = 1;
 
@@ -17,6 +17,7 @@ const connectEventSource = () => {
           Authorization: localStorage.getItem("accessToken"),
         },
         withCredentials: true,
+        heartbeatTimeout: 3000000
       }
     );
 
@@ -25,10 +26,14 @@ const connectEventSource = () => {
       retryCount = 0;
     };
 
-    eventSource.onmessage = (event) => {
-      console.log("Message Received:", event.data);
-    //   if (onMessageCallback) onMessageCallback(event.data);
-    };
+    eventSource.addEventListener("message", (e) => {
+        console.log("📢 Notification:", e.data);
+        const newNotification = {
+          id: String(Date.now()),
+          message: e.data // e.data에서 받은 문자열
+        };
+        if(onMessageCallback) onMessageCallback(newNotification);
+      });
 
     eventSource.onerror = (error) => {
       eventSource.close();
