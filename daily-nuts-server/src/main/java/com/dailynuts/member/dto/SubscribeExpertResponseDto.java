@@ -1,14 +1,14 @@
 package com.dailynuts.member.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter @Builder
-@AllArgsConstructor
-public class ExpertSearchDto {
+import java.time.LocalDate;
+
+@Builder @Getter
+public class SubscribeExpertResponseDto {
     private String name;
     private String profileImageUrl;
     private int postCount;
-    private boolean isSubscribed;
+    private LocalDate subscribeDate;
 }

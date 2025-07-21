@@ -1,4 +1,5 @@
 import defaultProfile from '../assets/images/default-profile.png';
+import '../assets/css/Subscribe.css';
 
 function SubscribeItem ({subscribeInfo}) {
     return (
@@ -15,11 +16,12 @@ function SubscribeItem ({subscribeInfo}) {
                         </div>
                         <div className="approval-info">
                         <h4 className="author-name">{subscribeInfo.name}</h4>
-                        <p className="next-payment">{subscribeInfo.subscribeDate}</p>
+                        
                         </div>
                     </div>
                     
-                    <button className="payment-button">결제하기</button>
+                    {/* <button className="payment-button">결제하기</button> */}
+                    <p className="next-payment">{subscribeInfo.subscribeDate}</p>
                 </div>
             </div>
         </>
