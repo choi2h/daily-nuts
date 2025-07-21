@@ -22,7 +22,7 @@ function PostItem({post, toggleLike, onClick}) {
                     <img className="profile-image" src={defaultProfile} alt="Profile" />
                 </div>
                 <div className="author-info">
-                    <span className="author-name">{post.author}</span>
+                    <span className="author-name">{post.writer}</span>
                     <span className="post-date">{post.time}</span>
                 </div>
             </div>

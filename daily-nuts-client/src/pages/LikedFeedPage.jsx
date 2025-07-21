@@ -170,7 +170,7 @@ const LikedFeedPage = () => {
                         contents: post.contents,
                         likeCount: post.likeCount,
                         liked: post.liked,
-                        author: post.author,
+                        writer: post.writer,
                         time: post.createdAt
                     }}
                     toggleLike={toggleLike}onClick={postOnClick}/>

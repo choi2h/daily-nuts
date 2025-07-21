@@ -170,7 +170,7 @@ const SubscribeFeedPage = () => {
                         contents: post.contents,
                         likeCount: post.likeCount,
                         lliked: post.isLiked,
-                        author: post.writer,
+                        writer: post.writer,
                     }}
                     toggleLike={toggleLike}onClick={postOnClick}/>
                 )}
