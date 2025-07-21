@@ -61,10 +61,12 @@ public class ExpertSearchServiceImpl implements ExpertSearchService {
         SubscribeExpertsResponseDto response = new SubscribeExpertsResponseDto();
         for(Subscription subscription : subscribeExpertIds) {
             String imageUrl = imageRepository.findByExpertIdAndType(memberId, ImageType.PROFILE);
-            Optional<Member> member = memberRepository.findById(subscription.getExpertId());
-            if (member.isEmpty()) continue;
+            Optional<Member> memberOptional = memberRepository.findById(subscription.getExpertId());
+            if (memberOptional.isEmpty()) continue;
+            Member member = memberOptional.get();
             SubscribeExpertResponseDto expert = SubscribeExpertResponseDto.builder()
-                    .name(member.get().getName())
+                    .id(member.getId())
+                    .name(member.getName())
                     .profileImageUrl(imageUrl)
                     .subscribeDate(subscription.getStartedAt().toLocalDate())
                     .build();
