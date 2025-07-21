@@ -4,6 +4,8 @@ import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.repository.MemberRepository;
+import com.dailynuts.notification.entity.NotificationType;
+import com.dailynuts.notification.service.NotificationInfoService;
 import com.dailynuts.subscription.dto.*;
 import com.dailynuts.subscription.entity.Payment;
 import com.dailynuts.subscription.entity.Product;
@@ -34,6 +36,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final SubscriptionRepository subscriptionRepository;
     private final PortOneClient portOneClient;
     private final PaymentMapper paymentMapper;
+    private final NotificationInfoService notificationInfoService;
 
     private final Map<String, PaymentPrepareInfoDto> prepareMap = new ConcurrentHashMap<>();
 
@@ -84,6 +87,8 @@ public class PaymentServiceImpl implements PaymentService {
 
         Subscription subscription = paymentMapper.toSubscriptionEntity(subscriberId, prepareInfo, payment, now, end);
         subscriptionRepository.save(subscription);
+
+        notificationInfoService.createNotification(NotificationType.FOLLOW, subscriberId, prepareInfo.getExpertId(), null);
 
         prepareMap.remove(request.getMerchantUid());
         return paymentMapper.toConfirmResponse("결제가 완료되었습니다.", subscription);

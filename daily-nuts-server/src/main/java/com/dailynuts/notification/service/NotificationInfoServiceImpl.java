@@ -37,9 +37,12 @@ public class NotificationInfoServiceImpl implements NotificationInfoService {
         Notification notification = Notification.builder()
                 .memberId(targetMemberId)
                 .type(type)
-                .postId(postId)
                 .message(message)
                 .build();
+
+        if(type.equals(NotificationType.LIKES) || type.equals(NotificationType.COMMENT)) {
+            notification.setPostId(postId);
+        }
         notificationRepository.save(notification);
         notificationConnectService.sendMessageToClient(targetMemberId, message);
     }

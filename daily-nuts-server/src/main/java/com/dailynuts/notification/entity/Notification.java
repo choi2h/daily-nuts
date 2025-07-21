@@ -19,6 +19,7 @@ public class Notification {
     private Long memberId;
     @Enumerated(EnumType.STRING)
     private NotificationType type;
+    @Setter
     private Long postId;
     private String message;
     private LocalDateTime createdAt;
