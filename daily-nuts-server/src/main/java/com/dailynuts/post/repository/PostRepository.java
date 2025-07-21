@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT member.id FROM Post WHERE id=:postId")
-    Long findMemberIdByPostId(Long postId);
+    Long findWriterMemberIdByPostId(Long postId);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Post SET likeCount = likeCount+1 WHERE id=:postId")

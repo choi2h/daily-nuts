@@ -2,11 +2,14 @@ package com.dailynuts.post.service;
 
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
+import com.dailynuts.notification.entity.NotificationType;
+import com.dailynuts.notification.service.NotificationInfoService;
 import com.dailynuts.post.dto.CommentRequestDto;
 import com.dailynuts.post.dto.CommentResponseDto;
 import com.dailynuts.post.dto.CommentsResponseDto;
 import com.dailynuts.post.dto.DeleteResponseDto;
 import com.dailynuts.post.entity.Comment;
+import com.dailynuts.post.entity.Post;
 import com.dailynuts.post.repository.CommentRepository;
 import com.dailynuts.post.repository.PostRepository;
 import com.dailynuts.post.service.mapper.CommentMapper;
@@ -27,18 +30,21 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
+    private final NotificationInfoService notificationInfoService;
 
     //댓글 등록
     @Override
     public CommentResponseDto createComment(Long postId, Long memberId, String writer, CommentRequestDto request) {
-        postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
+        Long writerMemberId = postRepository.findWriterMemberIdByPostId(postId);
+        if(writerMemberId == null) throw new CustomException(CustomErrorCode.POST_NOT_FOUND);
 
         validateContentLength(request.getContents());
         Comment comment = commentMapper.toEntity(request, postId, memberId, writer, null);
         Comment saved = commentRepository.save(comment);
 
-        System.out.println(">>> 저장된 Comment의 commentId = " + saved.getId());
+        notificationInfoService.createNotification(NotificationType.COMMENT, memberId, writerMemberId, postId);
+
+        log.info(">>> 저장된 Comment의 commentId = {}", saved.getId());
 
         return commentMapper.toResponse(saved);
     }
