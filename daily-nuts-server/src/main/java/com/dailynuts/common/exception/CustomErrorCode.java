@@ -45,9 +45,10 @@ public enum CustomErrorCode {
     PRODUCT_NOT_EXIST(HttpStatus.NOT_FOUND, "A001", "존재하지 않는 상품입니다."),
     INVALID_PAYMENT_REQUEST(HttpStatus.BAD_REQUEST, "A002", "유효하지 않은 결제 요청입니다."),
     INVALID_PAYMENT_INFO(HttpStatus.BAD_REQUEST, "A003", "결제 정보가 유효하지 않습니다."),
-    PORTONE_CALL_FAILED(HttpStatus.BAD_REQUEST, "A004", "결제 정보 조회에 실패했습니다.");
+    PORTONE_CALL_FAILED(HttpStatus.BAD_REQUEST, "A004", "결제 정보 조회에 실패했습니다."),
 
     // 알림 N
+    NOTIFICATION_NOT_EXIST(HttpStatus.NOT_FOUND, "N001", "존재하지 않는 알림입니다.");
 
     private final HttpStatus status;
     private final String errorCode;

@@ -114,7 +114,7 @@ const SignupPage = () => {
             <input
               id="name"
               type="text"
-              placeholder="Enter your name"
+              placeholder="이름을 입력해주세요"
               value={signupInfo.name}
               name="name"
               onChange={handleChange}
@@ -151,7 +151,7 @@ const SignupPage = () => {
             <input
               id="loginId"
               type="text"
-              placeholder="Enter your loginID"
+              placeholder="아이디를 입력해주세요"
               value={signupInfo.loginId}
               name="loginId"
               onChange={handleChange}
@@ -201,7 +201,7 @@ const SignupPage = () => {
             <input
               id="phoneNumber"
               type="tel"
-              placeholder="Enter your phone number"
+              placeholder="핸드폰 번호를 입력해주세요"
               value={signupInfo.phoneNumber}
               name="phoneNumber"
               onChange={handleChange}
@@ -238,7 +238,7 @@ const SignupPage = () => {
             <input
               id="birth"
               type="text"
-              placeholder="Enter your birth"
+              placeholder="생년월일을 입력해주세요"
               value={signupInfo.birth}
               name="birth"
               onChange={handleChange}
@@ -275,7 +275,7 @@ const SignupPage = () => {
             <input
               id="email"
               type="email"
-              placeholder="Enter your email address"
+              placeholder="이메일을 입력해주세요"
               value={signupInfo.email}
               name="email"
               onChange={handleChange}
@@ -313,7 +313,7 @@ const SignupPage = () => {
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Create Password"
+                placeholder="비밀번호를 입력해주세요"
                 value={signupInfo.password}
                 name="password"
                 onChange={handleChange}
@@ -359,7 +359,7 @@ const SignupPage = () => {
               <input
                 id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm Password"
+                placeholder="비밀번호를 입력해주세요"
                 value={signupInfo.confirmPassword}
                 name="confirmPassword"
                 onChange={handleChange}

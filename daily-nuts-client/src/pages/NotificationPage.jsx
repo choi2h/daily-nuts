@@ -1,31 +1,22 @@
 import DefaultLayout from "../layers/DefaultLayout";
-import { useEffect } from "react";
-import { connectEventSource } from "../service/NotificationService";
+import { useEffect, useState } from "react";
+import { getNotifications } from "../service/NotificationService";
 import NotificationItem from "../components/NotificationItem";
 import '../assets/css/Notification.css';
 import BlankHeaderLayout from "../layers/BlankHeaderLayout";
-
-  const notifications = [
-    {
-      id: 1,
-      type: 'LIKES',
-      title: '박00님이 좋아요를 클릭했습니다.',
-      isRead: false,
-      createdAt: '2025-01-14'
-    },
-    {
-      id: 2,
-      type: 'FOLLOW',
-      title: '박00님이 회원님을 구독했습니다.',
-      isRead: true,
-      createdAt: '2025-01-14'
-    }
-  ];
+import { HttpStatusCode } from "axios";
 
 function NotificationPage() {
+    const [notifications, setNotifications] = useState([]);
 
     useEffect(() => {
-        connectEventSource(2);
+        getNotifications()
+          .then((res) => {
+            if(res.status === HttpStatusCode.Ok) {
+              console.log(res.data);
+              setNotifications(res.data);
+            }
+          });
     }, [])
 
     return (

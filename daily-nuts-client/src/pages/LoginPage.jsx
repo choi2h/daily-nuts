@@ -5,6 +5,7 @@ import '../assets/css/Login.css';
 import { useNavigate } from 'react-router';
 import { login } from '../service/MemberInfoService';
 import { HttpStatusCode } from 'axios';
+import { connectEventSource } from '../service/NotificationService';
 
 const LoginPage = () => {
   const [loginInfo, setLoginInfo] = useState({loginId: '', password: ''});
@@ -27,6 +28,8 @@ const LoginPage = () => {
           } else {
             console.warn("로그인 응답에 memberId가 없음", res.data);
           }
+          
+          connectEventSource();
           navigate('/');
         } else {
           alert(res.data.message);

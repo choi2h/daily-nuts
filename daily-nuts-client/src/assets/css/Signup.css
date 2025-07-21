@@ -135,7 +135,9 @@
   border: none;
   color: white;
   padding: 0 14px;
-  height: 48px;
+  height: 40px;
+  width: 110px;
+  margin-left: 8px;
   border-radius: 8px;
   font-weight: 500;
   font-size: 0.95rem;
