@@ -66,4 +66,7 @@ public class Member {
         this.birth = birth;
     }
 
+    public void changeRole(Role role) {
+        this.role = role;
+    }
 }

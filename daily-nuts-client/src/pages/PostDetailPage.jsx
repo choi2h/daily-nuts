@@ -8,7 +8,7 @@ import CommentItem from '../components/CommentItem';
 import BlankHeaderLayout from '../layers/BlankHeaderLayout';
 import axios from 'axios';
 
-const convertCommentData = (commentsFromServer) => {
+const convertCommentData = (commentsFromServer,myMemberId) => {
   return commentsFromServer.map(comment => ({
     id: comment.id,
     author: comment.writer,
@@ -16,7 +16,7 @@ const convertCommentData = (commentsFromServer) => {
     date: comment.createdAt.substring(0, 10).replace(/-/g, '.'),
     content: comment.contents,
     avatar: '/api/placeholder/40/40',
-    isAuthor: true,
+    isAuthor: comment.memberId === myMemberId,
     replies: comment.replies?.map(reply => ({
       id: reply.id,
       author: reply.writer,
@@ -24,7 +24,7 @@ const convertCommentData = (commentsFromServer) => {
       date: reply.createdAt.substring(0, 10).replace(/-/g, '.'),
       content: reply.contents,
       avatar: '/api/placeholder/40/40',
-      isAuthor: true,
+      isAuthor: comment.memberId === myMemberId,
       isReply: true,
       parentId: comment.id,
     })) || [],
@@ -34,7 +34,6 @@ const convertCommentData = (commentsFromServer) => {
 };
 
 const PostDetail = () => {
-  const currentMemberId = 1;
     
   const { id: postId } = useParams();
   const [post, setPost] = useState(null);
@@ -43,6 +42,7 @@ const PostDetail = () => {
   const [comments, setComments] = useState([]);
   const [editingCommentId, setEditingCommentId] = useState(null); //댓글 수정  
   const [editedContent, setEditedContent] = useState({});//댓글 수정
+  
 
   useEffect(() => {
     const storedId = localStorage.getItem("memberId");
@@ -89,7 +89,8 @@ const PostDetail = () => {
     const fetchComments = async () => {
         try {
         const res = await axios.get(`http://localhost:8081/post/${postId}/comments`);
-        const formattedComments = convertCommentData(res.data.comments);
+        const formattedComments = convertCommentData(res.data.comments, myMemberId);
+
         setComments(formattedComments);
         } catch (err) {
         console.error('댓글 목록 가져오기 실패:', err);
@@ -111,8 +112,8 @@ const PostDetail = () => {
             await axios.post(
             `http://localhost:8081/post/${postId}/comment`,
             {
-                contents: comment,
-                writer: "test",
+              contents: comment,
+              memberId: myMemberId
             }
             );
             setComment('');
@@ -155,7 +156,7 @@ const PostDetail = () => {
             `http://localhost:8081/post/${postId}/comment/${parentId}/reply`,
             {
             contents: replyContent,
-            writer: "test",
+            memberId: myMemberId,
             }
         );
         await fetchComments();
@@ -188,7 +189,7 @@ const PostDetail = () => {
     try {
         await axios.put(`http://localhost:8081/post/${postId}/comment/${commentId}`, {
         contents: content,
-        writer: "작성자", // 필요시 수정
+        memberId: myMemberId // 필요시 수정
         });
 
         await fetchComments();
@@ -248,7 +249,7 @@ const PostDetail = () => {
                 <CommentItem
                     key={comment.id}
                         comment={comment}
-                          currentMemberId={currentMemberId}
+                          currentMemberId={myMemberId}
 
                     onReplyClick={() => toggleReplyInput(comment.id)}
                     onEditClick={handleEditClick}
@@ -280,7 +281,7 @@ const PostDetail = () => {
                 <ReplyItem 
                     key={reply.id} 
                     reply={reply}
-                    currentMemberId={currentMemberId}
+                    currentMemberId={myMemberId}
                     isEditing={editingCommentId === reply.id}
                     editedContent={editedContent}
                     onEditClick={handleEditClick}
