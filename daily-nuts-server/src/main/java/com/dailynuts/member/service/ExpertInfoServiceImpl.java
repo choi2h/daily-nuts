@@ -9,6 +9,7 @@ import com.dailynuts.member.entity.ExpertInfo;
 import com.dailynuts.member.entity.Image;
 import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.entity.type.ImageType;
+import com.dailynuts.member.entity.type.Role;
 import com.dailynuts.member.repository.ExpertInfoRepository;
 import com.dailynuts.member.repository.ImageRepository;
 import com.dailynuts.member.repository.MemberRepository;
@@ -48,6 +49,8 @@ public class ExpertInfoServiceImpl implements ExpertInfoService {
         ExpertInfo expertInfo = new ExpertInfo(member, request.getDescription());
         List<Image> images = getImagesAndSetToExpertInfo(files, expertInfo, memberInfo.getLoginId());
         expertInfoRepository.save(expertInfo);
+
+        member.changeRole(Role.EXPERT);
 
         return mapper.toExpertInfoResponseDto(expertInfo, images);
     }
