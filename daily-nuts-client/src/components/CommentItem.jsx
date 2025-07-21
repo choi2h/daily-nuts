@@ -9,7 +9,6 @@ function CommentItem({
     onEditClick,
     onDeleteClick,
     onEditChange,
-    setEditedContent,
     isEditing,
     editedContent,
     onEditSubmit
