@@ -56,7 +56,7 @@ public class MemberController {
     @GetMapping("")
     public ResponseEntity<MemberMyPageResponseDto> mypageMember(@AuthenticationPrincipal JwtMember jwtMember) {
 
-        MemberMyPageResponseDto memberMypageResponseDto = memberService.buildMyPage(jwtMember);
+        MemberMyPageResponseDto memberMypageResponseDto = memberService.getMemberInfo(jwtMember);
 
         return ResponseEntity.ok(memberMypageResponseDto);
     }
