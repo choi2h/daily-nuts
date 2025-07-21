@@ -8,7 +8,7 @@ public interface MemberService {
     MemberLoginResponseDto loginMember(MemberLoginRequestDto memberLoginRequestDto);
     String[] refreshToken(String refreshToken);
     boolean existsByLoginId(String loginId);
-    MemberMyPageResponseDto buildMyPage(JwtMember jwtMember);
+    MemberMyPageResponseDto getMemberInfo(JwtMember jwtMember);
     void updateMember(MemberEditRequestDto req, JwtMember jwtMember);
     MemberDetailInfoResponseDto getExpertMemberInfo(Long targetMemberId, Long requestMemberId);
 }

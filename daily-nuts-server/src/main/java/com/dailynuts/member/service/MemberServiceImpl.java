@@ -102,7 +102,7 @@ public class MemberServiceImpl implements MemberService {
      * MemberMyPageResponseDto 객체
      */
     @Override
-    public MemberMyPageResponseDto buildMyPage(JwtMember jwtMember) {
+    public MemberMyPageResponseDto getMemberInfo(JwtMember jwtMember) {
         return memberMapper.convertToMemberMyPageResponse(jwtMember);
     }
 
@@ -110,7 +110,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void updateMember(MemberEditRequestDto req, JwtMember jwtMember) {
         Member member = memberRepository.findByLoginId(jwtMember.getLoginId())
-                .orElseThrow(() -> new IllegalArgumentException("회원이 없습니다."));
+                .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
         LocalDate birth = LocalDate.parse(req.getBirth(), fmt);
