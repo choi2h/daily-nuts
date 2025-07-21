@@ -52,8 +52,9 @@ axios.interceptors.request.use(
       delete axios.defaults.headers.common["Authorization"];
       delete axios.defaults.headers.common["Refresh-Token"];
       window.location.href = "/login";
+      alert("토큰이 만료되었습니다");
       console.log("Refresh token이 없어서 튕김!!!!");
-      return config
+      return
     }
 
     if (accessToken) {
