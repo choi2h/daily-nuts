@@ -34,6 +34,21 @@ function PostDetailItem({post, toggleLike, setPost, isAuthor, commentCount}) {
         }
     };
 
+    const moveProfile = () => {
+        navigate(`/profile/${post.memberId}`);
+    }
+
+    const getDateFormat = (dateStr) => {
+        const date = new Date(dateStr);
+
+        return date.toLocaleDateString("ko-KR", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+            }).replace(/\./g, "").trim().replace(/\s+/g, "-");
+    }
+
+
     return (
             <div>
                 <div className="post-detail-header">
@@ -43,12 +58,12 @@ function PostDetailItem({post, toggleLike, setPost, isAuthor, commentCount}) {
 
                 <div className="post-detail-meta">
                     <div className="author-info">
-                        <div className="profile-avatar">
+                        <div className="profile-avatar" onClick={moveProfile}>
                             <img className="profile-image" src={defaultProfile} alt="Profile" />
                         </div>
                         <span className="author-name">{post.writer}</span>
                     </div>
-                    <span className="post-date">{post.createdAt}</span>
+                    <span className="post-date">{getDateFormat(post.createdAt)}</span>
                 </div>
 
                 {isAuthor && (

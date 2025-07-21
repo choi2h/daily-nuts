@@ -17,8 +17,8 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/prepare")
-    public ResponseEntity<PaymentResponseDto.PrepareResponse> prepare(@RequestBody PaymentRequestDto.PrepareRequest request,
-                                                                      @AuthenticationPrincipal JwtMember jwtMember) {
+    public ResponseEntity<PaymentResponseDto.PrepareResponse> prepare(
+            @RequestBody PaymentRequestDto.PrepareRequest request, @AuthenticationPrincipal JwtMember jwtMember) {
         return ResponseEntity.ok(paymentService.createPrepare(jwtMember.getId(), request));
     }
 

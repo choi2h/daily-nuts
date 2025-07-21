@@ -18,8 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/member")
-@AllArgsConstructor
-@Slf4j
+@AllArgsConstructor @Slf4j
 public class MemberController {
 
     private final MemberService memberService;
@@ -53,11 +52,9 @@ public class MemberController {
      * @AuthenticationPrincipal로 주입된 객체를 사용하여
      * 마이페이지 렌더링에 필요한 로그인 사용자의 정보를 반환합니다.
      **/
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<MemberMyPageResponseDto> mypageMember(@AuthenticationPrincipal JwtMember jwtMember) {
-
-        MemberMyPageResponseDto memberMypageResponseDto = memberService.buildMyPage(jwtMember);
-
+        MemberMyPageResponseDto memberMypageResponseDto = memberService.getMemberInfo(jwtMember);
         return ResponseEntity.ok(memberMypageResponseDto);
     }
 
@@ -82,11 +79,9 @@ public class MemberController {
     // 로그아웃 기능
     // 다른 검증 로직은 없음 무조건 ok때리고
     // 이후 정리 작업은 프론트에서 해결
-    @GetMapping("logout")
+    @GetMapping("/logout")
     public ResponseEntity<Void> logoutMember() {
-
-        return ResponseEntity.ok()
-                .build();
+        return ResponseEntity.ok().build();
     }
 
     // 리프레시 토큰 지급 기능
@@ -107,4 +102,10 @@ public class MemberController {
                 .build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<MemberDetailInfoResponseDto> getMemberDetailInfo(
+            @PathVariable Long id, @AuthenticationPrincipal JwtMember jwtMember) {
+        MemberDetailInfoResponseDto response = memberService.getExpertMemberInfo(id, jwtMember.getId());
+        return ResponseEntity.ok(response);
+    }
 }
