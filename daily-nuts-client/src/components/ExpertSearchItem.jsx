@@ -1,7 +1,9 @@
 import defaultProfile from '../assets/images/default-profile.png';
-import '../assets/css/SearchResult.css'; // CSS 포함 확실히 하기
+import '../assets/css/SearchResult.css';
 
 function ExpertSearchItem({ expert }) {
+  console.log('expert:', expert);
+  console.log('isSubscribed:', expert.isSubscribed);
   return (
     <div className="approval-item">
       <div className="approval-content">
@@ -18,9 +20,9 @@ function ExpertSearchItem({ expert }) {
             <p className="next-payment">작성한 글: {expert.postCount}개</p>
           </div>
         </div>
-        <button className="payment-button">
-          {expert.isSubscribed ? '구독 중' : '구독하기'}
-        </button>
+        {expert.subscribed ? (
+          <button className="subscribed-btn">구독 중</button>
+        ) : null}
       </div>
     </div>
   );

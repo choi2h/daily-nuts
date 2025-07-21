@@ -23,7 +23,7 @@ function PostItem({post, toggleLike, onClick}) {
                 </div>
                 <div className="author-info">
                     <span className="author-name">{post.author}</span>
-                    <span className="post-date">· {post.time}</span>
+                    <span className="post-date">{post.time}</span>
                 </div>
             </div>
           </div>

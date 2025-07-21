@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router';
-import { IoHome, IoHeartOutline, IoBookmarkOutline, IoPersonOutline, IoNotificationsOutline, IoLogOutOutline, IoAddOutline } from 'react-icons/io5';
+import { useEffect, useState } from 'react';
+import { IoHome, IoHeartOutline, IoBookmarkOutline, IoPersonOutline, IoNotificationsOutline, IoLogOutOutline, IoAddOutline, IoNewspaperOutline } from 'react-icons/io5';
 import '../assets/css/Sidebar.css';
 import logo from '../assets/images/daily-nuts-logo.png';
 import defaultProfile from '../assets/images/default-profile.png';
@@ -7,9 +8,14 @@ import axios from 'axios';
 
 const navs = [
     {
-        name: "피드",
+        name: "최신피드",
         api: "/",
         icon: <IoHome />
+    },
+    {
+        name: "구독피드",
+        api: "/subscribe/feed",
+        icon: <IoNewspaperOutline />
     },
     {
         name: "좋아요",
@@ -34,11 +40,28 @@ const navs = [
 ]
 
 function Sidebar() {
+    const [role, setRole] = useState(localStorage.getItem("role"));
+    const isExpert = role === "EXPERT";
+
     const {pathname} = useLocation();
     const navigate = useNavigate();
     const isLogin = localStorage.getItem("loginId");
-    const userRole = localStorage.getItem("userRole");
     const memberName = localStorage.getItem("name");
+
+    useEffect(() => {
+        const updateRole = () => {
+            const newRole = localStorage.getItem("role");
+            setRole(newRole);
+        };
+
+        updateRole();
+
+        window.addEventListener("storage", updateRole);
+
+        return () => {
+            window.removeEventListener("storage", updateRole);
+        };
+    }, []);
 
     const handleNav = (nav) => {
         navigate(nav.api);
@@ -60,6 +83,7 @@ function Sidebar() {
                 localStorage.clear();
                 delete axios.defaults.headers.common['Authorization'];
                 delete axios.defaults.headers.common['Refresh-Token'];
+                window.dispatchEvent(new Event("storage"));
                 navigate('/login');
                 console.log('로그아웃');
             }
@@ -68,8 +92,6 @@ function Sidebar() {
 
     const handleCreatePost = () => {
         console.log('게시글 작성');
-        const role = localStorage.getItem("role");
-        const isExpert = role === "EXPERT";
 
         if (!isExpert) {
             alert("전문가만 글을 작성할 수 있습니다!");
@@ -100,10 +122,12 @@ function Sidebar() {
                         </div>
 
                         {/* 게시글 작성 버튼 */}
-                        <div className="create-post-btn" onClick={handleCreatePost}>
-                            <IoAddOutline className="create-post-icon" />
-                            <span>게시글 작성</span>
-                        </div>
+                        {isExpert && (
+                            <div className="create-post-btn" onClick={handleCreatePost}>
+                                <IoAddOutline className="create-post-icon" />
+                                <span>게시글 작성</span>
+                            </div>
+                        )}
 
                         {
                             navs.map((nav) => (
@@ -120,7 +144,6 @@ function Sidebar() {
                 </ul>
             </div>
 
-            
             {
                 isLogin?
                     (

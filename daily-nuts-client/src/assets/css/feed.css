@@ -48,6 +48,8 @@
 
 .author-info {
   display: flex;
+  flex-direction: row;
+  align-items: center;
   gap: 10px;
   font-size: 14px;
 }
@@ -129,4 +131,10 @@
   float: right;
   margin-right: 1rem;
   margin-top: 0.5rem;
+}
+
+.post-avatar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
