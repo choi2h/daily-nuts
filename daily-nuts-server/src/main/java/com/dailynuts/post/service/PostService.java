@@ -3,10 +3,6 @@ package com.dailynuts.post.service;
 import com.dailynuts.post.dto.PostRequestDto;
 import com.dailynuts.post.dto.PostResponseDto;
 import com.dailynuts.post.dto.PostsResponseDto;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface PostService {
     PostResponseDto createPost(PostRequestDto request);

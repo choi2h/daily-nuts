@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(List.of("http://localhost:5173")); // 프론트 도메인
-                    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // 허용 HTTP 메서드
+                    configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS")); // 허용 HTTP 메서드
                     configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
                     configuration.setAllowCredentials(true); // 인증정보 포함 허용
                     configuration.addExposedHeader("Authorization");
