@@ -21,6 +21,8 @@ public class MemberLoginResponseDto {
 
     private Role role;
 
+    private Long memberId;
+
     @JsonIgnore
     private String accessToken;
 

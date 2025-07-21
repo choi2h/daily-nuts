@@ -52,12 +52,14 @@ public class MemberServiceImpl implements MemberService {
         String refreshToken = jwtUtils.provideRefreshToken(member.getLoginId());
 
         return MemberLoginResponseDto.builder()
-                .loginId(member.getLoginId())
-                .name(member.getName())
-                .role(member.getRole())
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+             .loginId(member.getLoginId())
+             .name(member.getName())
+             .role(member.getRole())
+             .accessToken(accessToken)
+             .refreshToken(refreshToken)
+             .memberId(member.getId())
+             .build();
+
     }
 
     // 토큰을 생성 (리프레시용)

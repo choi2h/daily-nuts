@@ -1,5 +1,6 @@
 package com.dailynuts.post.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,4 +18,5 @@ public class PostResponseDto {
     private int likeCount;
     private boolean isPinned;
     private LocalDateTime createdAt;
+    private Long memberId;
 }
