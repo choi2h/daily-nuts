@@ -9,6 +9,7 @@ import com.dailynuts.member.entity.type.Role;
 import com.dailynuts.member.repository.ExpertInfoRepository;
 import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.member.service.mapper.MemberMapper;
+import com.dailynuts.security.entity.type.TokenType;
 import com.dailynuts.security.jwt.JwtMember;
 import com.dailynuts.security.jwt.JwtUtils;
 import com.dailynuts.subscription.repository.SubscriptionRepository;
@@ -56,8 +57,8 @@ public class MemberServiceImpl implements MemberService {
         if (!passwordEncoder.matches(req.getPassword(), member.getPassword())) {
             throw new CustomException(CustomErrorCode.PASSWORD_DOSE_NOT_MATCH);
         }
-        String accessToken = jwtUtils.provideToken(member.getLoginId());
-        String refreshToken = jwtUtils.provideRefreshToken(member.getLoginId());
+        String accessToken = jwtUtils.provideToken(member.getLoginId(), TokenType.ACCESS);
+        String refreshToken = jwtUtils.provideToken(member.getLoginId(), TokenType.REFRESH);
 
         return MemberLoginResponseDto.builder()
              .loginId(member.getLoginId())
@@ -76,8 +77,8 @@ public class MemberServiceImpl implements MemberService {
 
         if (jwtUtils.validateToken(refreshToken)) {
             String loginId = jwtUtils.getLoginIdFromToken(refreshToken);
-            tokens[0] = jwtUtils.provideToken(loginId);
-            tokens[1] = jwtUtils.provideRefreshToken(loginId);
+            tokens[0] = jwtUtils.provideToken(loginId, TokenType.ACCESS);
+            tokens[1] = jwtUtils.provideToken(loginId, TokenType.REFRESH);
         } else {
             throw new CustomException(CustomErrorCode.TOKEN_NOT_VALID);
         }
@@ -100,7 +101,7 @@ public class MemberServiceImpl implements MemberService {
      *                  인증된 회원 정보(JwtMember)
      * @return 마이페이지 렌더링에 사용될
      * MemberMyPageResponseDto 객체
-     */
+     **/
     @Override
     public MemberMyPageResponseDto getMemberInfo(JwtMember jwtMember) {
         return memberMapper.convertToMemberMyPageResponse(jwtMember);

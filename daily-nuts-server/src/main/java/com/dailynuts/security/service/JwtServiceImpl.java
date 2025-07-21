@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 public class JwtServiceImpl implements JwtService {
 
     private final MemberRepository memberRepository;
-    private final JwtUtils jwtUtils;
 
     @Transactional
     public UserDetails cookByLoginId(String loginId) {

@@ -1,6 +1,13 @@
 package com.dailynuts.security.jwt;
 
-import io.jsonwebtoken.*;
+import com.dailynuts.common.exception.CustomErrorCode;
+import com.dailynuts.common.exception.CustomException;
+import com.dailynuts.security.entity.type.TokenType;
+import com.dailynuts.security.jwt.mapper.TokenProvideMapper;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
@@ -10,67 +17,80 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.util.Date;
 
 
-// MemService에게 토큰에 대한 로직을 위임 받은 클래스
-// 각 기능에 맞게끔 토큰을 생성함
-// 토큰의 유효성 검증 및 토큰 파싱으로 LoginId를 추출
-// (기회가 된다면 기능에 필요한 인자를 따로 주고 토큰 생성 로직을 하나로 합치고 싶음)
+/**
+ * Jwt토큰의 생성, 검증, 파싱하여 데이터 생성과 추출을 담당하는 클래스
+ *
+ * 1. Jwt를 제공한다.
+ * 2. Jwt를 검증한다.
+ * 3. Jwt토큰을 파싱하여 username(Subject)을 읽어온다.
+ **/
 @Component
 @Slf4j
 public class JwtUtils {
+    /// 토큰 생성을 담당하는 클래스
+    private TokenProvideMapper mapper;
 
+    /// 시크릿 키의 원본이 되는 String
     @Value("${jwt.secret}")
     private String secretKeyString;
 
-    @Value("${jwt.expiration.access-token}")
-    private long accessTokenSeconds;
-
-    @Value("${cookie.max-age.access}")
-    private long accessCookieSeconds;
-
-    @Value("${jwt.expiration.refresh-token}")
-    private long refreshTokenSeconds;
-
-    @Value("${cookie.max-age.refresh}")
-    private long refreshCookieSeconds;
-
+    /// HMAC-SHA256 서명용 키 객체
     private SecretKey secretKey;
 
-    // 토큰 서명 알고리즘
     @PostConstruct
     public void init() {
-        byte[] keyBytes = secretKeyString.getBytes(StandardCharsets.UTF_8);
-        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+        try {
+            this.secretKey = Keys.hmacShaKeyFor(secretKeyString.getBytes(StandardCharsets.UTF_8));
+        } catch (IllegalArgumentException e) {
+            log.error("TokenProvideMapper의 Jwt Secret Key 초기화 실패", e);
+            throw new CustomException(CustomErrorCode.SECRET_KEY_INITIALIZATION_FAILED);
+        }
     }
 
-    // 토큰 생성 메서드
-    public String provideToken(String loginId) {
+    /**
+     * 1. 토큰을 발급하는 메서드
+     *
+     * 매개변수를 받아 알맞는 타입의 토큰을 생성하여 문자열의 토큰을 리턴합니다.
+     * @param loginId 외부 클라이언트로부터 받은 loginId 데이터
+     * @param tokenType 액세스 혹은 리프레시 중 하나를 선택하는 구별용 변수
+     * @return Jwt문자열
+     */
+    public String provideToken(String loginId, TokenType tokenType) {
+        String token = null;
 
-        return Jwts.builder()
-                .subject(loginId)
-                .issuedAt(Date.from(Instant.now()))
-                .expiration(Date.from(Instant.now().plusSeconds(accessTokenSeconds)))
-                .signWith(secretKey)
-                .compact();
+        // 액세스 토큰 생성
+        if(tokenType == TokenType.ACCESS){
+            token = mapper.loginIdToAccessToken(loginId, secretKey);
+        }
+
+        // 리프레시 토큰 생성
+        if(tokenType == TokenType.REFRESH){
+            token = mapper.loginIdToRefreshToken(loginId, secretKey);
+        }
+
+        // 액세스와 리프레시 토큰을 생성하지 못했을 경우
+        // TOKEN_CREATION_FAILED 예외를 여기서 던집니다
+        if (token == null){
+            log.warn("provideToken에서 토큰 생성에 실패했습니다. loginId={}, tokenType={}",
+                                      loginId, tokenType);
+            throw new CustomException(CustomErrorCode.TOKEN_CREATION_FAILED);
+        }
+
+        return token;
     }
 
-    // 리프레시 토큰 생성 메서드
-    public String provideRefreshToken(String loginId) {
-
-        return Jwts.builder()
-                .subject(loginId)
-                .issuedAt(Date.from(Instant.now()))
-                .expiration(Date.from(Instant.now().plusSeconds(refreshTokenSeconds)))
-                .signWith(secretKey)
-                .compact();
-    }
-
-    // 토큰 유효성 검사
+    /**
+     * 2. 토큰의 유효성을 검증하는 메서드
+     *
+     * 토큰의 서명이 위조됐는지 비교검사하고 만료시간이 지났는지 검사하여 boolean으로 리턴합니다.
+     * @param token jwt를 받습니다.
+     * @return true or false
+     */
     public boolean validateToken(String token) {
         try {
+            // 서명 검증과 만료 시간 검사를 자동으로 해줍니다
             Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
@@ -78,20 +98,27 @@ public class JwtUtils {
             return true;
 
         } catch (SignatureException e) {
-            log.warn("JWT 서명 오류: {}", e.getMessage());
+            log.warn("JWT 서명 오류");
         } catch (MalformedJwtException e) {
-            log.warn("JWT 구조 오류: {}", e.getMessage());
+            log.warn("JWT 구조 오류");
         } catch (ExpiredJwtException e) { // 토큰 만료
-            log.warn("토큰 만료: {}", e.getMessage());
+            log.warn("토큰 만료");
         } catch (UnsupportedJwtException e) {
-            log.warn("지원되지 않는 JWT 토큰: {}", e.getMessage());
+            log.warn("지원되지 않는 JWT 토큰");
         } catch (IllegalArgumentException e) {
-            log.warn("JWT 클레임 문자열 비어있음: {}", e.getMessage());
+            log.warn("JWT 클레임 문자열 비어있음");
         }
+
         return false;
     }
 
-    // 토큰 파싱해서 subject(loginId) 추출
+    /**
+     * 3. 토큰을 파싱하여 Subject를 추출하는 메서드
+     *
+     *
+     * @param token jwt를 받습니다.
+     * @return 토큰을 만들 때 입력했던 Subject값을 반환합니다.
+     */
     public String getLoginIdFromToken(String token){
 
         return Jwts.parser()
