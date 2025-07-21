@@ -1,17 +1,20 @@
 import { useState } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
 import '../assets/css/Default.css'
+import { useNavigate } from 'react-router';
 
 
 function SubTab ({categories, selectedCategory, changeCategory}) {
       const [searchQuery, setSearchQuery] = useState('');
+      const navigate = useNavigate();
 
         const handleSearchChange = (e) => {
           setSearchQuery(e.target.value);
         };
 
         const handleSearchSubmit = (searchTerm) => {
-          console.log('검색어:', searchTerm);
+          if (!searchTerm.trim()) return;
+          navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
         };
 
 
@@ -31,10 +34,8 @@ function SubTab ({categories, selectedCategory, changeCategory}) {
             }
           </div>
 
-            {/* 빈 공간 */}
         <div className="spacer"></div>
 
-        {/* 검색창 */}
         <div className="search-container">
           <div className="search-input-container">
             <IoSearchOutline className="search-icon" size={16} />

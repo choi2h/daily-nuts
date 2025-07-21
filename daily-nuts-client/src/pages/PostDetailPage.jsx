@@ -38,15 +38,24 @@ const PostDetail = () => {
     
   const { id: postId } = useParams();
   const [post, setPost] = useState(null);
+  const [myMemberId, setMyMemberId] = useState(null);
   const [comment, setComment] = useState(''); 
   const [comments, setComments] = useState([]);
   const [editingCommentId, setEditingCommentId] = useState(null); //댓글 수정  
   const [editedContent, setEditedContent] = useState({});//댓글 수정
+
+  useEffect(() => {
+    const storedId = localStorage.getItem("memberId");
+    if (storedId) {
+      setMyMemberId(parseInt(storedId, 10));
+    }
+  }, []);
  
   // 게시글 상세 정보
   useEffect(() => {
     axios.get(`/post/${postId}`)
       .then((res) => {
+        console.log(res.data);
         setPost(res.data);
       })
       .catch((err) => {
@@ -217,7 +226,8 @@ const PostDetail = () => {
   return (
     <DefaultLayout className="app">
       <BlankHeaderLayout>
-        <PostDetailItem post={post} toggleLike={toggleLike} />
+        <PostDetailItem post={post} toggleLike={toggleLike} 
+        isAuthor={post?.memberId === myMemberId}/>
         <div className="comment-section">
           <div className="comment-title">댓글</div>
           <form onSubmit={handleCommentSubmit} className="comment-form">

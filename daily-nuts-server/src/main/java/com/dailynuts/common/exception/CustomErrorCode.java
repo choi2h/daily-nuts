@@ -34,7 +34,8 @@ public enum CustomErrorCode {
     COMMENT_REPLY_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "C005", "대댓글에는 다시 답글을 달 수 없습니다."),
     COMMENT_DELETE_UNAUTHORIZED(HttpStatus.FORBIDDEN, "C006", "댓글 작성자만 삭제할 수 있습니다."),
 
-
+    // 카테고리 T
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "T001", "존재하지 않는 카테고리입니다."),
 
     // 구독 S
 

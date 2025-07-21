@@ -9,15 +9,15 @@ import java.util.List;
 @Getter
 public class ExpertInfoResponseDto {
     public String description;
-    public List<ImageInfo> images;
+    public List<ImageInfo> files;
 
     public ExpertInfoResponseDto(String description) {
         this.description = description;
-        this.images = new ArrayList<>();
+        this.files = new ArrayList<>();
     }
 
     public void addImage(String name, String url) {
-        images.add(new ImageInfo(name, url));
+        files.add(new ImageInfo(name, url));
     }
 
     @Getter

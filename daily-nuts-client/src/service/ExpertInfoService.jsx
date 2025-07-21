@@ -21,6 +21,7 @@ const saveExpertInfo = async (description, files) => {
         return res;
     }).catch((error) => {
         console.log(error);
+        return error;
     })
 }
 
@@ -53,4 +54,4 @@ const updateExpertInfo = async (description, files) => {
     })
 }
 
-export {saveExpertInfo, getExpertInfo};
+export {saveExpertInfo, getExpertInfo, updateExpertInfo};

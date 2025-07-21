@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,7 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity @Getter
+@Entity @Getter @Setter
 @Table(name = "member")
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -42,7 +43,7 @@ public class Member {
 
     @Column(name = "role", columnDefinition = "VARCHAR(20)", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;
 
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private ExpertInfo expertInfo;
@@ -56,14 +57,13 @@ public class Member {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Member(String loginId, String name, String password, String phoneNumber, String email, LocalDate birth, Role role) {
+    public Member(String loginId, String name, String password, String phoneNumber, String email, LocalDate birth) {
         this.loginId = loginId;
         this.name = name;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.birth = birth;
-        this.role = role;
     }
 
 }

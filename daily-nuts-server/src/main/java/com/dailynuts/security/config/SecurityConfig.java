@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,6 +25,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtUtils jwtUtils;
@@ -48,7 +50,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(List.of("http://localhost:5173")); // 프론트 도메인
-                    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // 허용 HTTP 메서드
+                    configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS")); // 허용 HTTP 메서드
                     configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
                     configuration.setAllowCredentials(true); // 인증정보 포함 허용
                     configuration.addExposedHeader("Authorization");
@@ -93,7 +95,7 @@ public class SecurityConfig {
                 // 요청에 대한 인가(Authorization) 규칙 설정
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/member/signup", "/member/login", "/member/refresh").permitAll()
+                                .requestMatchers("/member/signup", "/member/login", "/member/refresh", "/member/exist").permitAll()
                                 .anyRequest().authenticated()
                 );
 

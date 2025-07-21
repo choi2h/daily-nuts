@@ -1,6 +1,7 @@
 package com.dailynuts.member.dto;
 
 import com.dailynuts.member.entity.type.Role;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,10 +37,7 @@ public class MemberSignupRequestDto {
     @Size(min=5, max=100, message = "올바른 이메일을 입력해주세요")
     private String email;
 
-    @NotNull
+    @NotNull @JsonFormat(pattern = "yyyyMMdd")
     private LocalDate birth;
-
-    @NotNull
-    private Role role;
 
 }

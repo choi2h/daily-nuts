@@ -3,6 +3,7 @@ import { IoHome, IoHeartOutline, IoBookmarkOutline, IoPersonOutline, IoNotificat
 import '../assets/css/Sidebar.css';
 import logo from '../assets/images/daily-nuts-logo.png';
 import defaultProfile from '../assets/images/default-profile.png';
+import axios from 'axios';
 
 const navs = [
     {
@@ -36,6 +37,8 @@ function Sidebar() {
     const {pathname} = useLocation();
     const navigate = useNavigate();
     const isLogin = localStorage.getItem("loginId");
+    const userRole = localStorage.getItem("userRole");
+    const memberName = localStorage.getItem("name");
 
     const handleNav = (nav) => {
         navigate(nav.api);
@@ -46,15 +49,33 @@ function Sidebar() {
         navigate('/login');
     }
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         // 로그아웃 로직 구현
-        console.log('로그아웃');
-        // 예: localStorage.removeItem('token');
-        // 예: navigate('/login');
+        if (window.confirm("정말 로그아웃 하시겠습니까?")) {
+            try {
+                await axios.get('/member/logout');
+            } catch (err) {
+                console.warn('로그아웃 실패', err);
+            } finally {
+                localStorage.clear();
+                delete axios.defaults.headers.common['Authorization'];
+                delete axios.defaults.headers.common['Refresh-Token'];
+                navigate('/login');
+                console.log('로그아웃');
+            }
+        }
     };
 
     const handleCreatePost = () => {
         console.log('게시글 작성');
+        const role = localStorage.getItem("role");
+        const isExpert = role === "EXPERT";
+
+        if (!isExpert) {
+            alert("전문가만 글을 작성할 수 있습니다!");
+            return;
+        }
+
         navigate('/post/write');
     };
 
@@ -73,8 +94,8 @@ function Sidebar() {
                                 <img className="profile-image" src={defaultProfile} alt="Profile" />
                             </div>
                             <div className="profile-info-names">
-                                <h3>김이름</h3>
-                                <p>@loginId</p>
+                                <h3>{memberName}</h3>
+                                <p>{isLogin}</p>
                             </div>
                         </div>
 
@@ -103,7 +124,7 @@ function Sidebar() {
             {
                 isLogin?
                     (
-                        <div className="logout" onClick={() => handleLogout}>
+                        <div className="logout" onClick={handleLogout}>
                             <IoLogOutOutline className="logout-icon" />
                             <h4>로그아웃</h4>
                         </div>

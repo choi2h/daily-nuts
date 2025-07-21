@@ -1,6 +1,6 @@
 import '../assets/css/Login.css';
 import { useState } from 'react';
-import { FaLock } from 'react-icons/fa';
+import { FaLock, FaKey } from 'react-icons/fa';
 import '../assets/css/Login.css';
 import { useNavigate } from 'react-router';
 import { login } from '../service/MemberInfoService';
@@ -22,6 +22,13 @@ const LoginPage = () => {
       console.log("login!!!");
       login(loginInfo).then((res) => {
         if(res.status === HttpStatusCode.Ok) {
+          const memberId = res.data.memberId;
+          if (memberId != null) {
+            localStorage.setItem("memberId", memberId.toString());
+          } else {
+            console.warn("로그인 응답에 memberId가 없음", res.data);
+          }
+          
           connectEventSource();
           navigate('/');
         } else {
@@ -47,6 +54,7 @@ const LoginPage = () => {
             <div style={{textAlign:'left'}}>
               <label htmlFor="userid">아이디</label>
               <div className="input-icon-wrapper">
+                <FaKey className="input-icon" />
                 <input
                   id="userid"
                   type="text"

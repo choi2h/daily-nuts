@@ -85,6 +85,14 @@
   margin-top: 10px;
 }
 
+.empty-info {
+    gap: 20px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .preview-image {
   width: 80px;
   height: 80px;
