@@ -9,9 +9,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
 
+
+// MemService에게 토큰에 대한 로직을 위임 받은 클래스
+// 각 기능에 맞게끔 토큰을 생성함
+// 토큰의 유효성 검증 및 토큰 파싱으로 LoginId를 추출
+// (기회가 된다면 기능에 필요한 인자를 따로 주고 토큰 생성 로직을 하나로 합치고 싶음)
 @Component
 @Slf4j
 public class JwtUtils {
@@ -36,8 +42,8 @@ public class JwtUtils {
     // 토큰 서명 알고리즘
     @PostConstruct
     public void init() {
-
-        this.secretKey = Keys.hmacShaKeyFor(secretKeyString.getBytes());
+        byte[] keyBytes = secretKeyString.getBytes(StandardCharsets.UTF_8);
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
     // 토큰 생성 메서드
