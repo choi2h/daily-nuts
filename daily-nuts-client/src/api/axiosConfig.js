@@ -44,3 +44,4 @@ axios.interceptors.request.use(async config => {
   }
   return config;
 }, error => Promise.reject(error));
+export default axios;
