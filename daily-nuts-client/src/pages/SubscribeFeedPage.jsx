@@ -16,7 +16,7 @@ const categories = [
     { id: 6, name: '기타' },
   ];
 
-const LikedFeedPage = () => {
+const SubscribeFeedPage = () => {
   const [posts, setPosts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [sortCriteria, setSortCriteria] = useState("createdAt");
@@ -51,7 +51,7 @@ const LikedFeedPage = () => {
 
       setPosts((prevPosts) => 
         prevPosts.map((post) =>
-          post.id == postId
+          post.postId == postId
             ? {...post, likeCount: likeCount, 
               liked: isLiked} : post
         )
@@ -85,7 +85,7 @@ const LikedFeedPage = () => {
         categoryId: selectedCategory.id,
       };
 
-      const res = await axios.get('/posts/liked', { params });
+      const res = await axios.get('/posts/sub', { params });
       const newPosts = res.data.posts;
       if (!newPosts || !Array.isArray(newPosts)) {
         return;
@@ -169,9 +169,8 @@ const LikedFeedPage = () => {
                         title: post.title,
                         contents: post.contents,
                         likeCount: post.likeCount,
-                        liked: post.liked,
+                        lliked: post.isLiked,
                         writer: post.writer,
-                        time: post.createdAt
                     }}
                     toggleLike={toggleLike}onClick={postOnClick}/>
                 )}
@@ -197,4 +196,4 @@ const LikedFeedPage = () => {
   );
 };
 
-export default LikedFeedPage;
+export default SubscribeFeedPage;

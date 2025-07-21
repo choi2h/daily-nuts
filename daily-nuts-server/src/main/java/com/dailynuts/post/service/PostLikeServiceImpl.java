@@ -116,6 +116,7 @@ public class PostLikeServiceImpl implements PostLikeService {
                     post.getId(),
                     post.getTitle(),
                     post.getContents(),
+                    post.getWriter(),
                     likeCount,
                     true
             ));
