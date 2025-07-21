@@ -55,7 +55,7 @@ const connectEventSource = (onMessageCallback) => {
 };
 
 const getNotifications = async () => {
-  return axios.get( `${NOTIFICATION_API_PREFIX}/subscribe`)
+  return axios.get( `/notifications`)
     .then((res) => {
       console.log(res);
       return res;

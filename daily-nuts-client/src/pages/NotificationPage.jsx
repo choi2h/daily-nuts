@@ -13,8 +13,8 @@ function NotificationPage() {
         getNotifications()
           .then((res) => {
             if(res.status === HttpStatusCode.Ok) {
-              console.log(res.data);
-              setNotifications(res.data);
+              console.log(`notifications: ${res.data.notifications}`);
+              setNotifications(res.data.notifications);
             }
           });
     }, [])
@@ -26,7 +26,9 @@ function NotificationPage() {
             
                     <div className="notification-list">
                         {
-                            notifications.map((notification) => <NotificationItem key={notification.id} notification={notification}/>)
+                            !notifications ?
+                                '알림이 없습니다.'
+                                : notifications.map((notification) => <NotificationItem key={notification.id} notification={notification}/>)
                         }
                     </div>
                 </div>
