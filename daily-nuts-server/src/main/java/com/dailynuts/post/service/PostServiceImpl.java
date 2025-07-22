@@ -2,6 +2,7 @@ package com.dailynuts.post.service;
 
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
+import com.dailynuts.member.entity.Image;
 import com.dailynuts.post.dto.ExpertProfileResponseDto;
 import com.dailynuts.member.entity.ExpertInfo;
 import com.dailynuts.member.entity.Member;
@@ -24,8 +25,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -160,12 +163,15 @@ public class PostServiceImpl implements PostService{
         Long subscriberCount = subscriptionRepository
                 .countByExpertIdAndIsActiveTrue(expertId);
 
+        Optional<Image> imageOptional = imageRepository.findByMemberIdAndType(expert.getId(), ImageType.PROFILE);
+
         List<Post> allPosts = postRepository.findByMember_Id(expertId);
         List<PostResponseDto> posts = new ArrayList<>();
 
         for (Post post : allPosts) {
             if (post.isPinned() || isSubscribed) {
                 PostResponseDto postResponseDto = toPostResponseDto(post, requesterId);
+                imageOptional.ifPresent(image -> postResponseDto.setWriterProfile(image.getName()));
                 posts.add(postResponseDto);
             }
         }
@@ -177,7 +183,7 @@ public class PostServiceImpl implements PostService{
             return Boolean.compare(b.isPinned(), a.isPinned());
         });
 
-        return ExpertProfileResponseDto.builder()
+        ExpertProfileResponseDto response = ExpertProfileResponseDto.builder()
                 .id(expert.getId())
                 .name(expert.getName())
                 .description(expertInfo.getDescription())
@@ -185,6 +191,8 @@ public class PostServiceImpl implements PostService{
                 .isSubscribed(isSubscribed)
                 .posts(posts)
                 .build();
+        imageOptional.ifPresent(image -> response.setProfileImage(image.getName()));
+        return response;
     }
 
 }

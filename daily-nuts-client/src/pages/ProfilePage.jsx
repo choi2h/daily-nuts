@@ -30,6 +30,7 @@ const ProfilePage = () => {
       try {
         const res = await axios.get(`/post/expert/${id}`);
         const data = res.data;
+        console.log(data);
 
         setExpert(data);
         setPosts(data.posts || []);
@@ -70,8 +71,6 @@ const ProfilePage = () => {
             ? {...post, likeCount, liked} : post
         )
       );
-
-      if(beforeLiked && pathname === "/posts/likes") window.location.reload();
     } catch (err) {
       console.error('좋아요 처리 오류:', err);
     }
@@ -125,7 +124,7 @@ const ProfilePage = () => {
                 <div className="profile-header">
                     <div className="profile-info">
                         <div className="profile-avatar">
-                            <img className="profile-image" src={defaultProfile} alt="프로필 사진" />
+                            <img className="profile-image" src={expert.profileImage ? `/profile-images/${expert.profileImage}` : defaultProfile} alt="프로필 사진" />
                         </div>
                         <div className="profile-name">{expert.name}</div>
                     </div>
@@ -134,10 +133,15 @@ const ProfilePage = () => {
                           <span className="subscription-label">구독자</span>
                           <span className="subscription-count">{expert.subscriberCount}</span>
                         </div>
-
-                        <button className={`subscribe-button ${expert.subscribed ? 'disable' : ''}`} onClick={expert.subscribed && isModalOpen ? closeModal : openModal}>
-                          {expert.subscribed ? '구독중' : '구독하기' }
-                        </button>
+                        {
+                          expert.id === localStorage.getItem('memberId') ? '' :
+                          (
+                             <button className={`subscribe-button ${expert.subscribed ? 'disable' : ''}`} onClick={expert.subscribed && isModalOpen ? closeModal : openModal}>
+                              {expert.subscribed ? '구독중' : '구독하기' }
+                            </button>
+                          )
+                        }
+                       
                     </div>
                 </div>
 
