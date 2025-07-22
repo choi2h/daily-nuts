@@ -10,12 +10,16 @@ import java.util.Optional;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
     List<Subscription> findAllBySubscriberIdOrderByStartedAtDesc(Long subscriberId);
+
     Optional<Subscription> findByExpertIdAndSubscriberId(Long expertId, Long subscriberId);
+
     boolean existsBySubscriberIdAndExpertId(Long subscriberId, Long expertId);
+
     Long countByExpertId(Long expertId);
 
     @Query("SELECT s FROM Subscription s WHERE s.subscriberId=:subscriberId AND s.isActive=:isActive")
     List<Subscription> findAllBySubscriberId(Long subscriberId, boolean isActive);
-  
+
     @Query("SELECT s.expertId FROM Subscription s WHERE s.subscriberId = :subscriberId AND s.isActive = true")
     List<Long> findExpertIdsBySubscriberId(@Param("subscriberId") Long subscriberId);
+}
