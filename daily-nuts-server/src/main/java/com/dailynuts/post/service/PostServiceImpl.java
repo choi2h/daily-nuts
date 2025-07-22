@@ -11,7 +11,6 @@ import com.dailynuts.member.repository.ImageRepository;
 import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.post.dto.PostRequestDto;
 import com.dailynuts.post.dto.PostResponseDto;
-import com.dailynuts.post.dto.PostTitleResponseDto;
 import com.dailynuts.post.entity.Category;
 import com.dailynuts.post.entity.Post;
 import com.dailynuts.post.repository.CategoryRepository;
@@ -153,37 +152,30 @@ public class PostServiceImpl implements PostService{
         ExpertInfo expertInfo = expertInfoRepository.findByMember_Id(expertId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EXPERT_NOT_EXIST));
 
-        boolean isSubscribed = subscriptionRepository.existsBySubscriberIdAndExpertId(requesterId, expertId);
-        Long subscriberCount = subscriptionRepository.countByExpertId(expertId);
+        boolean isWriter = requesterId != null && requesterId.equals(expertId);
 
-        List<Post> fixedPosts = postRepository.findByMember_IdAndIsPinnedTrue(expertId);
-        List<PostResponseDto> fixedDto = new ArrayList<>();
+        boolean isSubscribed = isWriter || subscriptionRepository
+                .existsBySubscriberIdAndExpertIdAndIsActiveTrue(requesterId, expertId);
 
-        for (Post post : fixedPosts) {
-            int commentCount = commentRepository.countByPostId(post.getId());
-            boolean isLiked = postLikeRepository.existsPostLikeByPostIdAndMemberId(post.getId(), requesterId);
+        Long subscriberCount = subscriptionRepository
+                .countByExpertIdAndIsActiveTrue(expertId);
 
-            PostResponseDto dto = toPostResponseDto(post, requesterId);
-            fixedDto.add(dto);
+        List<Post> allPosts = postRepository.findByMember_Id(expertId);
+        List<PostResponseDto> posts = new ArrayList<>();
+
+        for (Post post : allPosts) {
+            if (post.isPinned() || isSubscribed) {
+                PostResponseDto postResponseDto = toPostResponseDto(post, requesterId);
+                posts.add(postResponseDto);
+            }
         }
 
-        List<Post> normalPosts = postRepository.findByMember_IdAndIsPinnedFalse(expertId);
-        List<PostTitleResponseDto> normalDto = new ArrayList<>();
-
-        for (Post post : normalPosts) {
-            boolean isLiked = postLikeRepository.existsPostLikeByPostIdAndMemberId(post.getId(), requesterId);
-
-            PostTitleResponseDto dto = PostTitleResponseDto.builder()
-                    .id(post.getId())
-                    .title(post.getTitle())
-                    .writer(post.getWriter())
-                    .likeCount(post.getLikeCount())
-                    .liked(isLiked)
-                    .createdAt(post.getCreatedAt())
-                    .build();
-
-            normalDto.add(dto);
-        }
+        posts.sort((a, b) -> {
+            if (a.isPinned() == b.isPinned()) {
+                return b.getCreatedAt().compareTo(a.getCreatedAt());
+            }
+            return Boolean.compare(b.isPinned(), a.isPinned());
+        });
 
         return ExpertProfileResponseDto.builder()
                 .id(expert.getId())
@@ -191,8 +183,7 @@ public class PostServiceImpl implements PostService{
                 .description(expertInfo.getDescription())
                 .subscriberCount(subscriberCount)
                 .isSubscribed(isSubscribed)
-                .fixedPosts(fixedDto)
-                .normalPosts(normalDto)
+                .posts(posts)
                 .build();
     }
 

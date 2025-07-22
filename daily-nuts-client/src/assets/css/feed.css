@@ -80,6 +80,7 @@
 }
 
 .post-excerpt {
+  white-space: pre-line;
   font-size: 15px;
   color: #657786;
   margin-bottom: 12px;
