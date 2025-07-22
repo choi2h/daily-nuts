@@ -29,6 +29,7 @@ public enum CustomErrorCode {
     POST_LIKE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "P003", "이미 좋아요된 게시물입니다."),
     SEARCH_KEYWORD_EMPTY(HttpStatus.BAD_REQUEST, "P004", "검색어를 입력해주세요"),
     INVALID_SORT_CRITERIA(HttpStatus.BAD_REQUEST, "P005", "유효하지 않은 정렬 기준입니다."),
+    PIN_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "P006", "고정글은 최대 3개까지만 설정할 수 있습니다."),
 
     // 댓글 C
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C001", "존재하지 않는 댓글입니다."),

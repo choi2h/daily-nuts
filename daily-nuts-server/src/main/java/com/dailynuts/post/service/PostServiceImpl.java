@@ -117,4 +117,23 @@ public class PostServiceImpl implements PostService{
                 .ifPresent(image -> response.setWriterProfile(image.getName()));
         return response;
     }
+
+    @Override
+    public void togglePin(Long postId, Long memberId, boolean pinned) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
+
+        if (!post.getMember().getId().equals(memberId)) {
+            throw new CustomException(CustomErrorCode.PERMISSION_DENIED);
+        }
+
+        if (pinned) {
+            long pinnedCount = postRepository.countByMember_IdAndIsPinnedTrue(memberId);
+            if (pinnedCount >= 3) {
+                throw new CustomException(CustomErrorCode.PIN_LIMIT_EXCEEDED);
+            }
+        }
+
+        post.setPinned(pinned);
+    }
 }
