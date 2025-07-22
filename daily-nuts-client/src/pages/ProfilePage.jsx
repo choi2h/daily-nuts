@@ -29,11 +29,10 @@ const ProfilePage = () => {
         setExpert(data);
         setPosts(combined);
       } catch (err) {
-        console.error('전문가 조회 오류:', err); // 디버깅용
         setTimeout(() => {
-          alert('등록된 전문가가 없습니다.');
-          navigate(-1);
-        }, 2000);
+          window.alert('등록된 전문가가 없습니다.');
+          navigate("/");
+        }, 300);
       }
     };
 
