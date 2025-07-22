@@ -12,8 +12,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [expert, setExpert] = useState(null);
-  const [fixedPosts, setFixedPosts] = useState([]);
-  const [normalPosts, setNormalPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
 
@@ -34,8 +33,7 @@ const ProfilePage = () => {
         console.log(data);
 
         setExpert(data);
-        setFixedPosts(data.fixedPosts || []);
-        setNormalPosts(data.normalPosts || []);
+        setPosts(data.posts || []);
 
         const storedMemberId = localStorage.getItem("memberId");
         if (storedMemberId && String(storedMemberId) === String(data.id)) {
@@ -66,14 +64,8 @@ const ProfilePage = () => {
       }
 
       const {likeCount, liked} = res.data;
-      setFixedPosts((prevPosts) => 
-        prevPosts.map((post) =>
-          post.id == postId
-            ? {...post, likeCount, liked} : post
-        )
-      );
 
-      setNormalPosts((prevPosts) => 
+      setPosts((prevPosts) => 
         prevPosts.map((post) =>
           post.id == postId
             ? {...post, likeCount, liked} : post
@@ -89,9 +81,8 @@ const ProfilePage = () => {
   };
 
   const togglePinned = async (postId) => {
-    const allPosts = [...fixedPosts, ...normalPosts];
-    const post = allPosts.find(p => p.id === postId);
-    const pinnedCount = fixedPosts.length;
+    const post = posts.find(p => p.id === postId);
+    const pinnedCount = posts.filter(p => p.pinned).length;
 
     if (!post.pinned && pinnedCount >= 3) {
       alert("고정글은 최대 3개까지 설정할 수 있습니다.");
@@ -102,15 +93,10 @@ const ProfilePage = () => {
 
     try {
       await axios.patch(`/post/${postId}/pin?pinned=${!post.pinned}`);
-
-      if (updated.pinned) {
-        setFixedPosts(prev => sortPosts([...prev, updated]));
-        setNormalPosts(prev => prev.filter(p => p.id !== postId));
-      } else {
-        setNormalPosts(prev => sortPosts([...prev, updated]));
-        setFixedPosts(prev => prev.filter(p => p.id !== postId));
-      }
-
+      const updatedPosts = posts.map(p =>
+        p.id === postId ? updated : p
+      );
+      setPosts(sortPosts(updatedPosts));
     } catch (err) {
       alert("고정글 설정에 실패했습니다.");
       console.error(err);
@@ -179,36 +165,23 @@ const ProfilePage = () => {
             <div className="posts-section">
                 <div className="posts-header">
                   <span className="posts-label">작성글</span>
-                  <span className="posts-count">{fixedPosts.length + normalPosts.length}</span>
+                  <span className="posts-count">{posts.length}</span>
                 </div>
 
                 <div className='main-content'>
-                  {expert.fixedPosts.length === 0 && expert.normalPosts.length === 0 ? (
+                  {posts.length === 0 ? (
                     <p>게시글이 없습니다.</p>
                   ) : (
-                    <>
-                      {fixedPosts.map((post, idx) => (
-                        <PostItem
-                          key={`fixed-${idx}`}
-                          post={post}
-                          toggleLike={toggleLike}
-                          onClick={postOnClick}
-                          isOwnProfile={isOwnProfile}
-                          togglePinned={togglePinned}
-                        />
-                      ))}
-
-                      {normalPosts.map((post, idx) => (
-                        <PostItem
-                          key={`normal-${idx}`}
-                          post={post}
-                          toggleLike={toggleLike}
-                          onClick={postOnClick}
-                          isOwnProfile={isOwnProfile}
-                          togglePinned={togglePinned}
-                        />
-                      ))}
-                    </>
+                    posts.map((post) => (
+                      <PostItem
+                        key={post.id}
+                        post={post}
+                        toggleLike={toggleLike}
+                        onClick={() => postOnClick(post.id)}
+                        isOwnProfile={isOwnProfile}
+                        togglePinned={togglePinned}
+                      />
+                    ))
                   )}
                 </div>
               </div>
