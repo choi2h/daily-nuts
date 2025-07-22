@@ -42,6 +42,7 @@ public class PaymentResponseDto {
     @Builder
     public static class StatusItem {
         private Long paymentId;
+        private Long expertId;
         private String expertName;
         private int amount;
         private String status; // paid or expired

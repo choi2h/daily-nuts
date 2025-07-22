@@ -78,6 +78,7 @@ public class PaymentMapper {
 
             return PaymentResponseDto.StatusItem.builder()
                     .paymentId(sub.getPayment().getId())
+                    .expertId(sub.getExpertId())
                     .expertName(expertName)
                     .amount(product.getPrice())
                     .status(sub.getEndedAt().isAfter(LocalDateTime.now()) ? "paid" : "expired")
