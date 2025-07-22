@@ -17,4 +17,6 @@ public interface CommentRepository extends MongoRepository<Comment,ObjectId> {
 
     // 부모 댓글(대댓글이 아닌) 조회, 생성일 순 정렬
     List<Comment> findByPostIdAndParentCommentIdIsNullOrderByCreatedAtAsc(Long postId);
+
+    int countByPostId(Long postId);
 }

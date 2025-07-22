@@ -14,6 +14,7 @@ import SearchResultPage from './pages/SearchResultPage';
 import { NotificationProvider } from './context/NotificationContext';
 import NotificationContainer from './components/NotificationContainer';
 import LikedFeedPage from './pages/LikedFeedPage';
+import SubscribeFeedPage from './pages/SubscribeFeedPage';
 
 function App() {
 
