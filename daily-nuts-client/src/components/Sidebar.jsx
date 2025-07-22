@@ -14,7 +14,7 @@ const navs = [
     },
     {
         name: "구독피드",
-        api: "/subscribe/feed",
+        api: "/posts/subscribe",
         icon: <IoNewspaperOutline />
     },
     {

@@ -25,7 +25,7 @@ public class PostMapper {
                 .build();
     }
 
-    public PostResponseDto getPostResponseDto(Post post, boolean isLiked) {
+    public PostResponseDto getPostResponseDto(Post post, boolean isLiked, int commentCount) {
         return PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -38,6 +38,7 @@ public class PostMapper {
                 .createdAt(post.getCreatedAt())
                 .memberId(post.getMember().getId())
                 .isLiked(isLiked)
+                .commentCount(commentCount)
                 .build();
     }
 }

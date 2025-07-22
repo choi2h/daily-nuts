@@ -13,7 +13,7 @@ function PostItem({post, toggleLike, onClick}) {
 
   const handleLikeClick = (e) => {
     e.stopPropagation();
-    console.log("liked 상태:", post.liked);
+    console.log("liked 상태:", post);
     toggleLike(post.id, post.liked);
   };
 
@@ -59,7 +59,7 @@ function PostItem({post, toggleLike, onClick}) {
               className="action-btn"
               onClick={() => onClick(post.id)}
             >
-              <GoComment size={22} /> <span>3</span>
+              <GoComment size={22} /> <span>{post.commentCount}</span>
             </button>
           </div>
         </div>

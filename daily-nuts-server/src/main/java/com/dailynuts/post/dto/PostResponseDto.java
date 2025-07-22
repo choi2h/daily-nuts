@@ -19,4 +19,5 @@ public class PostResponseDto {
     private LocalDateTime createdAt;
     private Long memberId;
     private boolean isLiked;
+    private int commentCount;
 }

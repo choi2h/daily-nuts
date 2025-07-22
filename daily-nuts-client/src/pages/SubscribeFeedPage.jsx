@@ -86,6 +86,7 @@ const SubscribeFeedPage = () => {
       };
 
       const res = await axios.get('/posts/sub', { params });
+      console.log(res);
       const newPosts = res.data.posts;
       if (!newPosts || !Array.isArray(newPosts)) {
         return;
