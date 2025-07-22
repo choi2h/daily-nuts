@@ -37,7 +37,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-
                 // 이화님이 주신 프론트 cors 설정
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
@@ -49,8 +48,6 @@ public class SecurityConfig {
                     configuration.addExposedHeader("Refresh-Token");
                     return configuration;
                 }))
-
-
 
                 // CSRF (Cross-Site Request Forgery) 보호 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
