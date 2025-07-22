@@ -6,7 +6,7 @@ import '../assets/css/Feed.css';
 import { useNavigate } from "react-router";
 import axios from "axios";
 
-function PostItem({post, toggleLike, onClick}) {
+function PostItem({post, toggleLike, togglePinned, isOwnProfile, onClick}) {
   const navigate = useNavigate();
 
   const handleCardClick = async () => {
@@ -28,6 +28,11 @@ function PostItem({post, toggleLike, onClick}) {
     e.stopPropagation();
     console.log("liked 상태:", post);
     toggleLike(post.id, post.liked);
+  };
+
+  const handleTogglePinned = (e) => {
+    e.stopPropagation();
+    togglePinned(post.id);
   };
 
   const moveProfile = () => {
@@ -52,6 +57,11 @@ function PostItem({post, toggleLike, onClick}) {
               <div className="author-info">
                   <span className="author-name">{post.writer}</span>
                   <span className="post-date">· {getDateFormat(post.createdAt)}</span>
+                  {isOwnProfile && (
+                    <button className="action-btn" onClick={handleTogglePinned}>
+                      {post.pinned ? '고정 해제' : '고정하기'}
+                    </button>
+                  )}
               </div>
           </div>
         </div>

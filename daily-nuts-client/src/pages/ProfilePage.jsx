@@ -14,6 +14,16 @@ const ProfilePage = () => {
   const [expert, setExpert] = useState(null);
   const [posts, setPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
+
+  const sortPosts = (posts) => {
+    return [...posts].sort((a, b) => {
+      if (a.pinned === b.pinned) {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      }
+      return b.pinned - a.pinned;
+    });
+  };
 
   useEffect(() => {
     const fetchExpert = async () => {
@@ -21,18 +31,18 @@ const ProfilePage = () => {
         const res = await axios.get(`/member/expert/${id}`);
         const data = res.data;
 
-        const fixed = data.fixedPosts?.map(post => ({ ...post, pinned: true })) || [];
-        const normal = data.normalPosts?.map(post => ({ ...post, pinned: false })) || [];
-
-        const combined = [...fixed, ...normal];
-
         setExpert(data);
-        setPosts(combined);
+        setPosts(sortPosts(data.posts));
+
+        const storedMemberId = localStorage.getItem("memberId");
+        if (storedMemberId && String(storedMemberId) === String(data.id)) {
+          setIsOwnProfile(true);
+        }
       } catch (err) {
         setTimeout(() => {
           window.alert('등록된 전문가가 없습니다.');
           navigate("/");
-        }, 300);
+        }, 2000);
       }
     };
 
@@ -51,6 +61,27 @@ const ProfilePage = () => {
 
   const postOnClick = (id) => {
     navigate(`/post/${id}`);
+  };
+
+  const togglePinned = async (postId) => {
+    const post = posts.find(p => p.id === postId);
+    const pinnedCount = posts.filter(p => p.pinned).length;
+
+    if (!post.pinned && pinnedCount >= 3) {
+      alert("고정글은 최대 3개까지 설정할 수 있습니다.");
+      return;
+    }
+
+    try {
+      await axios.patch(`/post/${postId}/pin?pinned=${!post.pinned}`);
+      const updated = posts.map(p =>
+      p.id === postId ? { ...p, pinned: !p.pinned } : p
+      );
+        setPosts(sortPosts(updated));
+    } catch (err) {
+      alert("고정글 설정에 실패했습니다.");
+      console.error(err);
+    }
   };
 
   if (!expert) {
@@ -118,7 +149,8 @@ const ProfilePage = () => {
                     <p>게시글이 없습니다.</p>
                   ) : (
                     posts.map((post, idx) => (
-                        <PostItem key={`fixed-${idx}`} post={post} toggleLike={toggleLike} onClick={postOnClick} />
+                        <PostItem key={`fixed-${idx}`} post={post} toggleLike={toggleLike} onClick={postOnClick} 
+                        isOwnProfile={isOwnProfile} togglePinned={togglePinned}/>
                       ))
                     )}
                 </div>

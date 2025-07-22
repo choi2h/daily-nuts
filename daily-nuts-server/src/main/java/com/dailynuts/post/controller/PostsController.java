@@ -72,4 +72,15 @@ public class PostsController {
         postService.deletePost(id, userDetails);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/pin")
+    public ResponseEntity<Void> togglePin(
+            @PathVariable Long id,
+            @RequestParam boolean pinned,
+            @AuthenticationPrincipal JwtMember userDetails
+    )
+    {
+        postService.togglePin(id, userDetails.getId(), pinned);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -16,8 +16,8 @@ import com.dailynuts.member.repository.ImageRepository;
 import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.member.service.mapper.ExpertInfoMapper;
 import com.dailynuts.post.dto.PostResponseDto;
-import com.dailynuts.post.dto.PostTitleResponseDto;
 import com.dailynuts.post.entity.Post;
+import com.dailynuts.post.repository.CommentRepository;
 import com.dailynuts.post.repository.PostRepository;
 import com.dailynuts.security.jwt.JwtMember;
 import com.dailynuts.subscription.repository.SubscriptionRepository;
@@ -43,6 +43,7 @@ public class ExpertInfoServiceImpl implements ExpertInfoService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public ExpertInfoResponseDto createExpertInfo(ExpertInfoRequestDto request, List<MultipartFile> files, JwtMember memberInfo) {
@@ -115,33 +116,28 @@ public class ExpertInfoServiceImpl implements ExpertInfoService {
 
         Long subscriberCount = subscriptionRepository.countByExpertId(expertId);
 
-        List<Post> fixedPostEntities = postRepository.findByMember_IdAndIsPinnedTrue(expertId);
+        List<Post> posts = postRepository.findByMember_Id(expertId);
+        List<PostResponseDto> postResponseDto = new ArrayList<>();
 
-        List<PostResponseDto> fixedPosts = new ArrayList<>();
-        for (Post post : fixedPostEntities) {
-            fixedPosts.add(PostResponseDto.builder()
+        for (Post post : posts) {
+            int commentCount = commentRepository.countByPostId(post.getId());
+
+            PostResponseDto dto = PostResponseDto.builder()
                     .id(post.getId())
                     .title(post.getTitle())
                     .contents(post.getContents())
                     .writer(post.getWriter())
-                    .categoryName(post.getCategory().getName())
                     .categoryId(post.getCategory().getId())
+                    .categoryName(post.getCategory().getName())
                     .likeCount(post.getLikeCount())
                     .isPinned(post.isPinned())
                     .createdAt(post.getCreatedAt())
                     .memberId(post.getMember().getId())
-                    .build());
-        }
+                    .isLiked(false)
+                    .commentCount(commentCount)
+                    .build();
 
-        List<Post> normalPostEntities = postRepository.findByMember_IdAndIsPinnedFalse(expertId);
-        List<PostTitleResponseDto> normalPosts = new ArrayList<>();
-        for (Post post : normalPostEntities) {
-            normalPosts.add(PostTitleResponseDto.builder()
-                    .id(post.getId())
-                    .title(post.getTitle())
-                    .writer(post.getWriter())
-                    .likeCount(post.getLikeCount())
-                    .build());
+            postResponseDto.add(dto);
         }
 
         return ExpertProfileResponseDto.builder()
@@ -150,8 +146,7 @@ public class ExpertInfoServiceImpl implements ExpertInfoService {
                 .description(expertInfo.getDescription())
                 .subscriberCount(subscriberCount)
                 .isSubscribed(isSubscribed)
-                .fixedPosts(fixedPosts)
-                .normalPosts(normalPosts)
+                .posts(postResponseDto)
                 .build();
     }
 

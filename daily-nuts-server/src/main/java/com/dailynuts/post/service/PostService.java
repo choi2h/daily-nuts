@@ -10,5 +10,5 @@ public interface PostService {
     PostResponseDto getPost(Long id, JwtMember userDetails);
     PostResponseDto updatePost(Long id, PostRequestDto request, JwtMember userDetails);
     void deletePost(Long id, JwtMember userDetails);
-
+    void togglePin(Long postId, Long memberId, boolean pinned);
 }

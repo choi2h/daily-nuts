@@ -53,6 +53,7 @@ public class ExpertController {
             @AuthenticationPrincipal JwtMember userDetails
     )
     {
+        Long requesterId = (userDetails != null) ? userDetails.getId() : null;
         ExpertProfileResponseDto expertProfileResponseDto = expertInfoService.getExpertProfile(id, userDetails.getId());
         return ResponseEntity.ok(expertProfileResponseDto);
     }
