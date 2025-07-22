@@ -6,12 +6,14 @@ import { useNavigate } from 'react-router';
 import { login } from '../service/MemberInfoService';
 import { HttpStatusCode } from 'axios';
 import { connectEventSource } from '../service/NotificationService';
+import useNotifications from '../context/useNotifications';
 
 const LoginPage = () => {
   const [loginInfo, setLoginInfo] = useState({loginId: '', password: ''});
   const [showPassword, setShowPassword] = useState(false);
   const togglePassword = () => setShowPassword(prev => !prev);
   const navigate = useNavigate();
+  const { addNotification } = useNotifications();
 
   const handleJoin = () => {
     navigate('/signup');
@@ -29,7 +31,11 @@ const LoginPage = () => {
             console.warn("로그인 응답에 memberId가 없음", res.data);
           }
           
-          connectEventSource();
+          connectEventSource((message) => {
+            addNotification(message); // ✅ UI에 알림 추가
+          });
+
+
           navigate('/');
         } else {
           alert(res.data.message);
