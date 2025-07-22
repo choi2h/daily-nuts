@@ -101,6 +101,12 @@ function Sidebar() {
         navigate('/post/write');
     };
 
+     const moveProfile = () => {
+        const id = JSON.parse(localStorage.getItem("memberId"));
+        console.log(id);
+        navigate(`/profile/${id}`);
+    }
+
     return (
         <div className='sidebar'>
             <div>
@@ -111,7 +117,7 @@ function Sidebar() {
                 <ul className="nav-menu">
                 { isLogin ? (
                     <div>
-                        <div className="profile-info-section">
+                        <div className="profile-info-section" onClick={localStorage.getItem("role") === "EXPERT" ? moveProfile : ''}>
                             <div className="profile-avatar">
                                 <img className="profile-image" src={defaultProfile} alt="Profile" />
                             </div>

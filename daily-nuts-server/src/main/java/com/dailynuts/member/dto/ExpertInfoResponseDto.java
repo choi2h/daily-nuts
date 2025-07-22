@@ -2,6 +2,7 @@ package com.dailynuts.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.List;
 @Getter
 public class ExpertInfoResponseDto {
     public String description;
+    @Setter
+    public String role;
     public List<ImageInfo> files;
 
     public ExpertInfoResponseDto(String description) {
