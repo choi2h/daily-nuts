@@ -9,6 +9,19 @@ const PaymentHistory = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedExpert, setSelectedExpert] = useState(null);
 
+  const handleOpenModal = (expert) => {
+    setSelectedExpert(expert);
+    setModalOpen(true);
+  };
+
+  const shouldShowPaymentButton = (nextPayment) => {
+    const today = new Date();
+    const paymentDate = new Date(nextPayment);
+    const diffTime = paymentDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays <= 2;
+  };
+
   useEffect(() => {
     axios
       .get('/payment/status')
@@ -32,11 +45,6 @@ const PaymentHistory = () => {
       });
   }, []);
 
-  const handleOpenModal = (expert) => {
-    setSelectedExpert(expert);
-    setModalOpen(true);
-  };
-
   return (
     <div className="profile-card">
       <h2 className="page-title">결제내역</h2>
@@ -58,11 +66,15 @@ const PaymentHistory = () => {
                     <p className="next-payment">다음 결제일은 {item.nextPayment}입니다.</p>
                   </div>
                 </div>
-              <button 
-                className="payment-button" 
-                onClick={() => handleOpenModal({expertId: item.expertId, expertName: item.expertName, price: item.price,})}>
-                  결제하기
-              </button>
+                {shouldShowPaymentButton(item.nextPayment) && (
+                  <button className="payment-button" 
+                    onClick={() => handleOpenModal({
+                      expertId: item.expertId,
+                      expertName: item.expertName,
+                      price: item.price,
+                    })}> 결제하기 
+                  </button>
+                )}
             </div>
           </div>
         ))}
