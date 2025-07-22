@@ -53,12 +53,36 @@ const ProfilePage = () => {
     }
   }, [id]);
 
-  const toggleLike = (postId) => {
-    setFixedPosts(prev =>
-      prev.map(post =>
-        post.id === postId ? { ...post, liked: !post.liked } : post
-      )
-    );
+    const toggleLike = async (postId, beforeLiked) => {
+    try {
+      const url = `/post/${postId}/like`;
+      let res;
+
+      if (beforeLiked) {
+        res = await axios.delete(url);
+      } else {
+        res = await axios.post(url);
+      }
+
+      const {likeCount, liked} = res.data;
+      setFixedPosts((prevPosts) => 
+        prevPosts.map((post) =>
+          post.id == postId
+            ? {...post, likeCount, liked} : post
+        )
+      );
+
+      setNormalPosts((prevPosts) => 
+        prevPosts.map((post) =>
+          post.id == postId
+            ? {...post, likeCount, liked} : post
+        )
+      );
+
+      if(beforeLiked && pathname === "/posts/likes") window.location.reload();
+    } catch (err) {
+      console.error('좋아요 처리 오류:', err);
+    }
   };
 
   const postOnClick = (id) => {
@@ -84,7 +108,7 @@ const ProfilePage = () => {
         setFixedPosts(prev => sortPosts([...prev, updated]));
         setNormalPosts(prev => prev.filter(p => p.id !== postId));
       } else {
-        setNormalPosts(prev => [...prev, updated]);
+        setNormalPosts(prev => sortPosts([...prev, updated]));
         setFixedPosts(prev => prev.filter(p => p.id !== postId));
       }
 

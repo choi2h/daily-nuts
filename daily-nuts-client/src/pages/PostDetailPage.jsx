@@ -106,12 +106,11 @@ const PostDetail = () => {
     const handleCancleLike = () => {
       console.log('cancle like!!');
       cancleLike(post.id).then((res) => {
-        console.log(res.data);
-        if(res.status === HttpStatusCode.Created) {
+        if(res.status === HttpStatusCode.Ok) {
             setPost(prev => ({
               ...prev,
-              liked: true,
-              likeCount: res.data.likeCount
+              liked: false,
+              likeCount: res.likeCount
             }));
         } else {
           console.log(res.data.message);

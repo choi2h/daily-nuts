@@ -53,7 +53,7 @@ function PostItem({post, toggleLike, togglePinned, isOwnProfile, onClick}) {
       <div className="post" >
         <div className="post-header">
           <div className="post-avatar" onClick={moveProfile}>
-              <img className="post-image" src={`/profile-images/${post.writerProfile || defaultProfile}`} alt="Profile" />
+              <img className="post-image" src={post.writerProfile ? `/profile-images/${post.writerProfile}` : defaultProfile} alt="Profile" />
               <div className="author-info">
                   <span className="author-name">{post.writer}</span>
                   <span className="post-date">· {getDateFormat(post.createdAt)}</span>
@@ -80,7 +80,7 @@ function PostItem({post, toggleLike, togglePinned, isOwnProfile, onClick}) {
           
           <div className="post-actions">
             <button 
-              className={`action-btn ${post.isLiked ? 'liked' : ''}`}
+              className={`action-btn ${post.liked ? 'liked' : ''}`}
               onClick={handleLikeClick}
             >
               {post.liked ? <IoMdHeart size={24}/> : <IoMdHeartEmpty size={24}/>} 
