@@ -2,7 +2,10 @@ package com.dailynuts.member.controller;
 
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
+import com.dailynuts.member.dto.ExpertInfoResponseDto;
 import com.dailynuts.member.dto.ExpertSearchResponseDto;
+import com.dailynuts.member.dto.SubscribeExpertsResponseDto;
+import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.service.ExpertSearchService;
 import com.dailynuts.security.jwt.JwtMember;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +36,10 @@ public class ExpertSearchController {
         return ResponseEntity.ok(results);
     }
 
+    @GetMapping("/subscribe")
+    public ResponseEntity<SubscribeExpertsResponseDto> getSubscribeExperts(@AuthenticationPrincipal JwtMember memberInfo) {
+        SubscribeExpertsResponseDto response = expertSearchService.subscribeExperts(memberInfo.getId());
+        return ResponseEntity.ok(response);
+    }
 }
 

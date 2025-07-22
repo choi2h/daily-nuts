@@ -76,4 +76,14 @@ const getExpertProfile = async (id) => {
     })
 }
 
-export { signup, existsLoginId, login, getExpertProfile};
+const getSubscribeExperts = async () => {
+  return axios.get(`/member/subscribe`)
+    .then((res) => {
+      console.log(res);
+      return res;
+    }).catch((err) => {
+      console.log(err);
+    });
+}
+
+export { signup, existsLoginId, login, getExpertProfile, getSubscribeExperts};
