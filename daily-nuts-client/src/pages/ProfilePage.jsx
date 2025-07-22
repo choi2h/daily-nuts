@@ -12,32 +12,41 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [expert, setExpert] = useState(null);
-  const [fixedPosts, setFixedPosts] = useState([]);
-  const [normalPosts, setNormalPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    axios.get(`/member/expert/${id}`)
-      .then(res => {
+    const fetchExpert = async () => {
+      try {
+        const res = await axios.get(`/member/expert/${id}`);
         const data = res.data;
-        data.isSubscribed = data.subscribed;
-        setExpert(res.data);
-        setFixedPosts(res.data.fixedPosts || []);
-        setNormalPosts(res.data.normalPosts || []);
-      })
-      .catch(err => {
-        alert('등록된 전문가가 없습니다.');
-        navigate(-1);
-      });
+
+        const fixed = data.fixedPosts?.map(post => ({ ...post, pinned: true })) || [];
+        const normal = data.normalPosts?.map(post => ({ ...post, pinned: false })) || [];
+
+        const combined = [...fixed, ...normal];
+
+        setExpert(data);
+        setPosts(combined);
+      } catch (err) {
+        setTimeout(() => {
+          window.alert('등록된 전문가가 없습니다.');
+          navigate("/");
+        }, 300);
+      }
+    };
+
+    if (id) {
+      fetchExpert();
+    }
   }, [id]);
 
   const toggleLike = (postId) => {
-    const toggleInPosts = (posts) =>
-      posts.map(post =>
+    setPosts(prev =>
+      prev.map(post =>
         post.id === postId ? { ...post, liked: !post.liked } : post
-      );
-      setFixedPosts(prev => toggleInPosts(prev));
-      setNormalPosts(prev => toggleInPosts(prev));
+      )
+    );
   };
 
   const postOnClick = (id) => {
@@ -100,33 +109,20 @@ const ProfilePage = () => {
             {/* 게시글 섹션 */}
             <div className="posts-section">
                 <div className="posts-header">
-                  <span className="posts-label">고정 글</span>
-                  <span className="posts-count">{fixedPosts.length}</span>
+                  <span className="posts-label">작성글</span>
+                  <span className="posts-count">{posts.length}</span>
                 </div>
 
                 <div className='main-content'>
-                  {fixedPosts.length === 0
-                    ? <p>고정 글이 없습니다.</p>
-                    : fixedPosts.map((post, idx) =>
+                  {posts.length === 0 ? (
+                    <p>게시글이 없습니다.</p>
+                  ) : (
+                    posts.map((post, idx) => (
                         <PostItem key={`fixed-${idx}`} post={post} toggleLike={toggleLike} onClick={postOnClick} />
-                      )}
+                      ))
+                    )}
                 </div>
-
-                <hr style={{ border: '2px solid #aaa', margin: '2rem 0' }} />
-
-                <div className="posts-header">
-                  <span className="posts-label">일반 글</span>
-                  <span className="posts-count">{normalPosts.length}</span>
-                </div>
-                <div className="main-content">
-                  {normalPosts.length === 0
-                    ? <p>일반 글이 없습니다.</p>
-                    : normalPosts.map((post, idx) =>
-                        <PostItem key={`normal-${idx}`} post={post} toggleLike={toggleLike} onClick={postOnClick} />
-                      )}
-                </div>
-
-            </div>
+              </div>
             </div>
         </BlankHeaderLayout>
     </DefaultLayout>
