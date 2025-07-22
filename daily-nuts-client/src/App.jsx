@@ -24,6 +24,7 @@ function App() {
         <Routes>
           <Route path='/' element={<FeedPage/>}></Route>
           <Route path='/posts' element={<FeedPage/>}></Route>
+          <Route path='/subscribe/feed' element={<SubscribeFeedPage />} />
           <Route path='/posts/likes' element={<LikedFeedPage/>}></Route>
           <Route path='/post/:id' element={<PostDetail/>}></Route>
           <Route path='/post/write' element={<PostWritePage/>}></Route>
