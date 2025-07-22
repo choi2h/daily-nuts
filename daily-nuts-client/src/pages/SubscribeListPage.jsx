@@ -1,36 +1,19 @@
+import { useEffect, useState } from "react";
 import SubscribeItem from "../components/SubscribeItem";
 import BlankHeaderLayout from "../layers/BlankHeaderLayout";
 import DefaultLayout from "../layers/DefaultLayout";
-
-const subscribeInfos = [
-    {
-        name: '김00',
-        subscriberCount: 30,
-        subscribeDate: '2025-07-11',
-    },
-    {
-        name: '박00',
-        subscriberCount: 20,
-        subscribeDate: '2025-07-11',
-    },
-    {
-        name: '김00',
-        subscriberCount: 10,
-        subscribeDate: '2025-07-11',
-    },
-    {
-        name: '최00',
-        subscriberCount: 80,
-        subscribeDate: '2025-07-11',
-    },
-    {
-        name: '김00',
-        subscriberCount: 120,
-        subscribeDate: '2025-07-11',
-    }
-]
+import { getSubscribeExperts } from "../service/MemberInfoService";
 
 function SubscribeListPage() {
+    const [subscribeInfos, setSubscribeInfos] = useState([]);
+
+    useEffect(() => {
+        getSubscribeExperts().then((res) => {
+            console.log('Subscribe experts!!! : ' + res.data.experts);
+            setSubscribeInfos(res.data.experts);
+        })
+    }, []);
+
     return (
         <DefaultLayout>
             <BlankHeaderLayout type='feed' isUseSearch={false} title='구독목록'>

@@ -12,5 +12,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByLoginId(String loginId);
     List<Member> findByNameContainingAndRole(String name, Role role);
     boolean existsByLoginId(String loginId);
+    List<Member> findAllByIdIn(List<Long> ids);
 
 }

@@ -14,6 +14,8 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
     boolean existsBySubscriberIdAndExpertId(Long subscriberId, Long expertId);
     Long countByExpertId(Long expertId);
 
+    @Query("SELECT s FROM Subscription s WHERE s.subscriberId=:subscriberId AND s.isActive=:isActive")
+    List<Subscription> findAllBySubscriberId(Long subscriberId, boolean isActive);
+  
     @Query("SELECT s.expertId FROM Subscription s WHERE s.subscriberId = :subscriberId AND s.isActive = true")
     List<Long> findExpertIdsBySubscriberId(@Param("subscriberId") Long subscriberId);
-}
