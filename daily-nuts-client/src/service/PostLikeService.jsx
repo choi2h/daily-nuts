@@ -16,7 +16,7 @@ const cancleLike = async (postId) => {
     return axios.delete(`/post/${postId}/like`)
     .then((res) => {
         console.log(res);
-
+        if(res.status !== HttpStatusCode.Ok) return res.response;
         return res;
     }).catch((err) => {
         console.log(err);

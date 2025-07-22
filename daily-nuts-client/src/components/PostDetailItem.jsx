@@ -59,7 +59,7 @@ function PostDetailItem({post, toggleLike, setPost, isAuthor, commentCount}) {
                 <div className="post-detail-meta">
                     <div className="author-info">
                         <div className="profile-avatar" onClick={moveProfile}>
-                            <img className="profile-image" src={`/profile-images/${post.writerProfile || defaultProfile}`} alt="Profile" />
+                            <img className="profile-image" src={post.writerProfile ? `/profile-images/${post.writerProfile}` : defaultProfile} alt="Profile" />
                         </div>
                         <span className="author-name">{post.writer}</span>
                     </div>
