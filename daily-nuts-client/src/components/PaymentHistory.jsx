@@ -9,7 +9,6 @@ const PaymentHistory = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedExpert, setSelectedExpert] = useState(null);
 
-
   useEffect(() => {
     axios
       .get('/payment/status')
@@ -40,7 +39,7 @@ const PaymentHistory = () => {
     setModalOpen(true);
   };
 
-    const shouldShowPaymentButton = (nextPayment) => {
+  const shouldShowPaymentButton = (nextPayment) => {
     const today = new Date();
     const paymentDate = new Date(nextPayment);
     const diffTime = paymentDate.getTime() - today.getTime();
@@ -56,39 +55,41 @@ const PaymentHistory = () => {
         {approvalItems.map((item) => (
           <div key={item.id} className="approval-item">
             <div className="approval-content">
-                <div className="payment-info-profile">
-                  <div className="profile-image-wrapper">
-                    <img 
-                      src={defaultProfile} 
-                      className="profile-image"
-                    />
-                    {/* <div className="online-indicator"></div> */}
-                  </div>
-                  <div className="approval-info">
-                    <h4 className="author-name">{item.name}</h4>
-                    <p className="next-payment">다음 결제일은 {item.displayDate}입니다.</p>
-                  </div>
+              <div className="payment-info-profile">
+                <div className="profile-image-wrapper">
+                  <img 
+                    src={defaultProfile} 
+                    className="profile-image"
+                    alt="프로필"
+                  />
                 </div>
-                {shouldShowPaymentButton(item.nextPayment) && (
-                  <button className="payment-button" 
-                    onClick={() => handleOpenModal({
-                      expertId: item.expertId,
-                      expertName: item.expertName,
-                      price: item.price,
-                    })}> 결제하기 
-                  </button>
-                )}
+                <div className="approval-info">
+                  <h4 className="author-name">{item.name}</h4>
+                  <p className="next-payment">다음 결제일은 {item.displayDate}입니다.</p>
+                </div>
+              </div>
+              {shouldShowPaymentButton(item.nextPayment) && (
+                <button className="payment-button" 
+                  onClick={() => handleOpenModal({
+                    expertId: item.expertId,
+                    expertName: item.expertName,
+                    price: item.price,
+                  })}> 결제하기 
+                </button>
+              )}
             </div>
           </div>
         ))}
       </div>
-      <SubscriptionModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        expertId={selectedExpert?.expertId}
-        expertName={selectedExpert?.expertName}
-        price={selectedExpert?.price}
-      />
+      {modalOpen && selectedExpert && (
+        <SubscriptionModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          expertId={selectedExpert.expertId}
+          expertName={selectedExpert.expertName}
+          price={selectedExpert.price}
+        />
+      )}
     </div>
   );
 };
