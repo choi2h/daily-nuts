@@ -16,6 +16,8 @@ public class CommentResponseDto {
     private String id;
     private Long postId;
     private Long memberId;
+    @Setter
+    private String profileImage;
     private String writer;
     private String contents;
     private LocalDateTime createdAt;

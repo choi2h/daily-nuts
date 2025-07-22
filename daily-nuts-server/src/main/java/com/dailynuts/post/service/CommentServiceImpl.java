@@ -2,6 +2,8 @@ package com.dailynuts.post.service;
 
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
+import com.dailynuts.member.entity.type.ImageType;
+import com.dailynuts.member.repository.ImageRepository;
 import com.dailynuts.notification.entity.NotificationType;
 import com.dailynuts.notification.service.NotificationInfoService;
 import com.dailynuts.post.dto.CommentRequestDto;
@@ -31,6 +33,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final NotificationInfoService notificationInfoService;
+    private final ImageRepository imageRepository;
 
     //댓글 등록
     @Override
@@ -45,8 +48,7 @@ public class CommentServiceImpl implements CommentService {
         notificationInfoService.createNotification(NotificationType.COMMENT, memberId, writerMemberId, postId);
 
         log.info(">>> 저장된 Comment의 commentId = {}", saved.getId());
-
-        return commentMapper.toResponse(saved);
+        return addImageToCommentResponse(saved);
     }
 
     //대댓글
@@ -65,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
 
         Comment reply = commentMapper.toEntity(request, postId, memberId, writer, parentCommentId);
         Comment saved = commentRepository.save(reply);
-        return commentMapper.toResponse(saved);
+        return addImageToCommentResponse(saved);
     }
 
     //댓글+대댓글 조회
@@ -81,10 +83,11 @@ public class CommentServiceImpl implements CommentService {
             List<Comment> replies = commentRepository.findByParentCommentId(parent.getId());
             log.info(">> 대댓글 수 = {}", replies.size());
 
-            CommentResponseDto parentResponse = commentMapper.toResponse(parent);
-            List<CommentResponseDto> replyResponses = replies.stream()
-                    .map(commentMapper::toResponse)
-                    .collect(Collectors.toList());
+            CommentResponseDto parentResponse = addImageToCommentResponse(parent);
+            List<CommentResponseDto> replyResponses = new ArrayList<>();
+            for(Comment reply : replies) {
+                replyResponses.add(addImageToCommentResponse(reply));
+            }
             parentResponse.setReplies(replyResponses);
             responseList.add(parentResponse);
         }
@@ -114,7 +117,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setUpdatedAt(LocalDateTime.now());
         Comment updated = commentRepository.save(comment);
 
-        return commentMapper.toResponse(updated);
+        return addImageToCommentResponse(updated);
     }
 
     //댓글 삭제
@@ -138,5 +141,12 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.delete(comment);
 
         return new DeleteResponseDto("댓글 삭제 성공", commentId.toHexString());
+    }
+
+    private CommentResponseDto addImageToCommentResponse(Comment comment) {
+        CommentResponseDto response = commentMapper.toResponse(comment);
+        imageRepository.findByMemberIdAndType(comment.getMemberId(), ImageType.PROFILE)
+                .ifPresent(image -> response.setProfileImage(image.getName()));
+        return response;
     }
 }

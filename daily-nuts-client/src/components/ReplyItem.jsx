@@ -19,7 +19,7 @@ function ReplyItem({
         <BiReply size={16} />
       </div>
       <div className="comment-avatar">
-        <img src={defaultProfile} alt={reply.author} />
+        <img src={reply.profileImage ? `/profile-images/${reply.profileImage}` : defaultProfile} alt={reply.author} />
       </div>
       <div className="comment-content">
         <div className="comment-header">
