@@ -18,6 +18,7 @@ const convertCommentData = (commentsFromServer,myMemberId) => {
     content: comment.contents,
     avatar: '/api/placeholder/40/40',
     isAuthor: comment.memberId === myMemberId,
+    profileImage: comment.profileImage,
     replies: comment.replies?.map(reply => ({
       id: reply.id,
       author: reply.writer,
@@ -28,6 +29,7 @@ const convertCommentData = (commentsFromServer,myMemberId) => {
       isAuthor: comment.memberId === myMemberId,
       isReply: true,
       parentId: comment.id,
+      profileImage: reply.profileImage,
     })) || [],
     isReplyOpen: false,
     replyInput: '',
@@ -124,7 +126,6 @@ const PostDetail = () => {
         try {
         const res = await axios.get(`http://localhost:8081/post/${postId}/comments`);
         const formattedComments = convertCommentData(res.data.comments, myMemberId);
-
         setComments(formattedComments);
         } catch (err) {
         console.error('댓글 목록 가져오기 실패:', err);
@@ -174,8 +175,7 @@ const PostDetail = () => {
         setComments(prev =>
         prev.map(comment =>
             comment.id === parentId ? { ...comment, replyInput: value } : comment
-        )
-        );
+        ));
     };
 
   // 대댓글 등록
@@ -204,6 +204,7 @@ const PostDetail = () => {
         setEditingCommentId(commentId);
         setEditedContent(prev => ({ ...prev, [commentId]: currentContent }));
         };
+
     // 수정 내용 변경 시
     const handleEditChange = (e, commentId) => {
     const value = e.target.value;

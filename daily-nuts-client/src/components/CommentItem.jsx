@@ -16,9 +16,9 @@ function CommentItem({
     const isAuthor = comment.authorId === currentMemberId;
   return (
       <div className="comment-item">
-           {/* 프로필 */}
+      {/* 프로필 */}
       <div className="comment-avatar">
-        <img src={defaultProfile} alt={comment.author} />
+        <img src={comment.profileImage ? `/profile-images/${comment.profileImage}` : defaultProfile} alt={comment.author} />
       </div>
       
       <div className="comment-content">
