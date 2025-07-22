@@ -8,6 +8,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,11 +24,11 @@ import java.nio.charset.StandardCharsets;
  * 2. Jwt를 검증한다.
  * 3. Jwt토큰을 파싱하여 Subject(loginId)를 읽어온다.
  **/
-@Component
-@Slf4j
+@Component @Slf4j
+@RequiredArgsConstructor
 public class JwtUtils {
     /// 토큰 생성을 담당하는 클래스
-    private TokenProvideMapper mapper;
+    private final TokenProvideMapper mapper;
 
     /// 시크릿 키의 원본이 되는 String
     @Value("${jwt.secret}")
