@@ -2,6 +2,8 @@ package com.dailynuts.post.service;
 
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
+import com.dailynuts.member.entity.type.ImageType;
+import com.dailynuts.member.repository.ImageRepository;
 import com.dailynuts.post.dto.PostResponseDto;
 import com.dailynuts.post.dto.PostsResponseDto;
 import com.dailynuts.post.entity.Post;
@@ -31,6 +33,7 @@ public class PostsServiceImpl implements PostsService {
     private final CommentRepository commentRepository;
     private final PostMapper postMapper;
     private final SubscriptionRepository subscriptionRepository;
+    private final ImageRepository imageRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -112,7 +115,10 @@ public class PostsServiceImpl implements PostsService {
     private PostResponseDto toPostResponseDto(Post post, Long memberId) {
         boolean isExist = postLikeRepository.existsPostLikeByPostIdAndMemberId(post.getId(), memberId);
         int commentCount = commentRepository.countByPostId(post.getId());
-        return postMapper.getPostResponseDto(post, isExist, commentCount);
+        PostResponseDto response =  postMapper.getPostResponseDto(post, isExist, commentCount);
+        imageRepository.findByMemberIdAndType(post.getMember().getId(), ImageType.PROFILE)
+                .ifPresent(image -> response.setWriterProfile(image.getName()));
+        return response;
     }
 
 }

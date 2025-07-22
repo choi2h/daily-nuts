@@ -41,6 +41,7 @@ const navs = [
 
 function Sidebar() {
     const [role, setRole] = useState(localStorage.getItem("role"));
+    const [profileImage, setProfileImage] = useState(localStorage.getItem("profile"));
     const isExpert = role === "EXPERT";
 
     const {pathname} = useLocation();
@@ -49,17 +50,22 @@ function Sidebar() {
     const memberName = localStorage.getItem("name");
 
     useEffect(() => {
-        const updateRole = () => {
+        const updateSidebarData = () => {
             const newRole = localStorage.getItem("role");
+            const newProfile = localStorage.getItem("profile");
             setRole(newRole);
+            setProfileImage(newProfile);
+            console.log("Sidebar 업데이트:", newRole, newProfile);
         };
 
-        updateRole();
+        // 초기 로드
+        updateSidebarData();
 
-        window.addEventListener("storage", updateRole);
+        // 커스텀 이벤트 리스너
+        window.addEventListener("profileUpdated", updateSidebarData);
 
         return () => {
-            window.removeEventListener("storage", updateRole);
+            window.removeEventListener("profileUpdated", updateSidebarData);
         };
     }, []);
 
@@ -117,9 +123,12 @@ function Sidebar() {
                 <ul className="nav-menu">
                 { isLogin ? (
                     <div>
-                        <div className="profile-info-section" onClick={localStorage.getItem("role") === "EXPERT" ? moveProfile : ''}>
+                        <div
+                          className={`profile-info-section ${role !== "EXPERT" ? "disabled" : ""}`}
+                          onClick={role === "EXPERT" ? moveProfile : undefined}
+                        >
                             <div className="profile-avatar">
-                                <img className="profile-image" src={defaultProfile} alt="Profile" />
+                                <img className="profile-image" src={profileImage || defaultProfile} alt="Profile" />
                             </div>
                             <div className="profile-info-names">
                                 <h3>{memberName}</h3>
@@ -136,8 +145,8 @@ function Sidebar() {
                         )}
 
                         {
-                            navs.map((nav) => (
-                                <NavItem nav={nav} handleNav={handleNav} currentPath={pathname}/>
+                            navs.map((nav, idx) => (
+                                <NavItem key={idx} nav={nav} handleNav={handleNav} currentPath={pathname}/>
                             ))
                         }
                     </div>

@@ -2,6 +2,7 @@ package com.dailynuts.member.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -9,7 +10,8 @@ import java.time.LocalDate;
 public class SubscribeExpertResponseDto {
     private Long id;
     private String name;
-    private String profileImageUrl;
+    @Setter
+    private String profileImage;
     private int postCount;
     private LocalDate subscribeDate;
 }

@@ -5,7 +5,6 @@ import com.dailynuts.member.dto.ExpertSearchResponseDto;
 import com.dailynuts.member.dto.SubscribeExpertResponseDto;
 import com.dailynuts.member.dto.SubscribeExpertsResponseDto;
 import com.dailynuts.member.entity.ExpertInfo;
-import com.dailynuts.member.entity.Image;
 import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.entity.type.ImageType;
 import com.dailynuts.member.entity.type.Role;
@@ -43,12 +42,17 @@ public class ExpertSearchServiceImpl implements ExpertSearchService {
                     int postCount = (int) postRepository.countByMemberId(expert.getId());
                     boolean subscribed = subscriptionRepository.existsBySubscriberIdAndExpertId(subscriberId, expert.getId());
 
-                    return expertSearchMapper.toExpertSearchDto(
+                    ExpertSearchDto dto =  expertSearchMapper.toExpertSearchDto(
                             expert,
                             profileImageUrl,
                             postCount,
                             subscribed
                     );
+
+                    imageRepository.findByMemberIdAndType(expert.getId(), ImageType.PROFILE)
+                            .ifPresent(image -> dto.setProfileImage(image.getName()));
+
+                    return dto;
                 })
                 .collect(Collectors.toList());
 
@@ -60,16 +64,18 @@ public class ExpertSearchServiceImpl implements ExpertSearchService {
         List<Subscription> subscribeExpertIds = subscriptionRepository.findAllBySubscriberId(memberId, true);
         SubscribeExpertsResponseDto response = new SubscribeExpertsResponseDto();
         for(Subscription subscription : subscribeExpertIds) {
-            String imageUrl = imageRepository.findByExpertIdAndType(memberId, ImageType.PROFILE);
             Optional<Member> memberOptional = memberRepository.findById(subscription.getExpertId());
             if (memberOptional.isEmpty()) continue;
             Member member = memberOptional.get();
             SubscribeExpertResponseDto expert = SubscribeExpertResponseDto.builder()
                     .id(member.getId())
                     .name(member.getName())
-                    .profileImageUrl(imageUrl)
                     .subscribeDate(subscription.getStartedAt().toLocalDate())
                     .build();
+
+            imageRepository.findByMemberIdAndType(memberId, ImageType.PROFILE)
+                    .ifPresent(image -> expert.setProfileImage(image.getName()));
+
             response.addExpert(expert);
         }
         return response;

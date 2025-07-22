@@ -6,7 +6,7 @@ import '../assets/css/Feed.css';
 import { useNavigate } from "react-router";
 import axios from "axios";
 
-function PostItem({post, toggleLike, onClick}) {
+function PostItem({post, toggleLike, togglePinned, isOwnProfile, onClick}) {
   const navigate = useNavigate();
 
   const handleCardClick = async () => {
@@ -30,6 +30,11 @@ function PostItem({post, toggleLike, onClick}) {
     toggleLike(post.id, post.liked);
   };
 
+  const handleTogglePinned = (e) => {
+    e.stopPropagation();
+    togglePinned(post.id);
+  };
+
   const moveProfile = () => {
     navigate(`/profile/${post.memberId}`);
   }
@@ -48,10 +53,15 @@ function PostItem({post, toggleLike, onClick}) {
       <div className="post" >
         <div className="post-header">
           <div className="post-avatar" onClick={moveProfile}>
-              <img className="post-image" src={defaultProfile} alt="Profile" />
+              <img className="post-image" src={`/profile-images/${post.writerProfile || defaultProfile}`} alt="Profile" />
               <div className="author-info">
                   <span className="author-name">{post.writer}</span>
                   <span className="post-date">· {getDateFormat(post.createdAt)}</span>
+                  {isOwnProfile && (
+                    <button className="action-btn" onClick={handleTogglePinned}>
+                      {post.pinned ? '고정 해제' : '고정하기'}
+                    </button>
+                  )}
               </div>
           </div>
         </div>
@@ -70,7 +80,7 @@ function PostItem({post, toggleLike, onClick}) {
           
           <div className="post-actions">
             <button 
-              className={`action-btn ${post.liked ? 'liked' : ''}`}
+              className={`action-btn ${post.isLiked ? 'liked' : ''}`}
               onClick={handleLikeClick}
             >
               {post.liked ? <IoMdHeart size={24}/> : <IoMdHeartEmpty size={24}/>} 

@@ -4,9 +4,12 @@ import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.member.dto.*;
 import com.dailynuts.member.entity.ExpertInfo;
+import com.dailynuts.member.entity.Image;
 import com.dailynuts.member.entity.Member;
+import com.dailynuts.member.entity.type.ImageType;
 import com.dailynuts.member.entity.type.Role;
 import com.dailynuts.member.repository.ExpertInfoRepository;
+import com.dailynuts.member.repository.ImageRepository;
 import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.member.service.mapper.MemberMapper;
 import com.dailynuts.security.entity.type.TokenType;
@@ -18,9 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 // MemberController와 비즈니스 로직이 연결된
 // 하나밖에 없는 Service
@@ -36,6 +41,8 @@ public class MemberServiceImpl implements MemberService {
     private final JwtUtils jwtUtils;
     private final SubscriptionRepository subscriptionRepository;
     private final ExpertInfoRepository expertInfoRepository;
+    private final FileService fileService;
+    private final ImageRepository imageRepository;
 
     // 멤버 아이디를 db에 저장
     @Override
@@ -60,14 +67,19 @@ public class MemberServiceImpl implements MemberService {
         String accessToken = jwtUtils.provideToken(member.getLoginId(), TokenType.ACCESS);
         String refreshToken = jwtUtils.provideToken(member.getLoginId(), TokenType.REFRESH);
 
-        return MemberLoginResponseDto.builder()
-             .loginId(member.getLoginId())
-             .name(member.getName())
-             .role(member.getRole())
-             .accessToken(accessToken)
-             .refreshToken(refreshToken)
-             .memberId(member.getId())
-             .build();
+        MemberLoginResponseDto response = MemberLoginResponseDto.builder()
+                .loginId(member.getLoginId())
+                .name(member.getName())
+                .role(member.getRole())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .memberId(member.getId())
+                .build();
+
+        imageRepository.findByMemberIdAndType(member.getId(), ImageType.PROFILE)
+                .ifPresent(value -> response.setProfileImageName(value.getName()));
+
+        return response;
 
     }
 
@@ -104,12 +116,16 @@ public class MemberServiceImpl implements MemberService {
      **/
     @Override
     public MemberMyPageResponseDto getMemberInfo(JwtMember jwtMember) {
-        return memberMapper.convertToMemberMyPageResponse(jwtMember);
+        MemberMyPageResponseDto response =  memberMapper.convertToMemberMyPageResponse(jwtMember);
+        imageRepository.findByMemberIdAndType(jwtMember.getId(), ImageType.PROFILE)
+                .ifPresent(value -> response.setProfileImageName(value.getName()));
+
+        return response;
     }
 
     @Override
     @Transactional
-    public void updateMember(MemberEditRequestDto req, JwtMember jwtMember) {
+    public MemberMyPageResponseDto updateMember(MemberEditRequestDto req, MultipartFile file, JwtMember jwtMember) {
         Member member = memberRepository.findByLoginId(jwtMember.getLoginId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
 
@@ -119,6 +135,28 @@ public class MemberServiceImpl implements MemberService {
         member.setPhoneNumber(req.getPhoneNumber());
         member.setBirth(birth);
         member.setEmail(req.getEmail());
+
+        if(file != null) {
+            String[] fileInfo = fileService.createFile(jwtMember.getLoginId(), file);
+            String path = fileInfo[0];
+            String name = fileInfo[1];
+
+            Optional<Image> imageOptional = imageRepository.findByMemberIdAndType(member.getId(), ImageType.PROFILE);
+            if(imageOptional.isEmpty()) {
+                Image image = new Image(name, member.getId(), path, ImageType.PROFILE);
+                imageRepository.save(image);
+            } else {
+                Image image = imageOptional.get();
+                image.setName(name);
+                image.setUrl(path);
+            }
+        }
+
+        MemberMyPageResponseDto response =  memberMapper.convertToMemberMyPageResponseAfterEdit(member);
+        imageRepository.findByMemberIdAndType(jwtMember.getId(), ImageType.PROFILE)
+                .ifPresent(value -> response.setProfileImageName(value.getName()));
+
+        return response;
     }
 
     // 비밀번호 해시화 로직

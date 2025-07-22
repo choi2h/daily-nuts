@@ -23,6 +23,9 @@ public class MemberLoginResponseDto {
 
     private Long memberId;
 
+    @Setter
+    private String profileImageName;
+
     @JsonIgnore
     private String accessToken;
 

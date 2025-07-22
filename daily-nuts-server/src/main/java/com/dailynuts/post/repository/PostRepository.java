@@ -40,4 +40,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByMember_IdAndIsPinnedTrue(Long memberId);
 
     List<Post> findByMember_IdAndIsPinnedFalse(Long memberId);
+
+    long countByMember_IdAndIsPinnedTrue(Long memberId);
+
+    List<Post> findByMember_Id(Long memberId);
 }

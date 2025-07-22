@@ -16,7 +16,7 @@ function SubscribeItem ({subscribeInfo}) {
                     <div className="payment-info-profile">
                         <div className="profile-image-wrapper">
                         <img 
-                            src={!subscribeInfo.profileImageUrl ? defaultProfile : subscribeInfo.profileImageUrl} 
+                            src={`/profile-images/${subscribeInfo.profileImage || defaultProfile}`}
                             className="profile-image"
                         />
                         {/* <div className="online-indicator"></div> */}

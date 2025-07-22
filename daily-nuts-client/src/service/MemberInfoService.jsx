@@ -1,4 +1,5 @@
 import axios, { HttpStatusCode } from "axios"
+import defaultProfile from '../assets/images/default-profile.png';
 
 // 로그인
 const login = async (loginInfo) => {
@@ -16,6 +17,9 @@ const login = async (loginInfo) => {
                       localStorage.setItem("loginId", res.data.loginId);
                       localStorage.setItem("name", res.data.name);
                       localStorage.setItem("role", res.data.role);
+                      const profileImage = res.data.profileImageName ? `/profile-images/${res.data.profileImageName}` : defaultProfile;
+                      console.log(profileImage);
+                      localStorage.setItem("profile", profileImage);
             }
             return res;
         })

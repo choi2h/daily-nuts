@@ -18,7 +18,8 @@ import java.util.List;
 public class FileServiceImpl implements FileService {
 
     private static final String DATE_FORMAT = "yyyyMMdd";
-    private static final String FILE_FULL_PATH_FORMAT = "%s%s_%s_%s";
+    private static final String FILE_NAME_FORMAT = "%s_%s_%s";
+    private static final String FILE_FULL_PATH_FORMAT = "%s%s";
 
     @Value("${image.path}")
     private String imagePath;
@@ -32,11 +33,11 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public String createFile(String loginId, MultipartFile file) {
+    public String[] createFile(String loginId, MultipartFile file) {
         log.info("UploadFile: {}", file.getOriginalFilename());
-
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT));
-        String fullPath = String.format(FILE_FULL_PATH_FORMAT, imagePath, loginId, date, file.getOriginalFilename());
+        String fileName = String.format(FILE_NAME_FORMAT, loginId, date, file.getOriginalFilename());
+        String fullPath = String.format(FILE_FULL_PATH_FORMAT, imagePath, fileName);
         log.debug("Full path: {}", fullPath);
 
         try {
@@ -46,6 +47,6 @@ public class FileServiceImpl implements FileService {
             throw new CustomException(CustomErrorCode.FILE_SAVE_FAIL);
         }
 
-        return fullPath;
+        return new String[]{fullPath, fileName};
     }
 }

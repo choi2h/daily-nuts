@@ -2,6 +2,7 @@ package com.dailynuts.post.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,8 @@ public class PostResponseDto {
     private String title;
     private String contents;
     private String writer;
+    @Setter
+    private String writerProfile;
     private String categoryName;
     private Long categoryId;
     private int likeCount;

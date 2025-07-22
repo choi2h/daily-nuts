@@ -1,10 +1,9 @@
-package com.dailynuts.member.dto;
+package com.dailynuts.post.dto;
 
-import com.dailynuts.post.dto.PostResponseDto;
-import com.dailynuts.post.dto.PostTitleResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
