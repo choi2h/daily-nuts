@@ -5,7 +5,6 @@ import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.member.entity.Member;
 import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.security.jwt.JwtMember;
-import com.dailynuts.security.jwt.JwtUtils;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 public class JwtServiceImpl implements JwtService {
 
     private final MemberRepository memberRepository;
-    private final JwtUtils jwtUtils;
 
     @Transactional
     public UserDetails cookByLoginId(String loginId) {

@@ -2,6 +2,7 @@ package com.dailynuts.member.controller;
 
 import com.dailynuts.member.dto.ExpertInfoRequestDto;
 import com.dailynuts.member.dto.ExpertInfoResponseDto;
+import com.dailynuts.member.dto.ExpertProfileResponseDto;
 import com.dailynuts.member.service.ExpertInfoService;
 import com.dailynuts.security.jwt.JwtMember;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,15 @@ public class ExpertController {
             @AuthenticationPrincipal JwtMember memberInfo) {
         ExpertInfoResponseDto response = expertInfoService.updateExpertInfo(expertInfoRequest, files, memberInfo);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ExpertProfileResponseDto> getExpertInfo(
+            @PathVariable Long id,
+            @AuthenticationPrincipal JwtMember userDetails
+    )
+    {
+        ExpertProfileResponseDto expertProfileResponseDto = expertInfoService.getExpertProfile(id, userDetails.getId());
+        return ResponseEntity.ok(expertProfileResponseDto);
     }
 }

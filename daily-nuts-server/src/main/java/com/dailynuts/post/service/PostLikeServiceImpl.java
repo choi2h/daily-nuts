@@ -5,6 +5,8 @@ import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.notification.entity.NotificationType;
 import com.dailynuts.notification.service.NotificationInfoService;
 import com.dailynuts.post.dto.PostLikeResponseDto;
+import com.dailynuts.post.dto.PostLikesResponseDto;
+import com.dailynuts.post.entity.Post;
 import com.dailynuts.post.entity.PostLike;
 import com.dailynuts.post.repository.PostLikeRepository;
 import com.dailynuts.post.repository.PostRepository;
@@ -12,8 +14,13 @@ import com.dailynuts.subscription.entity.Subscription;
 import com.dailynuts.subscription.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -81,5 +88,44 @@ public class PostLikeServiceImpl implements PostLikeService {
 
     private PostLikeResponseDto getResponseDto(Long postId, int likeCount, boolean isLiked) {
         return new PostLikeResponseDto(postId, likeCount, isLiked);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PostLikesResponseDto getLikedPosts(Long memberId, Long categoryId, int pageNo, int size, String criteria) {
+        Set<String> allowedCriteria = Set.of("createdAt", "likeCount", "commentCount");
+        if (!allowedCriteria.contains(criteria)) {
+            throw new CustomException(CustomErrorCode.INVALID_SORT_CRITERIA);
+        }
+
+        Pageable pageable = PageRequest.of(pageNo, size, Sort.by(Sort.Direction.DESC, criteria));
+
+        Page<Post> likedPosts;
+
+        if (categoryId == null || categoryId == 0L) {
+            likedPosts = postLikeRepository.findLikedPosts(memberId, pageable);
+        } else {
+            likedPosts = postLikeRepository.findLikedPostsByCategory(memberId, categoryId, pageable);
+        }
+
+        List<PostLikeResponseDto> postLikeResponseDto = new ArrayList<>();
+
+        for (Post post : likedPosts.getContent()) {
+            int likeCount = postLikeRepository.countByPostId(post.getId());
+            postLikeResponseDto.add(new PostLikeResponseDto(
+                    post.getId(),
+                    post.getTitle(),
+                    post.getContents(),
+                    post.getWriter(),
+                    likeCount,
+                    true
+            ));
+        }
+
+        return new PostLikesResponseDto(
+                postLikeResponseDto,
+                likedPosts.getTotalPages(),
+                likedPosts.getNumber()
+        );
     }
 }

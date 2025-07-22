@@ -7,8 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,16 +34,9 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // JWT로 인증을 처리하는 경우 호출 X
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-
                 // 이화님이 주신 프론트 cors 설정
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
@@ -57,8 +48,6 @@ public class SecurityConfig {
                     configuration.addExposedHeader("Refresh-Token");
                     return configuration;
                 }))
-
-
 
                 // CSRF (Cross-Site Request Forgery) 보호 비활성화
                 .csrf(AbstractHttpConfigurer::disable)

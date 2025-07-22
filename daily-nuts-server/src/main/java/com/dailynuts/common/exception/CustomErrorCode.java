@@ -11,9 +11,13 @@ public enum CustomErrorCode {
     MEMBER_NOT_EXIST(HttpStatus.NOT_FOUND, "M001", "아이디 혹은 비밀번호를 확인해주세요"),
     PASSWORD_DOSE_NOT_MATCH(HttpStatus.UNAUTHORIZED, "M002", "아이디 혹은 비밀번호를 확인해주세요"),
     TOKEN_NOT_VALID(HttpStatus.UNAUTHORIZED, "M003", "로그인이 인증되지 않았습니다"),
+    TOKEN_CREATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "M008", "토큰 생성 과정에서 오류가 생겼습니다"),
+    SECRET_KEY_INITIALIZATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "M009", "시크릿 키 초기화 도중 오류가 생겼습니다"),
+    TOKEN_VALIDATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "M010", "토큰 유효성 검사를 실패하였습니다"),
     PERMISSION_DENIED(HttpStatus.FORBIDDEN, "M004", "권한이 없습니다"),
     EXPERT_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "M005", "이미 존재하는 전문가 정보가 있습니다."),
     EXPERT_NOT_EXIST(HttpStatus.NOT_FOUND, "M006", "전문가 정보가 존재하지 않습니다."),
+    NOT_EXPERT_MEMBER(HttpStatus.BAD_REQUEST, "M007", "전문가 회원이 아닙니다."),
 
     // 파일 F
     FILE_SAVE_FAIL(HttpStatus.SERVICE_UNAVAILABLE, "F001", "파일을 저장하지 못했습니다."),

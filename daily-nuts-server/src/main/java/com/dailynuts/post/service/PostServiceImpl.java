@@ -10,6 +10,7 @@ import com.dailynuts.post.dto.PostsResponseDto;
 import com.dailynuts.post.entity.Category;
 import com.dailynuts.post.entity.Post;
 import com.dailynuts.post.repository.CategoryRepository;
+import com.dailynuts.post.repository.PostLikeRepository;
 import com.dailynuts.post.repository.PostRepository;
 import com.dailynuts.post.service.mapper.PostMapper;
 import com.dailynuts.security.jwt.JwtMember;
@@ -32,6 +33,7 @@ public class PostServiceImpl implements PostService{
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final PostLikeRepository postLikeRepository;
 
     @Override
     @Transactional
@@ -46,7 +48,7 @@ public class PostServiceImpl implements PostService{
 
         Post post = postMapper.getPostEntity(request, member, category);
         Post saved = postRepository.save(post);
-        return postMapper.getPostResponseDto(saved);
+        return postMapper.getPostResponseDto(saved, false);
     }
 
     @Override
@@ -67,7 +69,9 @@ public class PostServiceImpl implements PostService{
             throw new CustomException(CustomErrorCode.PERMISSION_DENIED);
         }
 
-        return postMapper.getPostResponseDto(post);
+        boolean isLiked = postLikeRepository.existsPostLikeByPostIdAndMemberId(id, viewerId);
+
+        return postMapper.getPostResponseDto(post, isLiked);
     }
 
     @Override
@@ -87,7 +91,8 @@ public class PostServiceImpl implements PostService{
                         .orElseThrow(() -> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND));
 
         post.update(request.getTitle(), request.getContents(), category);
-        return postMapper.getPostResponseDto(post);
+        boolean isLiked = postLikeRepository.existsPostLikeByPostIdAndMemberId(id, memberId);
+        return postMapper.getPostResponseDto(post, isLiked);
     }
 
     @Override
@@ -108,7 +113,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional(readOnly = true)
-    public PostsResponseDto getPosts(Long categoryId, int pageNo, int size, String criteria) {
+    public PostsResponseDto getPosts(Long categoryId, int pageNo, int size, String criteria, Long memberId) {
         Set<String> allowedCriteria = Set.of("createdAt", "likeCount", "commentCount");
         if (!allowedCriteria.contains(criteria)) {
             throw new CustomException(CustomErrorCode.INVALID_SORT_CRITERIA);
@@ -123,7 +128,8 @@ public class PostServiceImpl implements PostService{
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
 
         for (Post post : postPage.getContent()) {
-            PostResponseDto postResponseDto = postMapper.getPostResponseDto(post);
+            boolean isExist = postLikeRepository.existsPostLikeByPostIdAndMemberId(post.getId(), memberId);
+            PostResponseDto postResponseDto = postMapper.getPostResponseDto(post, isExist);
             postResponseDtoList.add(postResponseDto);
         }
 

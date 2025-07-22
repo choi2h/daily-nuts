@@ -14,6 +14,7 @@ public class ExpertSearchMapper {
 
     public ExpertSearchDto toExpertSearchDto(Member expert, String profileImageUrl, int postCount, boolean subscribed) {
         return new ExpertSearchDto(
+                expert.getId(),
                 expert.getName(),
                 profileImageUrl,
                 postCount,

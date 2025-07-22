@@ -64,4 +64,26 @@ const existsLoginId = async (loginId) => {
   return res.data.exists;
 };
 
-export { signup, existsLoginId, login };
+const getExpertProfile = async (id) => {
+  return axios.get(`/member/${id}`)
+    .then((res) => {
+      console.log(res);
+      if(res.status !== HttpStatusCode.Ok) return res.response;
+      return res;
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+}
+
+const getSubscribeExperts = async () => {
+  return axios.get(`/member/subscribe`)
+    .then((res) => {
+      console.log(res);
+      return res;
+    }).catch((err) => {
+      console.log(err);
+    });
+}
+
+export { signup, existsLoginId, login, getExpertProfile, getSubscribeExperts};

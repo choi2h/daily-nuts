@@ -8,10 +8,12 @@ import com.dailynuts.post.dto.CommentsResponseDto;
 import com.dailynuts.post.dto.DeleteResponseDto;
 import com.dailynuts.post.repository.PostRepository;
 import com.dailynuts.post.service.CommentService;
+import com.dailynuts.security.jwt.JwtMember;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,13 +27,14 @@ public class CommentController {
     @PostMapping("/comment")
     public ResponseEntity<CommentResponseDto> createComment(
             @PathVariable Long postId,
-            @RequestBody @Valid CommentRequestDto request
+            @RequestBody @Valid CommentRequestDto request,
+            @AuthenticationPrincipal JwtMember jwtMember
     ) {
         if (!postRepository.existsById(postId)) {
             throw new CustomException(CustomErrorCode.POST_NOT_FOUND);
         }
-        Long memberId = 1L; // 임시
-        String writer = request.getWriter();
+        Long memberId = jwtMember.getId();
+        String writer = jwtMember.getName();
 
         CommentResponseDto response = commentService.createComment(postId, memberId, writer, request);
         return ResponseEntity.ok(response);
@@ -42,10 +45,11 @@ public class CommentController {
     public ResponseEntity<CommentResponseDto> createReplyToComment(
             @PathVariable Long postId,
             @PathVariable ObjectId parentCommentId,
+            @AuthenticationPrincipal JwtMember jwtMember,
             @RequestBody @Valid CommentRequestDto request
     ) {
-        Long memberId = 1L; // 테스트용 하드코딩
-        String writer = request.getWriter();
+        Long memberId = jwtMember.getId();
+        String writer = jwtMember.getName();
 
         CommentResponseDto response = commentService.createReplyToComment(postId, parentCommentId, memberId, writer, request);
         return ResponseEntity.ok(response);
@@ -63,9 +67,10 @@ public class CommentController {
     public ResponseEntity<CommentResponseDto> updateComment(
             @PathVariable Long postId,
             @PathVariable String commentId,
+            @AuthenticationPrincipal JwtMember jwtMember,
             @RequestBody @Valid CommentRequestDto request
     ){
-        Long memberId=1L; //로그인 사용자 대체
+        Long memberId = jwtMember.getId();
         CommentResponseDto response = commentService.updateComment(postId,commentId,memberId,request);
         return ResponseEntity.ok(response);
     }
@@ -74,8 +79,9 @@ public class CommentController {
     @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<DeleteResponseDto> deleteComment(
             @PathVariable("commentId") ObjectId commentId,
-            @RequestParam Long memberId
+            @AuthenticationPrincipal JwtMember jwtMember
     ) {
+        Long memberId = jwtMember.getId();
         DeleteResponseDto response = commentService.deleteComment(commentId, memberId);
         return ResponseEntity.ok(response);
     }

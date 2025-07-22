@@ -22,11 +22,21 @@ const NotificationItem = ({notification}) => {
         }
     }
 
+    const getDateFormat = (dateStr) => {
+        const date = new Date(dateStr);
+
+        return date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+        }).replace(/\./g, "").trim().replace(/\s+/g, "-");
+    }
+
 
     return (
             <div 
             key={notification.id} 
-            className={`notification-item ${notification.isRead ? 'read' : 'unread'}`}
+            className={`notification-item ${notification.read ? 'read' : 'unread'}`}
             onClick={onClick}>
                 <div className={`notification-icon`}>
                     {getIcon(notification.type)}
@@ -34,15 +44,15 @@ const NotificationItem = ({notification}) => {
                 
                 <div className="notification-content">
                     <div className="notification-item-title">
-                    {notification.title}
+                    {notification.message}
                     </div>
                     <div className="notification-item-subtitle">
-                    {notification.createdAt}
+                    {getDateFormat(notification.createdAt)}
                     </div>
                 </div>
             
                 <div className="notification-indicator">
-                    {notification.isRead ? (
+                    {notification.read ? (
                         <IoCheckmarkCircle className="read-icon" size={18} />
                     ) : (
                         <IoEllipseOutline className="unread-icon" size={18} />
