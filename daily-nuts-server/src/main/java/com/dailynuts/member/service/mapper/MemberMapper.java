@@ -43,6 +43,17 @@ public class MemberMapper {
                 .build();
     }
 
+    public MemberMyPageResponseDto convertToMemberMyPageResponseAfterEdit(Member jwtMember) {
+        return MemberMyPageResponseDto.builder()
+                .name(jwtMember.getName())
+                .loginId(jwtMember.getLoginId())
+                .email(jwtMember.getEmail())
+                .birth(jwtMember.getBirth())
+                .phoneNumber(formatKoreanMobile(jwtMember.getPhoneNumber()))
+                .updatedAt(jwtMember.getUpdatedAt().toLocalDate())
+                .build();
+    }
+
     public MemberDetailInfoResponseDto convertToMemberDetailInfoResponseDto
             (Member member, String description, Long subscriberCount, boolean isSubscribed) {
         return MemberDetailInfoResponseDto.builder()

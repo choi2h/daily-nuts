@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -36,4 +38,8 @@ public class MemberMyPageResponseDto {
 
     @NotBlank @NotNull
     private LocalDate updatedAt;
+
+    @Setter
+    private String profileImageName;
+
 }

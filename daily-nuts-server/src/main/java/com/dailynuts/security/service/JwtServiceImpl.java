@@ -17,7 +17,7 @@ public class JwtServiceImpl implements JwtService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public UserDetails cookByLoginId(String loginId) {
+    public UserDetails convertToUserDetails(String loginId) {
         Member member = memberRepository.findByLoginId(loginId)
                                         .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
 

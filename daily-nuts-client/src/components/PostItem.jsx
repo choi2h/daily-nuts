@@ -48,7 +48,7 @@ function PostItem({post, toggleLike, onClick}) {
       <div className="post" >
         <div className="post-header">
           <div className="post-avatar" onClick={moveProfile}>
-              <img className="post-image" src={defaultProfile} alt="Profile" />
+              <img className="post-image" src={`/profile-images/${post.writerProfile || defaultProfile}`} alt="Profile" />
               <div className="author-info">
                   <span className="author-name">{post.writer}</span>
                   <span className="post-date">· {getDateFormat(post.createdAt)}</span>

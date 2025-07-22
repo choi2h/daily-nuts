@@ -14,4 +14,6 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
     @Query("SELECT i.url FROM Image i WHERE i.id IN (SELECT ei.image.id FROM ExpertCertificationImage ei WHERE ei.expertInfo.id=:expertId) AND i.type=:type")
     String findByExpertIdAndType(Long expertId, ImageType type);
+
+    Optional<Image> findByMemberIdAndType(Long memberId, ImageType type);
 }

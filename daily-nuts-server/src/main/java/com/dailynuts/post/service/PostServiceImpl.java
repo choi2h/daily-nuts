@@ -3,6 +3,8 @@ package com.dailynuts.post.service;
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
 import com.dailynuts.member.entity.Member;
+import com.dailynuts.member.entity.type.ImageType;
+import com.dailynuts.member.repository.ImageRepository;
 import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.post.dto.PostRequestDto;
 import com.dailynuts.post.dto.PostResponseDto;
@@ -30,6 +32,7 @@ public class PostServiceImpl implements PostService{
     private final SubscriptionRepository subscriptionRepository;
     private final PostLikeRepository postLikeRepository;
     private final CommentRepository commentRepository;
+    private final ImageRepository imageRepository;
 
     @Override
     @Transactional
@@ -44,7 +47,11 @@ public class PostServiceImpl implements PostService{
 
         Post post = postMapper.getPostEntity(request, member, category);
         Post saved = postRepository.save(post);
-        return postMapper.getPostResponseDto(saved, false, 0);
+
+        PostResponseDto response =  postMapper.getPostResponseDto(saved, false, 0);
+        imageRepository.findByMemberIdAndType(memberId, ImageType.PROFILE)
+                .ifPresent(image -> response.setWriterProfile(image.getName()));
+        return response;
     }
 
     @Override
@@ -77,7 +84,7 @@ public class PostServiceImpl implements PostService{
         }
 
         Category category = categoryRepository.findById(request.getCategoryId())
-                        .orElseThrow(() -> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND));
 
         post.update(request.getTitle(), request.getContents(), category);
         return toPostResponseDto(post, memberId);
@@ -105,7 +112,9 @@ public class PostServiceImpl implements PostService{
     private PostResponseDto toPostResponseDto(Post post, Long memberId) {
         boolean isExist = postLikeRepository.existsPostLikeByPostIdAndMemberId(post.getId(), memberId);
         int commentCount = commentRepository.countByPostId(post.getId());
-        return postMapper.getPostResponseDto(post, isExist, commentCount);
+        PostResponseDto response =  postMapper.getPostResponseDto(post, isExist, commentCount);
+        imageRepository.findByMemberIdAndType(post.getMember().getId(), ImageType.PROFILE)
+                .ifPresent(image -> response.setWriterProfile(image.getName()));
+        return response;
     }
-
 }

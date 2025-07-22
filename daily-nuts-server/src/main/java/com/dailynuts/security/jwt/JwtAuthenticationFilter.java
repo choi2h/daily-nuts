@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 검사가 통과되면 인증 컨텍스트에 추가
         String loginId = jwtUtils.getLoginIdFromToken(token);
-        UserDetails userDetails = jwtService.cookByLoginId(loginId);
+        UserDetails userDetails = jwtService.convertToUserDetails(loginId);
         UsernamePasswordAuthenticationToken auth =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);

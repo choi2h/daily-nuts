@@ -71,7 +71,6 @@ public class ExpertInfoServiceImpl implements ExpertInfoService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EXPERT_NOT_EXIST));
 
         List<Image> images = imageRepository.findByExpertId(expertInfo.getId());
-
         return mapper.toExpertInfoResponseDto(expertInfo, images);
     }
 
@@ -91,9 +90,9 @@ public class ExpertInfoServiceImpl implements ExpertInfoService {
     private List<Image> getImagesAndSetToExpertInfo(List<MultipartFile> files, ExpertInfo expertInfo, String loginId) {
         List<Image> images = new ArrayList<>();
         files.forEach(file -> {
-            String url = fileService.createFile(loginId, file);
+            String url = fileService.createFile(loginId, file)[0];
             String name = file.getOriginalFilename();
-            Image image = new Image(name, url, ImageType.CERTIFICATION);
+            Image image = new Image(name, expertInfo.getMember().getId(), url, ImageType.CERTIFICATION);
             ExpertCertificationImage expertCertificationImage = new ExpertCertificationImage();
             expertCertificationImage.setImage(image);
             expertInfo.addImage(expertCertificationImage);

@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -59,10 +60,11 @@ public class MemberController {
     }
 
     @PatchMapping("/edit")
-    public ResponseEntity<Void> updateMember(@RequestBody MemberEditRequestDto req, @AuthenticationPrincipal JwtMember jwtMember) {
-        memberService.updateMember(req, jwtMember);
-        return ResponseEntity.ok()
-                             .build();
+    public ResponseEntity<MemberMyPageResponseDto> updateMember(@RequestPart(name = "info") MemberEditRequestDto req,
+                                             @RequestPart(name="file", required = false) MultipartFile file,
+                                             @AuthenticationPrincipal JwtMember jwtMember) {
+        memberService.updateMember(req, file, jwtMember);
+        return ResponseEntity.ok().build();
     }
 
     // 아이디 중복 기능

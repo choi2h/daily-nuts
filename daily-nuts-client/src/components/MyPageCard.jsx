@@ -1,11 +1,12 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "../assets/css/MyPage.css";
 import defaultProfile from "../assets/images/default-profile.png";
 import { validators } from "../utils/validators";
 import { validationMessages } from "../utils/validationMessages";
 
 function MyPageCard() {
+  const fileInputRef = useRef(null); // ✅ 파일 input 참조 추가
   const [isEditMode, setIsEditMode] = useState(false);
   const [profileData, setProfileData] = useState({
     name: "",
@@ -16,7 +17,11 @@ function MyPageCard() {
     email: "",
     updatedAt: "",
   });
-  const [editData, setEditData] = useState({ ...profileData });
+  const [editData, setEditData] = useState({
+  ...profileData,
+  profileImage: null,  // 새로 선택한 이미지 파일
+  previewUrl: defaultProfile // 미리보기 URL
+});
 
   useEffect(() => {
     if (!isEditMode) {
@@ -32,11 +37,29 @@ function MyPageCard() {
             phoneNumber: d.phoneNumber,
             email: d.email,
             updatedAt: d.updatedAt,
+            profileImage: d.profileImageName ? `/profile-images/${res.data.profileImageName}`: defaultProfile,
           });
         })
         .catch((err) => console.error("로드 실패:", err));
     }
   }, [isEditMode]);
+
+  const handleProfileImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setEditData((prev) => ({
+        ...prev,
+        profileImage: file,
+        previewUrl: URL.createObjectURL(file)
+      }));
+    }
+  };
+
+  const handleProfileImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // ✅ img 클릭 시 input 클릭 트리거
+    }
+  };
 
   const handleEdit = () => {
     setIsEditMode(true);
@@ -58,25 +81,56 @@ function MyPageCard() {
       !fieldValid("email")
     )
       return;
+
+    const formData = new FormData();
+    const info = JSON.stringify({
+      birth: editData.birth,
+      phoneNumber: editData.phoneNumber,
+      email: editData.email,
+    });
+
+    formData.append("info", new Blob([info], { type: "application/json" }));
+    if (editData.profileImage) {
+      formData.append("file", editData.profileImage);
+    }
+
     axios
-      .patch("/member/edit", {
-        birth: editData.birth,
-        phoneNumber: editData.phoneNumber,
-        email: editData.email,
+      .patch("/member/edit", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
-        const d = res.data;
-        setProfileData({
-          ...profileData,
-          birth: d.birth,
-          phoneNumber: d.phoneNumber,
-          email: d.email,
-        });
-        setIsEditMode(false);
-      })
-      .catch((err) => {
-        console.error("정보 저장 실패:", err);
-      });
+          const d = res.data;
+
+          // 서버 응답 기준으로 URL 생성 (없으면 기존 이미지로 fallback)           
+          const finalProfile = d.profileImageName             
+            ? `/profile-images/${d.profileImageName}`             
+            : profileData.profileImage; // fallback to existing image            
+
+          const newProfileData = {               
+            name: d.name,               
+            loginId: d.loginId,               
+            password: "········",               
+            birth: d.birth,               
+            phoneNumber: d.phoneNumber,               
+            email: d.email,               
+            updatedAt: d.updatedAt,               
+            profileImage: finalProfile,             
+          };
+
+            // ✅ localStorage에도 동일한 전체 객체 저장
+            localStorage.setItem("profile", newProfileData.profileImage);
+
+            setProfileData(newProfileData);
+
+            // ✅ 커스텀 이벤트 발생
+            window.dispatchEvent(new Event("profileUpdated"));
+
+            console.log("✅ 프로필 이미지 저장됨:", newProfileData.profileImage);
+            setIsEditMode(false);
+    })
+    .catch((err) => {
+      console.error("정보 저장 실패:", err);
+    });
   };
 
   const handleCancel = () => {
@@ -110,10 +164,20 @@ function MyPageCard() {
         <h2 className="page-title">회원정보 수정</h2>
         <div className="mypage-header">
           <div className="mypage-avatar-image">
+            {/* ✅ 이미지 클릭 시 파일 업로드 */}
             <img
               className="profile-image"
-              src={defaultProfile}
+              src={editData.profileImage || defaultProfile}
               alt="프로필 사진"
+              onClick={handleProfileImageClick}
+              style={{ cursor: "pointer" }} // ✅ 클릭 가능
+            />
+            <input
+              type="file"
+              accept=".jpg,.jpeg,.png"
+              ref={fileInputRef} // ✅ ref 연결
+              onChange={handleProfileImageUpload}
+              style={{ display: "none" }} // 숨김 처리
             />
           </div>
           <h2 className="mypage-username">{profileData.name}</h2>
@@ -273,7 +337,7 @@ function MyPageCard() {
         <div className="mypage-avatar-image">
           <img
             className="profile-image"
-            src={defaultProfile}
+            src={profileData.profileImage}
             alt="프로필 사진"
           />
         </div>
