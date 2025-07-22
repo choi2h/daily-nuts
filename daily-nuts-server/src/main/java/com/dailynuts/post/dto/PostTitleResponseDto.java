@@ -12,5 +12,6 @@ public class PostTitleResponseDto {
     private String title;
     private String writer;
     private int likeCount;
+    private boolean liked;
     private LocalDateTime createdAt;
 }
