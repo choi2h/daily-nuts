@@ -39,7 +39,7 @@ public class NotificationConnectServiceImpl implements NotificationConnectServic
 
         // 처음 연결 시 메시지 전송
         clients.put(memberId, sseEmitter);
-        sendMessage(sseEmitter, MessageFormatter.CONNECT_MESSAGE);
+        sendMessage(sseEmitter, "open", MessageFormatter.CONNECT_MESSAGE);
 
         return sseEmitter;
     }
@@ -51,16 +51,16 @@ public class NotificationConnectServiceImpl implements NotificationConnectServic
             return;
         }
 
-        sendMessage(sseEmitter, message);
+        sendMessage(sseEmitter, "message", message);
         log.info("Success to send message to memberId: {}", memberId);
     }
 
-    private void sendMessage(SseEmitter sseEmitter, String message) {
+    private void sendMessage(SseEmitter sseEmitter, String eventName, String message) {
         try {
             log.info("Sending message to client: {}", message);
             sseEmitter.send(
                     SseEmitter.event()
-                            .name("open")
+                            .name(eventName)
                             .data(message));
         } catch (IOException e) {
             e.printStackTrace();
