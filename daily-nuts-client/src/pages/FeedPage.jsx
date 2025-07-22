@@ -3,7 +3,7 @@ import '../assets/css/Feed.css';
 import PostItem from '../components/PostItem';
 import DefaultLayout from '../layers/DefaultLayout';
 import TabHeaderLyaout from '../layers/TabHeaderLayout';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import axios from '../api/axiosConfig';
 
 const categories = [
@@ -17,11 +17,11 @@ const categories = [
   ];
 
 const FeedPage = () => {
+  const {pathname} = useLocation(); 
   const [posts, setPosts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [sortCriteria, setSortCriteria] = useState("createdAt");
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
 
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -32,27 +32,26 @@ const FeedPage = () => {
     setCurrentPage(0);
   }
 
-  const toggleLike = async (postId, liked) => {
+  const toggleLike = async (postId, beforeLiked) => {
     try {
       const url = `/post/${postId}/like`;
       let res;
 
-      if (liked) {
+      if (beforeLiked) {
         res = await axios.delete(url);
       } else {
         res = await axios.post(url);
       }
 
-      const {likeCount, isLiked} = res.data;
-
+      const {likeCount, liked} = res.data;
       setPosts((prevPosts) => 
         prevPosts.map((post) =>
           post.id == postId
-            ? {...post, likeCount: likeCount, 
-              liked: isLiked} : post
+            ? {...post, likeCount, liked} : post
         )
       );
 
+      if(beforeLiked && pathname === "/posts/likes") window.location.reload();
     } catch (err) {
       console.error('좋아요 처리 오류:', err);
     }
@@ -80,13 +79,16 @@ const FeedPage = () => {
         criteria: sortCriteria,
         categoryId: selectedCategory.id,
       };
+      let url = '/posts';
+      if(pathname === "/posts/subscribe") url += '/sub';
+      else if(pathname === "/posts/likes") url += '/liked';
 
-      const res = await axios.get('/posts', { params });
+      const res = await axios.get(url, { params });
       const newPosts = res.data.posts;
       if (!newPosts || !Array.isArray(newPosts)) {
         return;
       }
-
+      console.log(res);
       setPosts((prev) => {
         const prevIds = new Set(prev.map(p => p.id));
         const uniqueNewPosts = newPosts.filter(p => !prevIds.has(p.id));
@@ -102,20 +104,21 @@ const FeedPage = () => {
 
       setLoading(false);
     }
-  }, [loading, hasMore, currentPage, sortCriteria, selectedCategory]);
+  }, [loading, hasMore, currentPage, sortCriteria, selectedCategory, pathname]);
 
-    useEffect(() => {
-      setPosts([]);
-      setCurrentPage(0);
-      setHasMore(true);
-      isFetchingRef.current = false;
-    }, [selectedCategory, sortCriteria]);
+  useEffect(() => {
+    console.log(pathname);
+    setPosts([]);
+    setCurrentPage(0);
+    setHasMore(true);
+    isFetchingRef.current = false;
+  }, [selectedCategory, sortCriteria, pathname]);
 
-    useEffect(() => {
-      if (currentPage === 0 && hasMore) {
-        loadMorePosts(0);
-      }
-    }, [currentPage, hasMore]);
+  useEffect(() => {
+    if (currentPage === 0 && hasMore) {
+      loadMorePosts(0);
+    }
+  }, [currentPage, hasMore]);
 
   // 무한 스크롤 이벤트 핸들러
   useEffect(() => {

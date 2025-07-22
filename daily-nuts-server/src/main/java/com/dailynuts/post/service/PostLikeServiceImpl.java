@@ -89,43 +89,4 @@ public class PostLikeServiceImpl implements PostLikeService {
     private PostLikeResponseDto getResponseDto(Long postId, int likeCount, boolean isLiked) {
         return new PostLikeResponseDto(postId, likeCount, isLiked);
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public PostLikesResponseDto getLikedPosts(Long memberId, Long categoryId, int pageNo, int size, String criteria) {
-        Set<String> allowedCriteria = Set.of("createdAt", "likeCount", "commentCount");
-        if (!allowedCriteria.contains(criteria)) {
-            throw new CustomException(CustomErrorCode.INVALID_SORT_CRITERIA);
-        }
-
-        Pageable pageable = PageRequest.of(pageNo, size, Sort.by(Sort.Direction.DESC, criteria));
-
-        Page<Post> likedPosts;
-
-        if (categoryId == null || categoryId == 0L) {
-            likedPosts = postLikeRepository.findLikedPosts(memberId, pageable);
-        } else {
-            likedPosts = postLikeRepository.findLikedPostsByCategory(memberId, categoryId, pageable);
-        }
-
-        List<PostLikeResponseDto> postLikeResponseDto = new ArrayList<>();
-
-        for (Post post : likedPosts.getContent()) {
-            int likeCount = postLikeRepository.countByPostId(post.getId());
-            postLikeResponseDto.add(new PostLikeResponseDto(
-                    post.getId(),
-                    post.getTitle(),
-                    post.getContents(),
-                    post.getWriter(),
-                    likeCount,
-                    true
-            ));
-        }
-
-        return new PostLikesResponseDto(
-                postLikeResponseDto,
-                likedPosts.getTotalPages(),
-                likedPosts.getNumber()
-        );
-    }
 }

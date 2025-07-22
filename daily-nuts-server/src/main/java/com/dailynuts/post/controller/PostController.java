@@ -1,7 +1,7 @@
 package com.dailynuts.post.controller;
 
 import com.dailynuts.post.dto.PostsResponseDto;
-import com.dailynuts.post.service.PostService;
+import com.dailynuts.post.service.PostsService;
 import com.dailynuts.security.jwt.JwtMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostService postService;
-
-//    @GetMapping
-//    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-//        List<PostResponseDto> responseDtoList = postService.getAllPosts();
-//        return ResponseEntity.ok(responseDtoList);
-//    }
+    private final PostsService postsService;
 
     @GetMapping
     public ResponseEntity<PostsResponseDto> getPosts(
@@ -32,7 +26,32 @@ public class PostController {
             @RequestParam(defaultValue = "createdAt") String criteria,
             @AuthenticationPrincipal JwtMember memberInfo)
     {
-        PostsResponseDto responseDto = postService.getPosts(categoryId, page, size, criteria, memberInfo.getId());
+        PostsResponseDto responseDto = postsService.getPosts(categoryId, page, size, criteria, memberInfo.getId());
         return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/sub")
+    public ResponseEntity<PostsResponseDto> getSubscribedFeed(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String criteria,
+            @AuthenticationPrincipal JwtMember memberInfo)
+    {
+        PostsResponseDto response = postsService.getSubscribedFeed(memberInfo.getId(), categoryId, page, size, criteria);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/liked")
+    public ResponseEntity<PostsResponseDto> getLikedPosts(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String criteria,
+            @AuthenticationPrincipal JwtMember userDetails
+    )
+    {
+        PostsResponseDto response = postsService.getLikedPosts(userDetails.getId(), categoryId, page, size, criteria);
+        return ResponseEntity.ok(response);
     }
 }
