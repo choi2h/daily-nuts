@@ -171,11 +171,14 @@ public class PostServiceImpl implements PostService{
         List<PostTitleResponseDto> normalDto = new ArrayList<>();
 
         for (Post post : normalPosts) {
+            boolean isLiked = postLikeRepository.existsPostLikeByPostIdAndMemberId(post.getId(), requesterId);
+
             PostTitleResponseDto dto = PostTitleResponseDto.builder()
                     .id(post.getId())
                     .title(post.getTitle())
                     .writer(post.getWriter())
                     .likeCount(post.getLikeCount())
+                    .liked(isLiked)
                     .createdAt(post.getCreatedAt())
                     .build();
 
