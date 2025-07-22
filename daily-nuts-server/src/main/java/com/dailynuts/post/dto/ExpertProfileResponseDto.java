@@ -1,9 +1,9 @@
-package com.dailynuts.member.dto;
+package com.dailynuts.post.dto;
 
-import com.dailynuts.post.dto.PostResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -14,5 +14,6 @@ public class ExpertProfileResponseDto {
     private String description;
     private Long subscriberCount;
     private boolean isSubscribed;
-    private List<PostResponseDto> posts;
+    private List<PostResponseDto> fixedPosts;
+    private List<PostTitleResponseDto> normalPosts;
 }

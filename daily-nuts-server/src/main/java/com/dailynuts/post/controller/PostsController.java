@@ -2,6 +2,7 @@ package com.dailynuts.post.controller;
 
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
+import com.dailynuts.post.dto.ExpertProfileResponseDto;
 import com.dailynuts.post.dto.PostRequestDto;
 import com.dailynuts.post.dto.PostResponseDto;
 import com.dailynuts.post.service.PostService;
@@ -71,6 +72,17 @@ public class PostsController {
 
         postService.deletePost(id, userDetails);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/expert/{id}")
+    public ResponseEntity<ExpertProfileResponseDto> getExpertInfo(
+            @PathVariable Long id,
+            @AuthenticationPrincipal JwtMember userDetails
+    )
+    {
+        Long requesterId = (userDetails != null) ? userDetails.getId() : null;
+        ExpertProfileResponseDto expertProfileResponseDto = postService.getExpertProfile(id, requesterId);
+        return ResponseEntity.ok(expertProfileResponseDto);
     }
 
     @PatchMapping("/{id}/pin")

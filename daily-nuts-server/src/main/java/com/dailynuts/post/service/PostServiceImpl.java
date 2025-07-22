@@ -2,12 +2,16 @@ package com.dailynuts.post.service;
 
 import com.dailynuts.common.exception.CustomErrorCode;
 import com.dailynuts.common.exception.CustomException;
+import com.dailynuts.post.dto.ExpertProfileResponseDto;
+import com.dailynuts.member.entity.ExpertInfo;
 import com.dailynuts.member.entity.Member;
+import com.dailynuts.member.repository.ExpertInfoRepository;
 import com.dailynuts.member.entity.type.ImageType;
 import com.dailynuts.member.repository.ImageRepository;
 import com.dailynuts.member.repository.MemberRepository;
 import com.dailynuts.post.dto.PostRequestDto;
 import com.dailynuts.post.dto.PostResponseDto;
+import com.dailynuts.post.dto.PostTitleResponseDto;
 import com.dailynuts.post.entity.Category;
 import com.dailynuts.post.entity.Post;
 import com.dailynuts.post.repository.CategoryRepository;
@@ -21,6 +25,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService{
@@ -33,6 +40,7 @@ public class PostServiceImpl implements PostService{
     private final PostLikeRepository postLikeRepository;
     private final CommentRepository commentRepository;
     private final ImageRepository imageRepository;
+    private final ExpertInfoRepository expertInfoRepository;
 
     @Override
     @Transactional
@@ -84,7 +92,7 @@ public class PostServiceImpl implements PostService{
         }
 
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND));
+                        .orElseThrow(() -> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND));
 
         post.update(request.getTitle(), request.getContents(), category);
         return toPostResponseDto(post, memberId);
@@ -119,6 +127,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Transactional
     public void togglePin(Long postId, Long memberId, boolean pinned) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
@@ -136,4 +145,52 @@ public class PostServiceImpl implements PostService{
 
         post.setPinned(pinned);
     }
+
+    public ExpertProfileResponseDto getExpertProfile(Long expertId, Long requesterId) {
+        Member expert = memberRepository.findById(expertId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_EXIST));
+
+        ExpertInfo expertInfo = expertInfoRepository.findByMember_Id(expertId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EXPERT_NOT_EXIST));
+
+        boolean isSubscribed = subscriptionRepository.existsBySubscriberIdAndExpertId(requesterId, expertId);
+        Long subscriberCount = subscriptionRepository.countByExpertId(expertId);
+
+        List<Post> fixedPosts = postRepository.findByMember_IdAndIsPinnedTrue(expertId);
+        List<PostResponseDto> fixedDto = new ArrayList<>();
+
+        for (Post post : fixedPosts) {
+            int commentCount = commentRepository.countByPostId(post.getId());
+            boolean isLiked = postLikeRepository.existsPostLikeByPostIdAndMemberId(post.getId(), requesterId);
+
+            PostResponseDto dto = toPostResponseDto(post, requesterId);
+            fixedDto.add(dto);
+        }
+
+        List<Post> normalPosts = postRepository.findByMember_IdAndIsPinnedFalse(expertId);
+        List<PostTitleResponseDto> normalDto = new ArrayList<>();
+
+        for (Post post : normalPosts) {
+            PostTitleResponseDto dto = PostTitleResponseDto.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .writer(post.getWriter())
+                    .likeCount(post.getLikeCount())
+                    .createdAt(post.getCreatedAt())
+                    .build();
+
+            normalDto.add(dto);
+        }
+
+        return ExpertProfileResponseDto.builder()
+                .id(expert.getId())
+                .name(expert.getName())
+                .description(expertInfo.getDescription())
+                .subscriberCount(subscriberCount)
+                .isSubscribed(isSubscribed)
+                .fixedPosts(fixedDto)
+                .normalPosts(normalDto)
+                .build();
+    }
+
 }

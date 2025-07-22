@@ -80,7 +80,7 @@ function PostItem({post, toggleLike, togglePinned, isOwnProfile, onClick}) {
           
           <div className="post-actions">
             <button 
-              className={`action-btn ${post.liked ? 'liked' : ''}`}
+              className={`action-btn ${post.isLiked ? 'liked' : ''}`}
               onClick={handleLikeClick}
             >
               {post.liked ? <IoMdHeart size={24}/> : <IoMdHeartEmpty size={24}/>} 
