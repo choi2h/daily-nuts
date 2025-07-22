@@ -14,6 +14,5 @@ public class ExpertProfileResponseDto {
     private String description;
     private Long subscriberCount;
     private boolean isSubscribed;
-    private List<PostResponseDto> fixedPosts;
-    private List<PostTitleResponseDto> normalPosts;
+    private List<PostResponseDto> posts;
 }

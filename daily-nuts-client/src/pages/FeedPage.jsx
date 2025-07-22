@@ -153,7 +153,6 @@ const FeedPage = () => {
               >
                 <option value="createdAt">최신순</option>
                 <option value="likeCount">좋아요순</option>
-                <option value="commentCount">댓글순</option>
               </select>
             </div>
             
