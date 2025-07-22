@@ -20,7 +20,7 @@ function ExpertSearchItem({ expert }) {
         <div className="payment-info-profile">
           <div className="profile-image-wrapper">
             <img 
-              src={`/profile-images/${expert.profileImage || defaultProfile}`}
+              src={expert.profileImage ? `/profile-images/${expert.profileImage}` : defaultProfile}
               className="profile-image"
               alt="전문가 프로필"
             />

@@ -184,7 +184,11 @@ public class MemberServiceImpl implements MemberService {
         boolean isSubscribed = subscriptionRepository.existsBySubscriberIdAndExpertId(requestMemberId, member.getId());
         Long count = subscriptionRepository.countByExpertId(member.getId());
 
-        return memberMapper.convertToMemberDetailInfoResponseDto(member, expertInfo.getDescription(), count, isSubscribed);
+        MemberDetailInfoResponseDto response =  memberMapper
+                .convertToMemberDetailInfoResponseDto(member, expertInfo.getDescription(), count, isSubscribed);
+        imageRepository.findByMemberIdAndType(targetMemberId, ImageType.PROFILE)
+                .ifPresent(value -> response.setProfileImage(value.getName()));
+        return response;
     }
 
 }
