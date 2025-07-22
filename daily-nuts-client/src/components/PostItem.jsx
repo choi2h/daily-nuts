@@ -1,14 +1,27 @@
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
+import { FaThumbtack } from "react-icons/fa";
 import { GoComment } from "react-icons/go";
 import defaultProfile from '../assets/images/default-profile.png';
 import '../assets/css/Feed.css';
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 function PostItem({post, toggleLike, onClick}) {
   const navigate = useNavigate();
 
-  const handleCardClick = () => {
-    onClick(post.id);
+  const handleCardClick = async () => {
+    try {
+      await axios.get(`/post/${post.id}`);
+      navigate(`/post/${post.id}`);
+    } catch (err) {
+      if (err.response?.status === 403) {
+        alert('구독자만 볼 수 있는 게시글입니다.');
+      } else if (err.response?.status === 401) {
+        alert('로그인이 필요합니다.');
+      } else {
+        alert('게시글에 접근할 수 없습니다.');
+      }
+    }
   };
 
   const handleLikeClick = (e) => {
@@ -44,7 +57,15 @@ function PostItem({post, toggleLike, onClick}) {
         </div>
         
         <div onClick={handleCardClick}>
-          <div className="post-title">{post.title}</div>
+          <div className="post-title">
+            {post.pinned && (
+              <FaThumbtack
+                size={14}
+                style={{ marginRight: '6px', color: '#f39c12', verticalAlign: 'middle' }}
+              />
+          )}
+          {post.title}
+          </div>
           <div className="post-excerpt">{post.contents}</div>
           
           <div className="post-actions">
