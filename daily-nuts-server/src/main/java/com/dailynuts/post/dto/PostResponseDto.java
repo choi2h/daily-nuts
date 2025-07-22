@@ -1,6 +1,5 @@
 package com.dailynuts.post.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 

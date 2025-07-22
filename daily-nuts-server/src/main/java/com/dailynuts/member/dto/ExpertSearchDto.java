@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter @Builder
 @AllArgsConstructor
 public class ExpertSearchDto {
+    private Long memberId;
     private String name;
     private String profileImageUrl;
     private int postCount;

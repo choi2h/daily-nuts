@@ -2,7 +2,7 @@ import "../assets/css/SubscribeModal.css";
 import { useState } from "react";
 import axios from "axios";
 
-const SubscriptionModal = ({ isOpen, onClose, memberInfo, price}) => {
+const SubscriptionModal = ({ isOpen, onClose, expertId, expertName, expertDescription, price}) => {
   const [loading, setLoading] = useState(false);
   
   if (!isOpen) return null;
@@ -26,8 +26,7 @@ const SubscriptionModal = ({ isOpen, onClose, memberInfo, price}) => {
       setLoading(true);
 
       //결제 요청 준비
-      console.log('prepare member id:  ' + memberInfo.memberId);
-      const prepareRes = await axios.post("/payment/prepare", { expertId: memberInfo.memberId});
+      const prepareRes = await axios.post("/payment/prepare", { expertId });
       const { data } = prepareRes;
 
       const { IMP } = window;
@@ -61,14 +60,16 @@ const SubscriptionModal = ({ isOpen, onClose, memberInfo, price}) => {
           ✕
         </button>
 
-        <h2 className="modal-title">{memberInfo.name}님을 구독하시겠습니까?</h2>
+        <h2 className="modal-title">{expertName}님을 구독하시겠습니까?</h2>
         <p className="modal-price">
           <span>{price.toLocaleString()}</span> 원
         </p>
 
         <div className="expert-info">
-          <h3>{memberInfo.name}</h3>
-          <div className="profile-description">{memberInfo.description}</div>
+          <h3>{expertName}</h3>
+          <p>
+            {expertDescription}
+          </p>
         </div>
 
         <button className="subscribe-btn" onClick={handleSubscribe} disabled={loading}>

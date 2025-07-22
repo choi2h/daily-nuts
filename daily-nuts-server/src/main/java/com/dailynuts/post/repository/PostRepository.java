@@ -36,4 +36,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByMember_IdIn(List<Long> memberIds, Pageable pageable);
 
     Page<Post> findByMember_IdInAndCategory_Id(List<Long> memberIds, Long categoryId, Pageable pageable);
+
+    List<Post> findByMember_IdAndIsPinnedTrue(Long memberId);
+
+    List<Post> findByMember_IdAndIsPinnedFalse(Long memberId);
 }
