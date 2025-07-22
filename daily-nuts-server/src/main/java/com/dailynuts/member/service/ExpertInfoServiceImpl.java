@@ -60,7 +60,9 @@ public class ExpertInfoServiceImpl implements ExpertInfoService {
 
         member.changeRole(Role.EXPERT);
 
-        return mapper.toExpertInfoResponseDto(expertInfo, images);
+        ExpertInfoResponseDto response = mapper.toExpertInfoResponseDto(expertInfo, images);
+        response.setRole(member.getRole().name());
+        return response;
     }
 
     @Override
