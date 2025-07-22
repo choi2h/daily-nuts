@@ -25,7 +25,7 @@ public class ExpertSearchController {
 
     @GetMapping("/search")
     public ResponseEntity<ExpertSearchResponseDto> searchExperts(@RequestParam(required = false) String name,
-                                           @AuthenticationPrincipal Member member) {
+                                           @AuthenticationPrincipal JwtMember member) {
         if (name == null || name.isBlank()) {
             throw new CustomException(CustomErrorCode.SEARCH_KEYWORD_EMPTY);
         }
