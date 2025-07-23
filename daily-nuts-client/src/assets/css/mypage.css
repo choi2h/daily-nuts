@@ -1,0 +1,256 @@
+.page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.mypage-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 32px;
+    gap: 20px;
+}
+
+.mypage-avatar-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #f0f0f0;
+    color: #666666;
+}
+
+.mypage-username {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+    margin: 0;
+}
+
+.mypage-content {
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.mypage-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.mypage-row:last-child {
+    margin-bottom: 0;
+}
+
+.mypage-label {
+    font-size: 14px;
+    color: #666666;
+    font-weight: 500;
+    min-width: 80px;
+}
+
+.mypage-value {
+    font-size: 14px;
+    color: #333333;
+    text-align: left;
+    flex: 1;
+    margin-left: 16px;
+}
+
+.edit-button {
+    width: 100%;
+    background-color: #B57138;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-bottom: 16px;
+}
+
+.edit-button:hover {
+    background-color: #c19b26;
+}
+
+.last-update {
+    font-size: 12px;
+    color: #999999;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .mypage-row {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 16px;
+    }
+    
+    .mypage-value {
+        margin-left: 0;
+        margin-top: 4px;
+        text-align: left;
+    }
+}
+
+  .page-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333333;
+      margin-bottom: 32px;
+      text-align: center;
+  }
+
+  .mypage-header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 32px;
+      gap: 20px;
+  }
+
+  .mypage-avatar-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      background-color: #f0f0f0;
+      color: #666666;
+  }
+
+  .mypage-username-input {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333333;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 8px 12px;
+      background-color: #ffffff;
+      outline: none;
+  }
+
+  .mypage-username-input:focus {
+      border-color: #B57138;
+  }
+
+  .mypage-content {
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+  }
+
+  .mypage-row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 24px;
+  }
+
+  .mypage-row:last-child {
+      margin-bottom: 0;
+  }
+
+  .mypage-label {
+      font-size: 14px;
+      color: #666666;
+      font-weight: 500;
+      min-width: 80px;
+  }
+
+  .mypage-input,
+  .mypage-select {
+        font-size: 14px;
+        color: #333333;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 8px 12px;
+        flex: 1;
+        margin-left: 16px;
+        background-color: #ffffff;
+        outline: none;
+        max-width: 260px;
+        width: 100%;
+    }
+
+  .mypage-input:focus, .mypage-select:focus {
+      border-color: #B57138;
+  }
+
+  .button-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+  }
+
+  .save-button {
+      flex: 1;
+      background-color: #B57138;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+  }
+
+  .save-button:hover {
+      background-color: #c19b26;
+  }
+
+  .cancel-button {
+      flex: 1;
+      background-color: #ffffff;
+      color: #666666;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+  }
+
+  .cancel-button:hover {
+      background-color: #f5f5f5;
+      border-color: #bbb;
+  }
+
+  @media (max-width: 768px) {
+      .mypage-row {
+          flex-direction: column;
+          align-items: flex-start;
+          margin-bottom: 16px;
+      }
+      
+      .mypage-input,
+      .mypage-select {
+          margin-left: 0;
+          margin-top: 4px;
+          width: 100%;
+      }
+
+      .button-group {
+          flex-direction: column;
+      }
+  }

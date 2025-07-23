@@ -1,0 +1,32 @@
+package com.dailynuts.member.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+public class ExpertInfoResponseDto {
+    public String description;
+    @Setter
+    public String role;
+    public List<ImageInfo> files;
+
+    public ExpertInfoResponseDto(String description) {
+        this.description = description;
+        this.files = new ArrayList<>();
+    }
+
+    public void addImage(String name, String url) {
+        files.add(new ImageInfo(name, url));
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class ImageInfo {
+        private String name;
+        private String url;
+    }
+}

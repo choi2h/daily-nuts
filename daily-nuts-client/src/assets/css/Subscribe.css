@@ -1,0 +1,15 @@
+/* 알림정보 컨테이너 */
+.subscribe-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.count-header {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  text-align: left;
+  gap: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}

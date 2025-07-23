@@ -1,0 +1,151 @@
+.approval-history {
+  width: 100%;
+  padding: 32px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.approval-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.approval-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0;
+}
+
+.approval-item {
+  width: 100%;
+  border-bottom: 1px solid #e5e5e5;
+  transition: background-color 0.2s ease;
+}
+
+.approval-item:hover {
+  background-color: #f8f9fa;
+}
+
+.approval-item:last-child {
+  border-bottom: none;
+}
+
+.approval-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 16px;
+}
+
+.payment-info-profile {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-image-wrapper {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: #00ff00;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.approval-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 4px;
+}
+
+.author-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333333;
+  margin: 0;
+}
+
+.next-payment {
+  font-size: 14px;
+  color: #666666;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.payment-button {
+  background-color: #B57138;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.payment-button:hover {
+  background-color: #ac6933;
+}
+
+.payment-button:active {
+  transform: translateY(1px);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .approval-content {
+    padding: 16px 12px;
+  }
+  
+  .profile-section {
+    gap: 12px;
+  }
+  
+  .profile-image-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  
+  .online-indicator {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .author-name {
+    font-size: 15px;
+  }
+  
+  .next-payment {
+    font-size: 13px;
+  }
+  
+  .payment-button {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+}
